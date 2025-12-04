@@ -1,0 +1,24 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.status {
+  font-size: 1.25rem;
+  color: #4ade80;
+  padding: 0.5rem 2rem;
+  border: 2px solid #4ade80;
+  border-radius: 9999px;
+  font-weight: 500;
+}
