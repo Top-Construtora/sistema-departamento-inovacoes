@@ -49,3 +49,17 @@ export function apenasInternos(req: Request, res: Response, next: NextFunction):
 
   next();
 }
+
+export function apenasLider(req: Request, res: Response, next: NextFunction): void {
+  if (!req.usuario) {
+    res.status(401).json({ success: false, error: 'Não autenticado' });
+    return;
+  }
+
+  if (req.usuario.perfil !== PerfilUsuario.LIDER) {
+    res.status(403).json({ success: false, error: 'Acesso restrito a líderes' });
+    return;
+  }
+
+  next();
+}

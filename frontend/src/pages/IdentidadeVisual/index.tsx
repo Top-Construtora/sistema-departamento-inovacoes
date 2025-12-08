@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useMemo, FormEvent } from 'react';
 import {
   Palette,
   Image,
@@ -107,6 +107,25 @@ export function IdentidadeVisual() {
       setLoading(false);
     }
   }
+
+  // Estatisticas
+  const stats = useMemo(() => {
+    return {
+      logos: dados?.logos.length || 0,
+      cores: dados?.cores.length || 0,
+      fontes: dados?.fontes.length || 0,
+      templates: dados?.templates.length || 0,
+    };
+  }, [dados]);
+
+  // Agrupar templates por tipo
+  const templatesPorTipo = useMemo(() => {
+    return (dados?.templates || []).reduce((acc, t) => {
+      if (!acc[t.tipo]) acc[t.tipo] = [];
+      acc[t.tipo].push(t);
+      return acc;
+    }, {} as Record<TipoTemplate, TemplateArquivo[]>);
+  }, [dados?.templates]);
 
   async function handleCopiarCor(codigo: string) {
     await navigator.clipboard.writeText(codigo);
@@ -227,22 +246,70 @@ export function IdentidadeVisual() {
   }
 
   if (loading) {
-    return <div className={styles.loading}>Carregando...</div>;
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          <div className={styles.loadingSpinner} />
+          <span className={styles.loadingText}>Carregando identidade visual...</span>
+        </div>
+      </div>
+    );
   }
-
-  // Agrupar templates por tipo
-  const templatesPorTipo = (dados?.templates || []).reduce((acc, t) => {
-    if (!acc[t.tipo]) acc[t.tipo] = [];
-    acc[t.tipo].push(t);
-    return acc;
-  }, {} as Record<TipoTemplate, TemplateArquivo[]>);
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
-        <div>
-          <h1 className={styles.title}>Identidade Visual</h1>
-          <p className={styles.subtitle}>Marca, cores, fontes e templates do departamento</p>
+        <div className={styles.headerTop}>
+          <div className={styles.headerInfo}>
+            <h1 className={styles.title}>Identidade Visual</h1>
+            <p className={styles.subtitle}>
+              Marca, cores, fontes e templates do departamento
+            </p>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className={styles.statsGrid}>
+          <div className={`${styles.statCard} ${styles.statCardLogos}`}>
+            <div className={styles.statHeader}>
+              <div className={styles.statIcon}>
+                <Image size={20} />
+              </div>
+            </div>
+            <span className={styles.statValue}>{stats.logos}</span>
+            <span className={styles.statLabel}>Logos</span>
+          </div>
+
+          <div className={`${styles.statCard} ${styles.statCardCores}`}>
+            <div className={styles.statHeader}>
+              <div className={styles.statIcon}>
+                <Palette size={20} />
+              </div>
+            </div>
+            <span className={styles.statValue}>{stats.cores}</span>
+            <span className={styles.statLabel}>Cores</span>
+          </div>
+
+          <div className={`${styles.statCard} ${styles.statCardFontes}`}>
+            <div className={styles.statHeader}>
+              <div className={styles.statIcon}>
+                <Type size={20} />
+              </div>
+            </div>
+            <span className={styles.statValue}>{stats.fontes}</span>
+            <span className={styles.statLabel}>Fontes</span>
+          </div>
+
+          <div className={`${styles.statCard} ${styles.statCardTemplates}`}>
+            <div className={styles.statHeader}>
+              <div className={styles.statIcon}>
+                <FileText size={20} />
+              </div>
+            </div>
+            <span className={styles.statValue}>{stats.templates}</span>
+            <span className={styles.statLabel}>Templates</span>
+          </div>
         </div>
       </div>
 
@@ -252,6 +319,7 @@ export function IdentidadeVisual() {
           <div className={styles.sectionTitle}>
             <Image size={24} />
             <h2>Logos</h2>
+            <span className={styles.sectionCount}>{stats.logos}</span>
           </div>
           <Button size="sm" onClick={() => setModalLogo(true)}>
             <Plus size={16} />
@@ -295,6 +363,7 @@ export function IdentidadeVisual() {
           <div className={styles.sectionTitle}>
             <Palette size={24} />
             <h2>Paleta de Cores</h2>
+            <span className={styles.sectionCount}>{stats.cores}</span>
           </div>
           <Button size="sm" onClick={() => setModalCor(true)}>
             <Plus size={16} />
@@ -352,6 +421,7 @@ export function IdentidadeVisual() {
           <div className={styles.sectionTitle}>
             <Type size={24} />
             <h2>Fontes Tipograficas</h2>
+            <span className={styles.sectionCount}>{stats.fontes}</span>
           </div>
           <Button size="sm" onClick={() => setModalFonte(true)}>
             <Plus size={16} />
@@ -407,6 +477,7 @@ export function IdentidadeVisual() {
           <div className={styles.sectionTitle}>
             <FileText size={24} />
             <h2>Templates</h2>
+            <span className={styles.sectionCount}>{stats.templates}</span>
           </div>
           <Button size="sm" onClick={() => setModalTemplate(true)}>
             <Plus size={16} />
@@ -432,8 +503,11 @@ export function IdentidadeVisual() {
                           <img src={template.preview_url} alt={template.nome} />
                         </div>
                       ) : (
-                        <div className={styles.templatePlaceholder}>
-                          <FileText size={32} />
+                        <div className={styles.templatePreview}>
+                          <div className={styles.templatePlaceholder}>
+                            <FileText size={32} />
+                            <span>Sem preview</span>
+                          </div>
                         </div>
                       )}
                       <div className={styles.templateInfo}>
@@ -444,6 +518,7 @@ export function IdentidadeVisual() {
                           </span>
                         )}
                         <span className={styles.templateDownloads}>
+                          <Download size={12} />
                           {template.downloads} downloads
                         </span>
                       </div>
@@ -458,6 +533,7 @@ export function IdentidadeVisual() {
                         <button
                           className={styles.deleteBtn}
                           onClick={() => handleExcluirTemplate(template.id)}
+                          style={{ position: 'relative', opacity: 1 }}
                         >
                           <Trash2 size={14} />
                         </button>

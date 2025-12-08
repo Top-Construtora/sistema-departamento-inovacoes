@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useMemo, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Plus,
@@ -13,6 +13,8 @@ import {
   Wrench,
   Link2,
   Search,
+  Layers,
+  Globe
 } from 'lucide-react';
 import { Button, Input, Select, Modal } from '../../components/ui';
 import { SistemaAcesso, TipoSistemaAcesso, CreateSistemaAcessoDTO, Usuario } from '../../types';
@@ -126,86 +128,208 @@ export function SistemasAcesso() {
   }
 
   // Filtrar sistemas
-  const sistemasFiltrados = sistemas.filter((sistema) => {
-    const matchBusca = sistema.nome.toLowerCase().includes(busca.toLowerCase()) ||
-      sistema.observacoes?.toLowerCase().includes(busca.toLowerCase());
-    const matchTipo = !filtroTipo || sistema.tipo === filtroTipo;
-    return matchBusca && matchTipo;
-  });
+  const sistemasFiltrados = useMemo(() => {
+    return sistemas.filter((sistema) => {
+      const matchBusca = sistema.nome.toLowerCase().includes(busca.toLowerCase()) ||
+        sistema.observacoes?.toLowerCase().includes(busca.toLowerCase());
+      const matchTipo = !filtroTipo || sistema.tipo === filtroTipo;
+      return matchBusca && matchTipo;
+    });
+  }, [sistemas, busca, filtroTipo]);
 
   // Agrupar por tipo
-  const sistemasPorTipo = sistemasFiltrados.reduce((acc, sistema) => {
-    const tipo = sistema.tipo;
-    if (!acc[tipo]) {
-      acc[tipo] = [];
-    }
-    acc[tipo].push(sistema);
-    return acc;
-  }, {} as Record<TipoSistemaAcesso, SistemaAcesso[]>);
+  const sistemasPorTipo = useMemo(() => {
+    return sistemasFiltrados.reduce((acc, sistema) => {
+      const tipo = sistema.tipo;
+      if (!acc[tipo]) {
+        acc[tipo] = [];
+      }
+      acc[tipo].push(sistema);
+      return acc;
+    }, {} as Record<TipoSistemaAcesso, SistemaAcesso[]>);
+  }, [sistemasFiltrados]);
 
-  const tipoOptions = [
-    { value: '', label: 'Todos os tipos' },
-    ...Object.entries(tipoLabels).map(([value, label]) => ({ value, label })),
-  ];
+  // Estatisticas
+  const stats = useMemo(() => {
+    const total = sistemas.length;
+    const desenvolvimento = sistemas.filter(s => s.tipo === 'DESENVOLVIMENTO').length;
+    const cloud = sistemas.filter(s => s.tipo === 'CLOUD').length;
+    const infra = sistemas.filter(s => s.tipo === 'INFRA').length;
+    const bancoDados = sistemas.filter(s => s.tipo === 'BANCO_DADOS').length;
+    return { total, desenvolvimento, cloud, infra, bancoDados };
+  }, [sistemas]);
+
+  // Verifica se tem filtros ativos
+  const hasActiveFilters = busca || filtroTipo;
+
+  function getInitials(nome: string): string {
+    return nome.split(' ').slice(0, 2).map(n => n.charAt(0).toUpperCase()).join('');
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          <div className={styles.loadingSpinner} />
+          <span className={styles.loadingText}>Carregando sistemas...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
-        <div>
+        <div className={styles.headerInfo}>
           <h1 className={styles.title}>Sistemas & Acessos</h1>
-          <p className={styles.subtitle}>Catalogo de sistemas e plataformas do departamento</p>
+          <p className={styles.subtitle}>
+            Catalogo de sistemas e plataformas do departamento
+          </p>
         </div>
 
-        <Button onClick={() => setIsFormOpen(true)}>
+        <button className={styles.newButton} onClick={() => setIsFormOpen(true)}>
           <Plus size={18} />
           Novo Sistema
-        </Button>
+        </button>
       </div>
 
+      {/* Stats Cards */}
+      <div className={styles.statsGrid}>
+        <div
+          className={`${styles.statCard} ${styles.statCardTotal} ${!filtroTipo ? styles.active : ''}`}
+          onClick={() => setFiltroTipo('')}
+        >
+          <div className={styles.statHeader}>
+            <div className={styles.statIcon}>
+              <Layers size={16} />
+            </div>
+          </div>
+          <span className={styles.statValue}>{stats.total}</span>
+          <span className={styles.statLabel}>Total</span>
+        </div>
+
+        <div
+          className={`${styles.statCard} ${styles.statCardDev} ${filtroTipo === 'DESENVOLVIMENTO' ? styles.active : ''}`}
+          onClick={() => setFiltroTipo(filtroTipo === 'DESENVOLVIMENTO' ? '' : 'DESENVOLVIMENTO')}
+        >
+          <div className={styles.statHeader}>
+            <div className={styles.statIcon}>
+              <Code size={16} />
+            </div>
+          </div>
+          <span className={styles.statValue}>{stats.desenvolvimento}</span>
+          <span className={styles.statLabel}>Desenvolvimento</span>
+        </div>
+
+        <div
+          className={`${styles.statCard} ${styles.statCardCloud} ${filtroTipo === 'CLOUD' ? styles.active : ''}`}
+          onClick={() => setFiltroTipo(filtroTipo === 'CLOUD' ? '' : 'CLOUD')}
+        >
+          <div className={styles.statHeader}>
+            <div className={styles.statIcon}>
+              <Cloud size={16} />
+            </div>
+          </div>
+          <span className={styles.statValue}>{stats.cloud}</span>
+          <span className={styles.statLabel}>Cloud</span>
+        </div>
+
+        <div
+          className={`${styles.statCard} ${styles.statCardInfra} ${filtroTipo === 'INFRA' ? styles.active : ''}`}
+          onClick={() => setFiltroTipo(filtroTipo === 'INFRA' ? '' : 'INFRA')}
+        >
+          <div className={styles.statHeader}>
+            <div className={styles.statIcon}>
+              <Server size={16} />
+            </div>
+          </div>
+          <span className={styles.statValue}>{stats.infra}</span>
+          <span className={styles.statLabel}>Infraestrutura</span>
+        </div>
+
+        <div
+          className={`${styles.statCard} ${styles.statCardData} ${filtroTipo === 'BANCO_DADOS' ? styles.active : ''}`}
+          onClick={() => setFiltroTipo(filtroTipo === 'BANCO_DADOS' ? '' : 'BANCO_DADOS')}
+        >
+          <div className={styles.statHeader}>
+            <div className={styles.statIcon}>
+              <Database size={16} />
+            </div>
+          </div>
+          <span className={styles.statValue}>{stats.bancoDados}</span>
+          <span className={styles.statLabel}>Banco de Dados</span>
+        </div>
+      </div>
+
+      {/* Filters */}
       <div className={styles.filters}>
-        <div className={styles.searchBox}>
-          <Search size={18} />
+        <div className={styles.searchWrapper}>
+          <Search size={18} className={styles.searchIcon} />
           <input
             type="text"
             placeholder="Buscar sistemas..."
+            className={styles.searchInput}
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
           />
         </div>
-        <Select
+
+        <select
+          className={styles.filterSelect}
           value={filtroTipo}
           onChange={(e) => setFiltroTipo(e.target.value)}
-          options={tipoOptions}
-        />
+        >
+          <option value="">Todos os tipos</option>
+          {Object.entries(tipoLabels).map(([value, label]) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
+        </select>
       </div>
 
-      {loading ? (
-        <div className={styles.loading}>Carregando...</div>
-      ) : sistemasFiltrados.length === 0 ? (
-        <div className={styles.empty}>
-          <Server size={48} />
-          <h3>Nenhum sistema encontrado</h3>
-          <p>Adicione sistemas ao catalogo para gerenciar acessos</p>
+      {/* Content */}
+      {sistemasFiltrados.length === 0 ? (
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>
+            <Server size={36} />
+          </div>
+          <h3 className={styles.emptyTitle}>
+            {hasActiveFilters ? 'Nenhum sistema encontrado' : 'Nenhum sistema cadastrado'}
+          </h3>
+          <p className={styles.emptyText}>
+            {hasActiveFilters
+              ? 'Tente ajustar os filtros ou o termo de busca'
+              : 'Adicione sistemas ao catalogo para gerenciar acessos'}
+          </p>
+          {!hasActiveFilters && (
+            <button className={styles.emptyButton} onClick={() => setIsFormOpen(true)}>
+              <Plus size={18} />
+              Novo Sistema
+            </button>
+          )}
         </div>
       ) : (
         <div className={styles.content}>
-          {Object.entries(sistemasPorTipo).map(([tipo, sistemas]) => {
+          {Object.entries(sistemasPorTipo).map(([tipo, sistemasDoTipo]) => {
             const Icon = tipoIcons[tipo as TipoSistemaAcesso];
             const color = tipoColors[tipo as TipoSistemaAcesso];
 
             return (
               <div key={tipo} className={styles.section}>
                 <div className={styles.sectionHeader} style={{ borderColor: color }}>
-                  <Icon size={20} style={{ color }} />
-                  <h2>{tipoLabels[tipo as TipoSistemaAcesso]}</h2>
-                  <span className={styles.count}>{sistemas.length}</span>
+                  <div className={styles.sectionIcon} style={{ background: `${color}20`, color }}>
+                    <Icon size={18} />
+                  </div>
+                  <h2 className={styles.sectionTitle}>{tipoLabels[tipo as TipoSistemaAcesso]}</h2>
+                  <span className={styles.sectionCount}>{sistemasDoTipo.length}</span>
                 </div>
 
                 <div className={styles.grid}>
-                  {sistemas.map((sistema) => (
+                  {sistemasDoTipo.map((sistema) => (
                     <div
                       key={sistema.id}
                       className={styles.card}
+                      style={{ '--card-color': color } as React.CSSProperties}
                       onClick={() => navigate(`/sistemas-acesso/${sistema.id}`)}
                     >
                       <div className={styles.cardHeader}>
@@ -232,18 +356,30 @@ export function SistemasAcesso() {
 
                       {sistema.observacoes && (
                         <p className={styles.cardDescription}>
-                          {sistema.observacoes.substring(0, 80)}
-                          {sistema.observacoes.length > 80 ? '...' : ''}
+                          {sistema.observacoes.substring(0, 100)}
+                          {sistema.observacoes.length > 100 ? '...' : ''}
                         </p>
                       )}
 
-                      {sistema.responsavel && (
-                        <div className={styles.cardFooter}>
-                          <span className={styles.responsavel}>
-                            Responsavel: {sistema.responsavel.nome}
+                      <div className={styles.cardFooter}>
+                        {sistema.responsavel ? (
+                          <div className={styles.responsavel}>
+                            <div className={styles.responsavelAvatar}>
+                              {getInitials(sistema.responsavel.nome)}
+                            </div>
+                            <span>{sistema.responsavel.nome.split(' ')[0]}</span>
+                          </div>
+                        ) : (
+                          <span className={styles.responsavel}>Sem responsavel</span>
+                        )}
+
+                        {sistema.url && (
+                          <span className={styles.urlBadge}>
+                            <Globe size={12} />
+                            URL
                           </span>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

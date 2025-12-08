@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   FolderKanban,
@@ -7,15 +7,34 @@ import {
   Key,
   Palette,
   LogOut,
+  Users,
+  Briefcase,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts';
 import { PerfilUsuario } from '../../../types';
 import styles from './styles.module.css';
 
-export function Sidebar() {
+interface SidebarProps {
+  collapsed: boolean;
+  onToggle: () => void;
+}
+
+function formatPerfil(perfil: string): string {
+  const perfilMap: Record<string, string> = {
+    LIDER: 'Lider',
+    ANALISTA: 'Analista',
+    EXTERNO: 'Usuario Externo',
+  };
+  return perfilMap[perfil] || perfil;
+}
+
+export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const { usuario, logout } = useAuth();
 
   const isInterno = usuario?.perfil === PerfilUsuario.LIDER || usuario?.perfil === PerfilUsuario.ANALISTA;
+  const isLider = usuario?.perfil === PerfilUsuario.LIDER;
 
   const menuItems = isInterno
     ? [
@@ -23,8 +42,10 @@ export function Sidebar() {
         { path: '/projetos', icon: FolderKanban, label: 'Projetos' },
         { path: '/demandas', icon: ClipboardList, label: 'Demandas' },
         { path: '/chamados', icon: Headphones, label: 'Chamados' },
-        { path: '/sistemas-acesso', icon: Key, label: 'Acessos' },
-        { path: '/identidade-visual', icon: Palette, label: 'Identidade' },
+        { path: '/portfolio', icon: Briefcase, label: 'Portfolio' },
+        { path: '/sistemas-acesso', icon: Key, label: 'Sistemas de Acesso' },
+        { path: '/identidade-visual', icon: Palette, label: 'Identidade Visual' },
+        ...(isLider ? [{ path: '/usuarios', icon: Users, label: 'Usuarios' }] : []),
       ]
     : [
         { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -32,39 +53,98 @@ export function Sidebar() {
       ];
 
   return (
-    <aside className={styles.sidebar}>
-      <div className={styles.logo}>
-        <h1>Inovacoes</h1>
+    <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
+      {/* Toggle Button */}
+      <button
+        className={styles.toggleButton}
+        onClick={onToggle}
+        title={collapsed ? 'Expandir menu' : 'Recolher menu'}
+      >
+        {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+      </button>
+
+      {/* Header com Logo */}
+      <div className={styles.header}>
+        <Link to="/" className={styles.logoLink}>
+          <div className={styles.logoIcon}>
+            <img src="/images/logo.png" alt="GIO" />
+          </div>
+          {!collapsed && (
+            <div className={styles.logoText}>
+              <span className={styles.logoTitle}>Inovacoes</span>
+              <span className={styles.logoSubtitle}>Tecnologia</span>
+            </div>
+          )}
+        </Link>
       </div>
 
+      {/* Navegacao */}
       <nav className={styles.nav}>
-        {menuItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.active : ''}`
-            }
-          >
-            <item.icon size={20} />
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
+        <div className={styles.navSection}>
+          {!collapsed && <p className={styles.navSectionTitle}>Menu Principal</p>}
+          {menuItems.slice(0, 4).map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              end={item.path === '/'}
+              className={({ isActive }) =>
+                `${styles.navItem} ${isActive ? styles.active : ''}`
+              }
+              title={collapsed ? item.label : undefined}
+            >
+              <item.icon className={styles.navIcon} />
+              {!collapsed && <span className={styles.navLabel}>{item.label}</span>}
+            </NavLink>
+          ))}
+        </div>
+
+        {isInterno && menuItems.length > 4 && (
+          <>
+            <div className={styles.divider} />
+            <div className={styles.navSection}>
+              {!collapsed && <p className={styles.navSectionTitle}>Configuracoes</p>}
+              {menuItems.slice(4).map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `${styles.navItem} ${isActive ? styles.active : ''}`
+                  }
+                  title={collapsed ? item.label : undefined}
+                >
+                  <item.icon className={styles.navIcon} />
+                  {!collapsed && <span className={styles.navLabel}>{item.label}</span>}
+                </NavLink>
+              ))}
+            </div>
+          </>
+        )}
       </nav>
 
+      {/* Footer com Usuario */}
       <div className={styles.footer}>
-        <div className={styles.user}>
+        <div className={`${styles.userCard} ${collapsed ? styles.userCardCollapsed : ''}`}>
           <div className={styles.userAvatar}>
             {usuario?.nome.charAt(0).toUpperCase()}
           </div>
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>{usuario?.nome}</span>
-            <span className={styles.userRole}>{usuario?.perfil}</span>
-          </div>
+          {!collapsed && (
+            <div className={styles.userInfo}>
+              <span className={styles.userName}>
+                {usuario?.nome.split(' ').slice(0, 2).join(' ')}
+              </span>
+              <span className={styles.userRole}>
+                {formatPerfil(usuario?.perfil || '')}
+              </span>
+            </div>
+          )}
+          <button
+            className={styles.logoutButton}
+            onClick={logout}
+            title="Sair"
+          >
+            <LogOut size={18} />
+          </button>
         </div>
-        <button className={styles.logoutButton} onClick={logout}>
-          <LogOut size={18} />
-        </button>
       </div>
     </aside>
   );

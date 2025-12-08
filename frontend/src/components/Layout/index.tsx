@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts';
 import { Sidebar } from './Sidebar';
@@ -5,6 +6,18 @@ import styles from './styles.module.css';
 
 export function Layout() {
   const { isAuthenticated, loading } = useAuth();
+  const [collapsed, setCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebar-collapsed');
+    return saved === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sidebar-collapsed', String(collapsed));
+  }, [collapsed]);
+
+  function toggleSidebar() {
+    setCollapsed((prev) => !prev);
+  }
 
   if (loading) {
     return (
@@ -20,8 +33,8 @@ export function Layout() {
 
   return (
     <div className={styles.container}>
-      <Sidebar />
-      <main className={styles.main}>
+      <Sidebar collapsed={collapsed} onToggle={toggleSidebar} />
+      <main className={`${styles.main} ${collapsed ? styles.mainCollapsed : ''}`}>
         <Outlet />
       </main>
     </div>

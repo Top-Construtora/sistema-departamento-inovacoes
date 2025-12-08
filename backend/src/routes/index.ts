@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { healthRoutes } from './healthRoutes.js';
 import { authRoutes } from './authRoutes.js';
+import { usuarioRoutes } from './usuarioRoutes.js';
 import { projetoRoutes } from './projetoRoutes.js';
 import { demandaRoutes } from './demandaRoutes.js';
 import { chamadoRoutes } from './chamadoRoutes.js';
@@ -14,6 +15,7 @@ const router = Router();
 
 router.use('/health', healthRoutes);
 router.use('/auth', authRoutes);
+router.use('/usuarios', usuarioRoutes);
 router.use('/projetos', projetoRoutes);
 router.use('/demandas', demandaRoutes);
 router.use('/chamados', chamadoRoutes);

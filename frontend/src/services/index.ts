@@ -7,3 +7,4 @@ export * from './chamadoService';
 export * from './sistemaAcessoService';
 export * from './identidadeVisualService';
 export * from './metricsService';
+export * from './portfolioService';

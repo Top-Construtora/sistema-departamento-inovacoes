@@ -1,98 +1,404 @@
+/* ========================================
+   SIDEBAR - DESIGN PREMIUM
+======================================== */
+
 .sidebar {
-  width: 240px;
+  width: 260px;
   height: 100vh;
-  background: #111827;
-  border-right: 1px solid #1f2937;
+  background: linear-gradient(180deg, #0a0a12 0%, #0d0d18 50%, #0a0a12 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
   top: 0;
+  z-index: 100;
+  overflow: hidden;
+  transition: width 0.3s ease;
 }
 
-.logo {
-  padding: 1.5rem;
-  border-bottom: 1px solid #1f2937;
+.sidebar.collapsed {
+  width: 80px;
 }
 
-.logo h1 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #3b82f6;
+/* Efeito de brilho sutil no topo */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ========================================
+   TOGGLE BUTTON
+======================================== */
+
+.toggleButton {
+  position: absolute;
+  top: 1.25rem;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  cursor: pointer;
+  z-index: 101;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggleButton:hover {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  color: #e5e7eb;
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: scale(1.1);
+}
+
+.sidebar.collapsed .toggleButton {
+  right: -12px;
+}
+
+/* ========================================
+   LOGO / HEADER
+======================================== */
+
+.header {
+  padding: 1.25rem 1.25rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar.collapsed .header {
+  padding: 1.25rem 0.875rem 1rem;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  text-decoration: none;
+  padding: 0.5rem;
+  margin: -0.5rem;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.sidebar.collapsed .logoLink {
+  justify-content: center;
+  padding: 0.5rem;
   margin: 0;
 }
 
+.logoLink:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.logoIcon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.logoLink:hover .logoIcon {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+.logoIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.logoTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.logoSubtitle {
+  font-size: 0.6875rem;
+  color: #6b7280;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ========================================
+   NAVEGACAO
+======================================== */
+
 .nav {
   flex: 1;
-  padding: 1rem 0.75rem;
+  padding: 0.75rem 0.875rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
 }
 
+.sidebar.collapsed .nav {
+  padding: 0.75rem 0.5rem;
+}
+
+/* Scrollbar customizada */
+.nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Secao do menu */
+.navSection {
+  margin-bottom: 0.5rem;
+}
+
+.navSectionTitle {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 1rem 0.5rem;
+  margin: 0;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+/* Item de navegacao */
 .navItem {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.875rem;
   padding: 0.75rem 1rem;
   color: #9ca3af;
   text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.2s;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  position: relative;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.sidebar.collapsed .navItem {
+  justify-content: center;
+  padding: 0.75rem;
+  gap: 0;
+}
+
+.navItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, #6366f1, #8b5cf6);
+  border-radius: 0 2px 2px 0;
+  transition: height 0.2s ease;
+}
+
+.sidebar.collapsed .navItem::before {
+  display: none;
 }
 
 .navItem:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  background: rgba(255, 255, 255, 0.04);
+  color: #e5e7eb;
 }
 
+.navItem:hover .navIcon {
+  color: #a5b4fc;
+}
+
+/* Item ativo */
 .navItem.active {
-  background: #3b82f6;
-  color: white;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05));
+  color: #f8fafc;
 }
 
-.footer {
-  padding: 1rem;
-  border-top: 1px solid #1f2937;
+.sidebar.collapsed .navItem.active {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.navItem.active::before {
+  height: 24px;
+}
+
+.navItem.active .navIcon {
+  color: #818cf8;
+}
+
+.navIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.navLabel {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+/* Badge de notificacao */
+.navBadge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 9px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
 }
 
-.user {
-  flex: 1;
+/* ========================================
+   DIVISOR
+======================================== */
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  margin: 0.5rem 1rem;
+}
+
+.sidebar.collapsed .divider {
+  margin: 0.5rem;
+}
+
+/* ========================================
+   FOOTER / USUARIO
+======================================== */
+
+.footer {
+  padding: 0.875rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar.collapsed .footer {
+  padding: 0.5rem;
+}
+
+.userCard {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.userCard:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.userCardCollapsed {
+  flex-direction: column;
+  padding: 0.5rem;
+  gap: 0.5rem;
 }
 
 .userAvatar {
-  width: 36px;
-  height: 36px;
-  background: #374151;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   color: white;
+  font-size: 0.9375rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.userCardCollapsed .userAvatar {
+  width: 36px;
+  height: 36px;
   font-size: 0.875rem;
 }
 
 .userInfo {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 0.125rem;
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }
 
 .userName {
   font-size: 0.875rem;
-  font-weight: 500;
-  color: white;
+  font-weight: 600;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .userRole {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   color: #6b7280;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .logoutButton {
@@ -100,12 +406,113 @@
   border: none;
   color: #6b7280;
   cursor: pointer;
+  padding: 0.625rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userCardCollapsed .logoutButton {
   padding: 0.5rem;
-  border-radius: 6px;
-  transition: all 0.2s;
 }
 
 .logoutButton:hover {
   background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  color: #f87171;
+}
+
+.logoutButton:active {
+  transform: scale(0.95);
+}
+
+/* ========================================
+   STATUS INDICATOR
+======================================== */
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  border: 2px solid #0a0a12;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+}
+
+/* ========================================
+   VERSAO DO APP
+======================================== */
+
+.version {
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.625rem;
+  color: #374151;
+  letter-spacing: 0.05em;
+}
+
+/* ========================================
+   TOOLTIP (para modo colapsado)
+======================================== */
+
+.sidebar.collapsed .navItem {
+  position: relative;
+}
+
+.sidebar.collapsed .navItem::after {
+  content: attr(title);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1f2937;
+  color: #f8fafc;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  margin-left: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.sidebar.collapsed .navItem:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(4px);
+}
+
+/* ========================================
+   RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 240px;
+  }
+
+  .sidebar.collapsed {
+    width: 72px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease, width 0.3s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .toggleButton {
+    display: none;
+  }
 }

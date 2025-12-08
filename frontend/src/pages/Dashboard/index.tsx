@@ -7,6 +7,9 @@ import {
   Users,
   Ticket,
   TrendingUp,
+  Calendar,
+  BarChart3,
+  PieChart as PieChartIcon,
 } from 'lucide-react';
 import {
   BarChart,
@@ -19,9 +22,9 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
   Legend,
+  Area,
+  AreaChart,
 } from 'recharts';
 import {
   ResumoGeral,
@@ -31,10 +34,9 @@ import {
   DemandasPorResponsavel,
 } from '../../types';
 import { metricsService } from '../../services';
-import { useAuth } from '../../contexts';
 import styles from './styles.module.css';
 
-const COLORS = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
+const COLORS = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ChartData = Record<string, any>;
@@ -42,14 +44,22 @@ type ChartData = Record<string, any>;
 const STATUS_COLORS: Record<string, string> = {
   IDEIA: '#6b7280',
   EM_ANALISE: '#f59e0b',
-  EM_DESENVOLVIMENTO: '#3b82f6',
+  EM_DESENVOLVIMENTO: '#6366f1',
   EM_TESTES: '#8b5cf6',
   EM_PRODUCAO: '#22c55e',
   ARQUIVADO: '#374151',
 };
 
 function formatStatus(status: string): string {
-  return status.replace(/_/g, ' ');
+  const statusMap: Record<string, string> = {
+    IDEIA: 'Ideia',
+    EM_ANALISE: 'Em Análise',
+    EM_DESENVOLVIMENTO: 'Em Desenvolvimento',
+    EM_TESTES: 'Em Testes',
+    EM_PRODUCAO: 'Em Produção',
+    ARQUIVADO: 'Arquivado',
+  };
+  return statusMap[status] || status.replace(/_/g, ' ');
 }
 
 function formatMes(mes: string): string {
@@ -58,8 +68,66 @@ function formatMes(mes: string): string {
   return `${meses[parseInt(mesNum) - 1]}/${ano.slice(2)}`;
 }
 
+function formatDate(): string {
+  const now = new Date();
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  };
+  const formatted = now.toLocaleDateString('pt-BR', options);
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
+
+
+// Custom Tooltip Component
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function CustomTooltip({ active, payload, label, formatter }: any) {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        style={{
+          background: 'rgba(17, 24, 39, 0.95)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '12px',
+          padding: '12px 16px',
+          boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+        }}
+      >
+        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>
+          {formatter ? formatter(label) : label}
+        </p>
+        {payload.map((entry: { name: string; value: number; color: string }, index: number) => (
+          <div
+            key={index}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginTop: '4px',
+            }}
+          >
+            <span
+              style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '3px',
+                background: entry.color,
+              }}
+            />
+            <span style={{ color: '#e5e7eb', fontSize: '13px' }}>
+              {entry.name}: <strong>{entry.value}</strong>
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+}
+
 export function Dashboard() {
-  const { usuario } = useAuth();
   const [loading, setLoading] = useState(true);
   const [resumo, setResumo] = useState<ResumoGeral | null>(null);
   const [projetosPorStatus, setProjetosPorStatus] = useState<ProjetosPorStatus[]>([]);
@@ -93,27 +161,45 @@ export function Dashboard() {
       setEvolucaoMensal(evolucaoData);
       setDemandasPorResponsavel(demandasResponsavelData.slice(0, 5));
     } catch (error) {
-      console.error('Erro ao carregar metricas:', error);
+      console.error('Erro ao carregar métricas:', error);
     } finally {
       setLoading(false);
     }
   }
 
   if (loading) {
-    return <div className={styles.loading}>Carregando metricas...</div>;
+    return (
+      <div className={styles.loading}>
+        <div className={styles.loadingSpinner} />
+        <span className={styles.loadingText}>Carregando métricas...</span>
+      </div>
+    );
   }
+
+  const totalProjetos = projetosPorStatus.reduce((acc, curr) => acc + curr.total, 0);
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
-        <h1 className={styles.title}>Dashboard</h1>
-        <p className={styles.subtitle}>Ola, {usuario?.nome.split(' ')[0]}! Veja o resumo das metricas do sistema.</p>
+        <div className={styles.headerTop}>
+          <div className={styles.headerInfo}>
+            <h1 className={styles.title}>Dashboard</h1>
+            <p className={styles.subtitle}>
+              Acompanhe as metricas e indicadores do departamento de Inovacoes e Tecnologia
+            </p>
+          </div>
+          <div className={styles.headerDate}>
+            <Calendar size={16} />
+            <span>{formatDate()}</span>
+          </div>
+        </div>
       </div>
 
-      {/* Cards de KPIs */}
+      {/* Stats Cards */}
       <div className={styles.stats}>
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(139, 92, 246, 0.2)' }}>
+          <div className={styles.statIcon} style={{ background: 'rgba(139, 92, 246, 0.15)' }}>
             <FolderKanban size={24} color="#8b5cf6" />
           </div>
           <div className={styles.statInfo}>
@@ -123,8 +209,8 @@ export function Dashboard() {
         </div>
 
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(59, 130, 246, 0.2)' }}>
-            <ClipboardList size={24} color="#3b82f6" />
+          <div className={styles.statIcon} style={{ background: 'rgba(99, 102, 241, 0.15)' }}>
+            <ClipboardList size={24} color="#6366f1" />
           </div>
           <div className={styles.statInfo}>
             <span className={styles.statValue}>{resumo?.demandas_abertas || 0}</span>
@@ -133,7 +219,7 @@ export function Dashboard() {
         </div>
 
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(245, 158, 11, 0.2)' }}>
+          <div className={styles.statIcon} style={{ background: 'rgba(245, 158, 11, 0.15)' }}>
             <Ticket size={24} color="#f59e0b" />
           </div>
           <div className={styles.statInfo}>
@@ -143,7 +229,7 @@ export function Dashboard() {
         </div>
 
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(239, 68, 68, 0.2)' }}>
+          <div className={styles.statIcon} style={{ background: 'rgba(239, 68, 68, 0.15)' }}>
             <AlertTriangle size={24} color="#ef4444" />
           </div>
           <div className={styles.statInfo}>
@@ -153,7 +239,7 @@ export function Dashboard() {
         </div>
 
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(34, 197, 94, 0.2)' }}>
+          <div className={styles.statIcon} style={{ background: 'rgba(34, 197, 94, 0.15)' }}>
             <Clock size={24} color="#22c55e" />
           </div>
           <div className={styles.statInfo}>
@@ -162,78 +248,102 @@ export function Dashboard() {
                 ? `${resumo?.tempo_medio_resolucao_dias}d`
                 : '-'}
             </span>
-            <span className={styles.statLabel}>Tempo Medio Resolucao</span>
+            <span className={styles.statLabel}>Tempo Médio</span>
           </div>
         </div>
 
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(6, 182, 212, 0.2)' }}>
+          <div className={styles.statIcon} style={{ background: 'rgba(6, 182, 212, 0.15)' }}>
             <Users size={24} color="#06b6d4" />
           </div>
           <div className={styles.statInfo}>
             <span className={styles.statValue}>{resumo?.usuarios_ativos || 0}</span>
-            <span className={styles.statLabel}>Usuarios Ativos</span>
+            <span className={styles.statLabel}>Usuários Ativos</span>
           </div>
         </div>
       </div>
 
-      {/* Graficos */}
+      {/* Charts */}
       <div className={styles.chartsGrid}>
-        {/* Evolucao Mensal */}
+        {/* Evolução Mensal */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <TrendingUp size={20} color="#3b82f6" />
-            <h3 className={styles.chartTitle}>Evolucao Mensal</h3>
+            <div className={styles.chartHeaderLeft}>
+              <div className={styles.chartIconWrapper} style={{ background: 'rgba(99, 102, 241, 0.15)' }}>
+                <TrendingUp size={20} color="#6366f1" />
+              </div>
+              <div>
+                <h3 className={styles.chartTitle}>Evolução Mensal</h3>
+                <p className={styles.chartSubtitle}>Últimos 6 meses</p>
+              </div>
+            </div>
           </div>
           <div className={styles.chartContainer}>
             {evolucaoMensal.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
-                <LineChart data={evolucaoMensal}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <AreaChart data={evolucaoMensal}>
+                  <defs>
+                    <linearGradient id="colorDemandas" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorChamadosAbertos" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorChamadosFechados" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis
                     dataKey="mes"
                     tickFormatter={formatMes}
-                    stroke="#6b7280"
+                    stroke="#4b5563"
                     fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
                   />
-                  <YAxis stroke="#6b7280" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      background: '#1f2937',
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                    }}
-                    labelFormatter={formatMes}
+                  <YAxis stroke="#4b5563" fontSize={12} tickLine={false} axisLine={false} />
+                  <Tooltip content={<CustomTooltip formatter={formatMes} />} />
+                  <Legend
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    formatter={(value) => <span style={{ color: '#9ca3af', fontSize: '12px' }}>{value}</span>}
                   />
-                  <Legend />
-                  <Line
+                  <Area
                     type="monotone"
                     dataKey="demandas_criadas"
                     name="Demandas"
-                    stroke="#3b82f6"
+                    stroke="#6366f1"
                     strokeWidth={2}
-                    dot={{ fill: '#3b82f6' }}
+                    fill="url(#colorDemandas)"
                   />
-                  <Line
+                  <Area
                     type="monotone"
                     dataKey="chamados_abertos"
                     name="Chamados Abertos"
                     stroke="#f59e0b"
                     strokeWidth={2}
-                    dot={{ fill: '#f59e0b' }}
+                    fill="url(#colorChamadosAbertos)"
                   />
-                  <Line
+                  <Area
                     type="monotone"
                     dataKey="chamados_fechados"
                     name="Chamados Fechados"
                     stroke="#22c55e"
                     strokeWidth={2}
-                    dot={{ fill: '#22c55e' }}
+                    fill="url(#colorChamadosFechados)"
                   />
-                </LineChart>
+                </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className={styles.emptyChart}>Sem dados para exibir</div>
+              <div className={styles.emptyChart}>
+                <div className={styles.emptyChartIcon}>
+                  <TrendingUp size={24} />
+                </div>
+                <span className={styles.emptyChartText}>Sem dados para exibir</span>
+              </div>
             )}
           </div>
         </div>
@@ -241,8 +351,15 @@ export function Dashboard() {
         {/* Projetos por Status */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <FolderKanban size={20} color="#8b5cf6" />
-            <h3 className={styles.chartTitle}>Projetos por Status</h3>
+            <div className={styles.chartHeaderLeft}>
+              <div className={styles.chartIconWrapper} style={{ background: 'rgba(139, 92, 246, 0.15)' }}>
+                <PieChartIcon size={20} color="#8b5cf6" />
+              </div>
+              <div>
+                <h3 className={styles.chartTitle}>Projetos por Status</h3>
+                <p className={styles.chartSubtitle}>{totalProjetos} projetos no total</p>
+              </div>
+            </div>
           </div>
           <div className={styles.chartContainer}>
             {projetosPorStatus.length > 0 ? (
@@ -254,32 +371,66 @@ export function Dashboard() {
                     nameKey="status"
                     cx="50%"
                     cy="50%"
+                    innerRadius={60}
                     outerRadius={100}
-                    label={(props) => {
-                      const entry = props.payload as ProjetosPorStatus;
-                      return `${formatStatus(entry.status)} (${entry.percentual}%)`;
-                    }}
-                    labelLine={false}
+                    paddingAngle={2}
                   >
                     {projetosPorStatus.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={STATUS_COLORS[entry.status] || COLORS[index % COLORS.length]}
+                        stroke="transparent"
                       />
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={{
-                      background: '#1f2937',
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload as ProjetosPorStatus;
+                        return (
+                          <div
+                            style={{
+                              background: 'rgba(17, 24, 39, 0.95)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              borderRadius: '12px',
+                              padding: '12px 16px',
+                              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+                            }}
+                          >
+                            <p style={{ color: '#e5e7eb', fontSize: '13px', fontWeight: 600 }}>
+                              {formatStatus(data.status)}
+                            </p>
+                            <p style={{ color: '#9ca3af', fontSize: '12px', marginTop: '4px' }}>
+                              {data.total} projetos ({data.percentual}%)
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
                     }}
-                    formatter={(value: number, name: string) => [value, formatStatus(name)]}
                   />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className={styles.emptyChart}>Sem dados para exibir</div>
+              <div className={styles.emptyChart}>
+                <div className={styles.emptyChartIcon}>
+                  <PieChartIcon size={24} />
+                </div>
+                <span className={styles.emptyChartText}>Sem dados para exibir</span>
+              </div>
+            )}
+            {projetosPorStatus.length > 0 && (
+              <div className={styles.legendWrapper}>
+                {projetosPorStatus.map((entry, index) => (
+                  <div key={index} className={styles.legendItem}>
+                    <span
+                      className={styles.legendDot}
+                      style={{ background: STATUS_COLORS[entry.status] || COLORS[index % COLORS.length] }}
+                    />
+                    <span>{formatStatus(entry.status)}</span>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>
@@ -287,74 +438,96 @@ export function Dashboard() {
         {/* Chamados por Setor */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <Ticket size={20} color="#f59e0b" />
-            <h3 className={styles.chartTitle}>Chamados por Setor</h3>
+            <div className={styles.chartHeaderLeft}>
+              <div className={styles.chartIconWrapper} style={{ background: 'rgba(245, 158, 11, 0.15)' }}>
+                <BarChart3 size={20} color="#f59e0b" />
+              </div>
+              <div>
+                <h3 className={styles.chartTitle}>Chamados por Setor</h3>
+                <p className={styles.chartSubtitle}>Top 6 setores</p>
+              </div>
+            </div>
           </div>
           <div className={styles.chartContainer}>
             {chamadosPorSetor.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={chamadosPorSetor.slice(0, 6)} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis type="number" stroke="#6b7280" fontSize={12} />
+                <BarChart data={chamadosPorSetor.slice(0, 6)} layout="vertical" barGap={4}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                  <XAxis type="number" stroke="#4b5563" fontSize={12} tickLine={false} axisLine={false} />
                   <YAxis
                     type="category"
                     dataKey="setor"
-                    stroke="#6b7280"
+                    stroke="#4b5563"
                     fontSize={11}
                     width={100}
-                    tickFormatter={(value) => value.length > 15 ? `${value.slice(0, 15)}...` : value}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => (value.length > 12 ? `${value.slice(0, 12)}...` : value)}
                   />
-                  <Tooltip
-                    contentStyle={{
-                      background: '#1f2937',
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                    }}
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    formatter={(value) => <span style={{ color: '#9ca3af', fontSize: '12px' }}>{value}</span>}
                   />
-                  <Legend />
-                  <Bar dataKey="abertos" name="Abertos" fill="#f59e0b" radius={[0, 4, 4, 0]} />
-                  <Bar dataKey="concluidos" name="Concluidos" fill="#22c55e" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="abertos" name="Abertos" fill="#f59e0b" radius={[0, 6, 6, 0]} barSize={16} />
+                  <Bar dataKey="concluidos" name="Concluídos" fill="#22c55e" radius={[0, 6, 6, 0]} barSize={16} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className={styles.emptyChart}>Sem dados para exibir</div>
+              <div className={styles.emptyChart}>
+                <div className={styles.emptyChartIcon}>
+                  <BarChart3 size={24} />
+                </div>
+                <span className={styles.emptyChartText}>Sem dados para exibir</span>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Demandas por Responsavel */}
+        {/* Demandas por Responsável */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <Users size={20} color="#06b6d4" />
-            <h3 className={styles.chartTitle}>Demandas por Responsavel</h3>
+            <div className={styles.chartHeaderLeft}>
+              <div className={styles.chartIconWrapper} style={{ background: 'rgba(6, 182, 212, 0.15)' }}>
+                <Users size={20} color="#06b6d4" />
+              </div>
+              <div>
+                <h3 className={styles.chartTitle}>Demandas por Responsável</h3>
+                <p className={styles.chartSubtitle}>Top 5 responsáveis</p>
+              </div>
+            </div>
           </div>
           <div className={styles.chartContainer}>
             {demandasPorResponsavel.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={demandasPorResponsavel}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <BarChart data={demandasPorResponsavel} barGap={2}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis
                     dataKey="responsavel_nome"
-                    stroke="#6b7280"
+                    stroke="#4b5563"
                     fontSize={11}
+                    tickLine={false}
+                    axisLine={false}
                     tickFormatter={(value) => value.split(' ')[0]}
                   />
-                  <YAxis stroke="#6b7280" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      background: '#1f2937',
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                    }}
+                  <YAxis stroke="#4b5563" fontSize={12} tickLine={false} axisLine={false} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    formatter={(value) => <span style={{ color: '#9ca3af', fontSize: '12px' }}>{value}</span>}
                   />
-                  <Legend />
-                  <Bar dataKey="a_fazer" name="A Fazer" stackId="a" fill="#6b7280" />
-                  <Bar dataKey="em_andamento" name="Em Andamento" stackId="a" fill="#3b82f6" />
-                  <Bar dataKey="concluidas" name="Concluidas" stackId="a" fill="#22c55e" />
+                  <Bar dataKey="a_fazer" name="A Fazer" stackId="a" fill="#6b7280" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="em_andamento" name="Em Andamento" stackId="a" fill="#6366f1" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="concluidas" name="Concluídas" stackId="a" fill="#22c55e" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className={styles.emptyChart}>Sem dados para exibir</div>
+              <div className={styles.emptyChart}>
+                <div className={styles.emptyChartIcon}>
+                  <Users size={24} />
+                </div>
+                <span className={styles.emptyChartText}>Sem dados para exibir</span>
+              </div>
             )}
           </div>
         </div>

@@ -1,6 +1,13 @@
 import { api } from './api';
 import { ApiResponse, AuthResponse, LoginDTO, Usuario } from '../types';
 
+interface RegisterDTO {
+  nome: string;
+  email: string;
+  senha: string;
+  setor?: string;
+}
+
 export const authService = {
   async login(data: LoginDTO): Promise<AuthResponse> {
     const response = await api.post<ApiResponse<AuthResponse>>('/auth/login', data);
@@ -10,6 +17,14 @@ export const authService = {
       return response.data.data;
     }
     throw new Error(response.data.error || 'Erro ao fazer login');
+  },
+
+  async register(data: RegisterDTO): Promise<Usuario> {
+    const response = await api.post<ApiResponse<Usuario>>('/auth/register', data);
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.error || 'Erro ao criar conta');
   },
 
   async me(): Promise<Usuario> {

@@ -5,6 +5,18 @@ import { Usuario, UsuarioSemSenha, CreateUsuarioDTO, PerfilUsuario } from '../ty
 // Cost factor para bcrypt (12 = ~300ms, equilibrio entre seguranca e performance)
 const BCRYPT_SALT_ROUNDS = 12;
 
+interface UsuarioFiltros {
+  perfil?: PerfilUsuario;
+  ativo?: boolean;
+  internos?: boolean;
+}
+
+interface UpdateUsuarioDTO {
+  nome?: string;
+  perfil?: PerfilUsuario;
+  setor?: string | null;
+}
+
 export class UsuarioService {
   async criar(data: CreateUsuarioDTO): Promise<UsuarioSemSenha> {
     // Hash da senha com cost factor seguro
@@ -32,6 +44,33 @@ export class UsuarioService {
     return usuario as UsuarioSemSenha;
   }
 
+  async listar(filtros: UsuarioFiltros = {}): Promise<UsuarioSemSenha[]> {
+    let query = supabase
+      .from('usuarios')
+      .select('id, nome, email, perfil, setor, data_criacao, ativo')
+      .order('nome', { ascending: true });
+
+    if (filtros.perfil) {
+      query = query.eq('perfil', filtros.perfil);
+    }
+
+    if (filtros.ativo !== undefined) {
+      query = query.eq('ativo', filtros.ativo);
+    }
+
+    if (filtros.internos) {
+      query = query.in('perfil', [PerfilUsuario.LIDER, PerfilUsuario.ANALISTA]);
+    }
+
+    const { data: usuarios, error } = await query;
+
+    if (error) {
+      throw new Error(`Erro ao listar usuários: ${error.message}`);
+    }
+
+    return (usuarios || []) as UsuarioSemSenha[];
+  }
+
   async buscarPorEmail(email: string): Promise<Usuario | null> {
     const { data: usuario, error } = await supabase
       .from('usuarios')
@@ -52,7 +91,6 @@ export class UsuarioService {
       .from('usuarios')
       .select('id, nome, email, perfil, setor, data_criacao, ativo')
       .eq('id', id)
-      .eq('ativo', true)
       .single();
 
     if (error || !usuario) {
@@ -60,6 +98,49 @@ export class UsuarioService {
     }
 
     return usuario as UsuarioSemSenha;
+  }
+
+  async atualizar(id: string, data: UpdateUsuarioDTO): Promise<UsuarioSemSenha | null> {
+    const { data: usuario, error } = await supabase
+      .from('usuarios')
+      .update(data)
+      .eq('id', id)
+      .select('id, nome, email, perfil, setor, data_criacao, ativo')
+      .single();
+
+    if (error) {
+      throw new Error(`Erro ao atualizar usuário: ${error.message}`);
+    }
+
+    return usuario as UsuarioSemSenha;
+  }
+
+  async alterarStatus(id: string, ativo: boolean): Promise<UsuarioSemSenha | null> {
+    const { data: usuario, error } = await supabase
+      .from('usuarios')
+      .update({ ativo })
+      .eq('id', id)
+      .select('id, nome, email, perfil, setor, data_criacao, ativo')
+      .single();
+
+    if (error) {
+      throw new Error(`Erro ao alterar status do usuário: ${error.message}`);
+    }
+
+    return usuario as UsuarioSemSenha;
+  }
+
+  async resetarSenha(id: string, novaSenha: string): Promise<void> {
+    const senhaHash = await bcrypt.hash(novaSenha, BCRYPT_SALT_ROUNDS);
+
+    const { error } = await supabase
+      .from('usuarios')
+      .update({ senha: senhaHash })
+      .eq('id', id);
+
+    if (error) {
+      throw new Error(`Erro ao resetar senha: ${error.message}`);
+    }
   }
 
   async verificarSenha(senha: string, senhaHash: string): Promise<boolean> {

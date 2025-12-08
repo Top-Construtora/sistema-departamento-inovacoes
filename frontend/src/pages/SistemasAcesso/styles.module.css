@@ -1,8 +1,28 @@
+/* ========================================
+   SISTEMAS & ACESSOS PAGE - Premium Design
+======================================== */
+
 .container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  animation: fadeIn 0.3s ease-out;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   HEADER
+======================================== */
 
 .header {
   display: flex;
@@ -12,8 +32,14 @@
   flex-wrap: wrap;
 }
 
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: white;
   margin: 0;
@@ -22,8 +48,123 @@
 .subtitle {
   color: #6b7280;
   font-size: 0.875rem;
-  margin: 0.25rem 0 0;
+  margin: 0;
 }
+
+.newButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.newButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* ========================================
+   STATS CARDS
+======================================== */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.875rem;
+}
+
+.statCard {
+  position: relative;
+  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+  transition: height 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  border-color: #374151;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.statCard:hover::before {
+  height: 4px;
+}
+
+.statCard.active {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: linear-gradient(145deg, #1a1f2e 0%, #111827 100%);
+}
+
+.statCardTotal::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.statCardDev::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.statCardCloud::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+.statCardInfra::before { background: linear-gradient(90deg, #6b7280, #9ca3af); }
+.statCardData::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.statIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.statCardTotal .statIcon { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+.statCardDev .statIcon { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.statCardCloud .statIcon { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
+.statCardInfra .statIcon { background: rgba(107, 114, 128, 0.2); color: #9ca3af; }
+.statCardData .statIcon { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+
+.statValue {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+/* ========================================
+   FILTERS
+======================================== */
 
 .filters {
   display: flex;
@@ -32,59 +173,157 @@
   flex-wrap: wrap;
 }
 
-.searchBox {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #111827;
-  border: 1px solid #374151;
-  border-radius: 8px;
-  padding: 0 0.75rem;
+.searchWrapper {
+  position: relative;
   flex: 1;
-  min-width: 200px;
+  min-width: 250px;
   max-width: 400px;
 }
 
-.searchBox svg {
-  color: #6b7280;
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4b5563;
+  pointer-events: none;
 }
 
-.searchBox input {
-  flex: 1;
-  background: none;
-  border: none;
+.searchInput {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 10px;
   color: white;
-  padding: 0.75rem 0;
   font-size: 0.875rem;
+  transition: all 0.2s;
 }
 
-.searchBox input:focus {
+.searchInput::placeholder {
+  color: #4b5563;
+}
+
+.searchInput:focus {
   outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-.searchBox input::placeholder {
-  color: #6b7280;
+.filterSelect {
+  padding: 0.75rem 1rem;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 180px;
 }
 
-.loading,
-.empty {
+.filterSelect:hover {
+  border-color: #4b5563;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+/* ========================================
+   LOADING STATE
+======================================== */
+
+.loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem;
+  padding: 5rem 2rem;
+  gap: 1rem;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #1f2937;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
   color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* ========================================
+   EMPTY STATE
+======================================== */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
   text-align: center;
 }
 
-.empty h3 {
-  margin: 1rem 0 0.5rem;
-  color: #9ca3af;
+.emptyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(145deg, #1f2937 0%, #111827 100%);
+  border-radius: 20px;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
 }
 
-.empty p {
-  margin: 0;
+.emptyTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin: 0 0 0.5rem;
 }
+
+.emptyText {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0 0 1.5rem;
+  max-width: 320px;
+}
+
+.emptyButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.emptyButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* ========================================
+   CONTENT SECTIONS
+======================================== */
 
 .content {
   display: flex;
@@ -102,43 +341,84 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
+  border-radius: 10px;
+  border-left: 4px solid;
 }
 
-.sectionHeader h2 {
+.sectionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.sectionTitle {
   font-size: 1rem;
   font-weight: 600;
   color: white;
   margin: 0;
+  flex: 1;
 }
 
-.count {
-  background: #1f2937;
+.sectionCount {
+  background: rgba(255, 255, 255, 0.1);
   color: #9ca3af;
   font-size: 0.75rem;
-  padding: 0.15rem 0.5rem;
-  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.25rem 0.625rem;
+  border-radius: 20px;
 }
+
+/* ========================================
+   SYSTEM CARDS GRID
+======================================== */
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
 }
 
+/* ========================================
+   SYSTEM CARD
+======================================== */
+
 .card {
-  background: #111827;
-  border-radius: 12px;
+  position: relative;
+  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
+  border-radius: 14px;
   padding: 1.25rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
   border: 1px solid transparent;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 14px 0 0 14px;
+  background: var(--card-color, #6366f1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .card:hover {
   border-color: #374151;
-  transform: translateY(-2px);
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .cardHeader {
@@ -146,6 +426,7 @@
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 1rem;
+  gap: 0.75rem;
 }
 
 .cardIcon {
@@ -155,13 +436,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.card:hover .cardIcon {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
 }
 
 .externalLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   color: #6b7280;
-  padding: 0.25rem;
-  border-radius: 4px;
+  border-radius: 8px;
   transition: all 0.2s;
+  background: transparent;
 }
 
 .externalLink:hover {
@@ -170,31 +462,70 @@
 }
 
 .cardTitle {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: white;
   margin: 0 0 0.5rem;
+  line-height: 1.4;
 }
 
 .cardDescription {
   font-size: 0.8rem;
   color: #9ca3af;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 1rem;
-  padding-top: 0.75rem;
+  padding-top: 0.875rem;
   border-top: 1px solid #1f2937;
+  gap: 0.75rem;
 }
 
 .responsavel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.75rem;
   color: #6b7280;
 }
 
-/* Form styles */
+.responsavelAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+  border-radius: 6px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: white;
+}
+
+.urlBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border-radius: 4px;
+}
+
+/* ========================================
+   FORM STYLES
+======================================== */
+
 .form {
   display: flex;
   flex-direction: column;
@@ -221,11 +552,17 @@
   color: white;
   font-size: 0.875rem;
   resize: vertical;
+  transition: all 0.2s;
+}
+
+.textareaWrapper textarea::placeholder {
+  color: #6b7280;
 }
 
 .textareaWrapper textarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .formActions {
@@ -233,4 +570,55 @@
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 0.5rem;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .newButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchWrapper {
+    max-width: none;
+  }
+
+  .filterSelect {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 1rem;
+  }
 }

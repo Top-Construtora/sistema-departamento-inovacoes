@@ -1,8 +1,28 @@
+/* ========================================
+   CHAMADOS PAGE - Premium Design
+======================================== */
+
 .container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  animation: fadeIn 0.3s ease-out;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   HEADER
+======================================== */
 
 .header {
   display: flex;
@@ -12,17 +32,37 @@
   flex-wrap: wrap;
 }
 
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: white;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.titleIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 12px;
+  color: white;
 }
 
 .subtitle {
   color: #6b7280;
   font-size: 0.875rem;
-  margin: 0.25rem 0 0;
+  margin: 0;
 }
 
 .actions {
@@ -31,134 +71,444 @@
   gap: 0.75rem;
 }
 
+.filterButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterButton:hover {
+  background: #374151;
+  color: white;
+}
+
+.filterButton.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #6366f1;
+  color: #818cf8;
+}
+
+.newButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.newButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* ========================================
+   STATS CARDS
+======================================== */
+
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1rem;
 }
 
 .statCard {
-  background: #111827;
-  border-radius: 10px;
-  padding: 1rem;
-  text-align: center;
+  position: relative;
+  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
+  border-radius: 14px;
+  padding: 1.25rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
   border: 1px solid transparent;
+  overflow: hidden;
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 14px 14px 0 0;
+  transition: height 0.3s ease;
 }
 
 .statCard:hover {
+  transform: translateY(-2px);
   border-color: #374151;
-  background: #1f2937;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
-.statValue {
-  display: block;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: white;
+.statCard:hover::before {
+  height: 4px;
 }
 
-.statLabel {
-  font-size: 0.75rem;
-  color: #6b7280;
-}
+.statCardNovos::before { background: linear-gradient(90deg, #6b7280, #9ca3af); }
+.statCardTriagem::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.statCardAtendimento::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.statCardAguardando::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.statCardConcluido::before { background: linear-gradient(90deg, #22c55e, #4ade80); }
 
-.filters {
-  display: flex;
-  align-items: flex-end;
-  gap: 1rem;
-  padding: 1rem;
-  background: #111827;
-  border-radius: 8px;
-  flex-wrap: wrap;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem;
-  color: #6b7280;
-}
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem;
-  color: #6b7280;
-  text-align: center;
-}
-
-.empty h3 {
-  margin: 1rem 0 0.5rem;
-  color: #9ca3af;
-}
-
-.empty p {
-  margin: 0;
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.card {
-  background: #111827;
-  border-radius: 12px;
-  padding: 1.25rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid transparent;
-}
-
-.card:hover {
-  border-color: #374151;
-}
-
-.cardHeader {
+.statHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.75rem;
 }
 
+.statIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  opacity: 0.9;
+}
+
+.statCardNovos .statIcon { background: rgba(107, 114, 128, 0.2); color: #9ca3af; }
+.statCardTriagem .statIcon { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+.statCardAtendimento .statIcon { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.statCardAguardando .statIcon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.statCardConcluido .statIcon { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+
+.statValue {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+/* ========================================
+   FILTERS PANEL
+======================================== */
+
+.filtersPanel {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  flex-wrap: wrap;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 160px;
+  flex: 1;
+}
+
+.filterLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filterSelect {
+  padding: 0.625rem 0.875rem;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterSelect:hover {
+  border-color: #4b5563;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.clearFiltersButton {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.625rem 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #f87171;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.clearFiltersButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+/* ========================================
+   LOADING STATE
+======================================== */
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  gap: 1rem;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #1f2937;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* ========================================
+   EMPTY STATE
+======================================== */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.emptyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(145deg, #1f2937 0%, #111827 100%);
+  border-radius: 20px;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.emptyTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin: 0 0 0.5rem;
+}
+
+.emptyText {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0 0 1.5rem;
+  max-width: 320px;
+}
+
+.emptyButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.emptyButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* ========================================
+   CHAMADO LIST
+======================================== */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+/* ========================================
+   CHAMADO CARD
+======================================== */
+
+.card {
+  position: relative;
+  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 14px 0 0 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  border-color: #374151;
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.cardNOVO::before { background: #6b7280; }
+.cardEM_TRIAGEM::before { background: #8b5cf6; }
+.cardEM_ATENDIMENTO::before { background: #3b82f6; }
+.cardAGUARDANDO_USUARIO::before { background: #f59e0b; }
+.cardEM_VALIDACAO::before { background: #06b6d4; }
+.cardCONCLUIDO::before { background: #22c55e; }
+.cardCANCELADO::before { background: #ef4444; }
+.cardREABERTO::before { background: #ec4899; }
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.875rem;
+  gap: 1rem;
+}
+
 .protocolo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.8rem;
   font-weight: 600;
   color: #6b7280;
-  font-family: monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
+
+.protocoloIcon {
+  color: #4b5563;
+}
+
+/* ========================================
+   STATUS BADGE
+======================================== */
 
 .status {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
   font-size: 0.7rem;
   font-weight: 600;
-  padding: 0.25rem 0.6rem;
+  padding: 0.35rem 0.75rem;
   border-radius: 20px;
   color: white;
   text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
+.statusNOVO { background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%); }
+.statusEM_TRIAGEM { background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%); }
+.statusEM_ATENDIMENTO { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); }
+.statusAGUARDANDO_USUARIO { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+.statusEM_VALIDACAO { background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%); }
+.statusCONCLUIDO { background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); }
+.statusCANCELADO { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+.statusREABERTO { background: linear-gradient(135deg, #db2777 0%, #ec4899 100%); }
+
+/* ========================================
+   CARD CONTENT
+======================================== */
+
 .cardTitle {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: white;
   margin: 0 0 0.5rem;
+  line-height: 1.4;
 }
 
 .cardDescricao {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: #9ca3af;
   margin: 0 0 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
+
+/* ========================================
+   CARD FOOTER
+======================================== */
 
 .cardFooter {
   display: flex;
@@ -166,66 +516,232 @@
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+  padding-top: 0.875rem;
+  border-top: 1px solid #1f2937;
 }
 
 .cardMeta {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
+  flex-wrap: wrap;
 }
+
+/* ========================================
+   CATEGORIA BADGE
+======================================== */
 
 .categoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.7rem;
-  padding: 0.2rem 0.5rem;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
   background: #1f2937;
   color: #9ca3af;
-  border-radius: 4px;
+  border-radius: 6px;
+  border: 1px solid #374151;
 }
+
+.categoriaPROBLEMA { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
+.categoriaMELHORIA { background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); color: #4ade80; }
+.categoriaREQUISICAO_ACESSO { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #60a5fa; }
+.categoriaAUTOMACAO { background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); color: #a78bfa; }
+.categoriaCONSULTORIA { background: rgba(6, 182, 212, 0.1); border-color: rgba(6, 182, 212, 0.3); color: #22d3ee; }
+.categoriaOUTROS { background: rgba(107, 114, 128, 0.1); border-color: rgba(107, 114, 128, 0.3); color: #9ca3af; }
+
+/* ========================================
+   PRIORIDADE BADGE
+======================================== */
 
 .prioridade {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 0.65rem;
   font-weight: 600;
-  padding: 0.2rem 0.4rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
   text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-.prioridadeBAIXA { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-.prioridadeMEDIA { background: rgba(234, 179, 8, 0.2); color: #eab308; }
-.prioridadeALTA { background: rgba(249, 115, 22, 0.2); color: #f97316; }
-.prioridadeCRITICA { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+.prioridadeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.prioridadeBAIXA {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+.prioridadeBAIXA .prioridadeDot { background: #22c55e; }
+
+.prioridadeMEDIA {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+.prioridadeMEDIA .prioridadeDot { background: #eab308; }
+
+.prioridadeALTA {
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+}
+.prioridadeALTA .prioridadeDot { background: #f97316; }
+
+.prioridadeCRITICA {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  animation: pulseCritica 2s ease-in-out infinite;
+}
+.prioridadeCRITICA .prioridadeDot { background: #ef4444; }
+
+@keyframes pulseCritica {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ========================================
+   CARD INFO
+======================================== */
 
 .cardInfo {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #6b7280;
 }
 
 .solicitante {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   max-width: 200px;
+}
+
+.solicitanteAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+  border-radius: 6px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+}
+
+.solicitanteNome {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.data {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #4b5563;
+  font-size: 0.75rem;
+}
+
+/* ========================================
+   ALERT BOXES
+======================================== */
+
 .alert {
-  margin-top: 0.75rem;
-  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.625rem 0.875rem;
   background: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  border-radius: 6px;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 8px;
   font-size: 0.8rem;
-  color: #f59e0b;
+  font-weight: 500;
+  color: #fbbf24;
+}
+
+.alertIcon {
+  flex-shrink: 0;
 }
 
 .alertSuccess {
-  margin-top: 0.75rem;
-  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.625rem 0.875rem;
   background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  border-radius: 6px;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 8px;
   font-size: 0.8rem;
-  color: #22c55e;
+  font-weight: 500;
+  color: #4ade80;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    justify-content: flex-end;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filtersPanel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterGroup {
+    min-width: 100%;
+  }
+
+  .cardFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .cardInfo {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filterButton,
+  .newButton {
+    width: 100%;
+    justify-content: center;
+  }
 }
