@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d1d5db;
+}
+
+.select {
+  padding: 0.6rem 0.8rem;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.select option {
+  background: #1f2937;
+  color: white;
+}
+
+.selectError {
+  border-color: #ef4444;
+}
+
+.error {
+  font-size: 0.75rem;
+  color: #ef4444;
+}

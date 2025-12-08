@@ -2,9 +2,13 @@ import bcrypt from 'bcryptjs';
 import { supabase } from '../config/database.js';
 import { Usuario, UsuarioSemSenha, CreateUsuarioDTO, PerfilUsuario } from '../types/usuario.js';
 
+// Cost factor para bcrypt (12 = ~300ms, equilibrio entre seguranca e performance)
+const BCRYPT_SALT_ROUNDS = 12;
+
 export class UsuarioService {
   async criar(data: CreateUsuarioDTO): Promise<UsuarioSemSenha> {
-    const senhaHash = await bcrypt.hash(data.senha, 10);
+    // Hash da senha com cost factor seguro
+    const senhaHash = await bcrypt.hash(data.senha, BCRYPT_SALT_ROUNDS);
 
     const { data: usuario, error } = await supabase
       .from('usuarios')

@@ -1,0 +1,747 @@
+/* ========================================
+   LOGIN PAGE - DESIGN PREMIUM
+   ======================================== */
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  background: linear-gradient(135deg, #05050a 0%, #0a0a14 50%, #080810 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grid de fundo sutil */
+.container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+/* Gradiente de luz ambiente */
+.ambientLight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambientLight::before {
+  content: '';
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.07) 0%, transparent 55%);
+  top: -350px;
+  left: -250px;
+  animation: ambientFloat 20s ease-in-out infinite;
+}
+
+.ambientLight::after {
+  content: '';
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 55%);
+  bottom: -250px;
+  right: 50px;
+  animation: ambientFloat 25s ease-in-out infinite reverse;
+}
+
+@keyframes ambientFloat {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, 20px);
+  }
+}
+
+/* Partículas flutuantes */
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(129, 140, 248, 0.3);
+  border-radius: 50%;
+  animation: float 15s infinite;
+}
+
+.particle:nth-child(1) {
+  left: 10%;
+  top: 20%;
+  animation-delay: 0s;
+  animation-duration: 20s;
+}
+
+.particle:nth-child(2) {
+  left: 20%;
+  top: 60%;
+  animation-delay: -5s;
+  animation-duration: 18s;
+  width: 3px;
+  height: 3px;
+  background: rgba(167, 139, 250, 0.25);
+}
+
+.particle:nth-child(3) {
+  left: 35%;
+  top: 30%;
+  animation-delay: -10s;
+  animation-duration: 22s;
+  width: 5px;
+  height: 5px;
+}
+
+.particle:nth-child(4) {
+  left: 45%;
+  top: 70%;
+  animation-delay: -7s;
+  animation-duration: 16s;
+  width: 3px;
+  height: 3px;
+  background: rgba(192, 132, 252, 0.2);
+}
+
+.particle:nth-child(5) {
+  left: 25%;
+  top: 85%;
+  animation-delay: -12s;
+  animation-duration: 24s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(20px);
+    opacity: 0;
+  }
+}
+
+/* ========================================
+   LAYOUT PRINCIPAL
+   ======================================== */
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ========================================
+   LADO ESQUERDO - BRANDING
+   ======================================== */
+.brandingSide {
+  display: none;
+  flex: 1;
+  padding: 3rem 4rem;
+  position: relative;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Glow que segue o mouse */
+.mouseGlow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(
+    circle,
+    rgba(99, 102, 241, 0.15) 0%,
+    rgba(139, 92, 246, 0.08) 30%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: left 0.1s ease-out, top 0.1s ease-out;
+  z-index: 0;
+}
+
+/* Logo no topo esquerdo */
+.logoHeader {
+  position: absolute;
+  top: 3rem;
+  left: 4rem;
+  z-index: 1;
+}
+
+.logoContainer {
+  width: 48px;
+  height: 48px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  box-shadow:
+    0 0 30px rgba(129, 140, 248, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.02);
+  transition: all 0.3s ease;
+}
+
+.logoContainer:hover {
+  border-color: rgba(129, 140, 248, 0.2);
+  box-shadow:
+    0 0 40px rgba(129, 140, 248, 0.15),
+    inset 0 0 20px rgba(255, 255, 255, 0.03);
+}
+
+.logoContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(129, 140, 248, 0.3));
+}
+
+/* Conteúdo central */
+.brandingCenter {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 520px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Subtítulo */
+.brandingSubtitle {
+  margin: 1.5rem 0 0;
+  color: #64748b;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+/* Footer com badge de segurança */
+.brandingFooter {
+  position: absolute;
+  bottom: 3rem;
+  left: 4rem;
+}
+
+.securityBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.securityBadge:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(129, 140, 248, 0.1);
+}
+
+.securityIcon {
+  width: 20px;
+  height: 20px;
+  color: #818cf8;
+  flex-shrink: 0;
+}
+
+.securityText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.securityText span:first-child {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.01em;
+}
+
+.securityText span:last-child {
+  font-size: 0.6875rem;
+  color: #475569;
+}
+
+/* Título principal */
+.brandingTitle {
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* Estilos do título */
+.titleWhite {
+  color: #ffffff;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.titleGradient {
+  background: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(129, 140, 248, 0.3));
+}
+
+/* ========================================
+   LADO DIREITO - FORMULÁRIO
+   ======================================== */
+.formSide {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+}
+
+/* Linha divisória gradiente */
+.formSide::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(129, 140, 248, 0.15) 30%,
+    rgba(167, 139, 250, 0.2) 50%,
+    rgba(129, 140, 248, 0.15) 70%,
+    transparent
+  );
+  display: none;
+}
+
+.formWrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Logo mobile */
+.mobileLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.mobileLogoIcon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(129, 140, 248, 0.1);
+}
+
+.mobileLogoIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mobileLogoText {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  letter-spacing: -0.01em;
+}
+
+/* ========================================
+   CARD DE LOGIN
+   ======================================== */
+.card {
+  background: linear-gradient(
+    165deg,
+    rgba(25, 30, 45, 0.95) 0%,
+    rgba(15, 18, 30, 0.98) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 25px 60px -15px rgba(0, 0, 0, 0.5),
+    0 0 80px -20px rgba(99, 102, 241, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Brilho sutil no topo do card */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(129, 140, 248, 0.4),
+    transparent
+  );
+}
+
+.cardHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.cardTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.cardSubtitle {
+  color: #64748b;
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+/* ========================================
+   FORMULÁRIO
+   ======================================== */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #475569;
+  pointer-events: none;
+  transition: color 0.2s, filter 0.2s;
+}
+
+.input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  background: rgba(10, 12, 20, 0.8);
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  border-radius: 12px;
+  color: #f1f5f9;
+  font-size: 0.9375rem;
+  transition: all 0.25s ease;
+}
+
+.input:hover {
+  border-color: rgba(100, 116, 139, 0.5);
+  background: rgba(10, 12, 20, 0.9);
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.6);
+  background: rgba(10, 12, 20, 1);
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.1),
+    0 0 20px rgba(99, 102, 241, 0.1);
+}
+
+.inputWrapper:focus-within .inputIcon {
+  color: #818cf8;
+  filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.5));
+}
+
+.input::placeholder {
+  color: #4b5563;
+}
+
+/* Campo de senha */
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordWrapper .input {
+  padding-right: 3.5rem;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.passwordToggle:hover {
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ========================================
+   BOTÃO DE SUBMIT
+   ======================================== */
+.submitButton {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px -5px rgba(99, 102, 241, 0.4);
+}
+
+.submitButton::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 30px -5px rgba(99, 102, 241, 0.5),
+    0 0 40px -10px rgba(129, 140, 248, 0.4);
+}
+
+.submitButton:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submitButton span {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Spinner */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* ========================================
+   BOX DE ERRO
+   ======================================== */
+.errorBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.errorIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: #f87171;
+  margin-top: 1px;
+}
+
+.errorBox span {
+  color: #fca5a5;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* ========================================
+   FOOTER DO CARD
+   ======================================== */
+.cardFooter {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: center;
+}
+
+.cardFooter p {
+  margin: 0;
+  color: #475569;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+@media (min-width: 1024px) {
+  .brandingSide {
+    display: flex;
+  }
+
+  .formSide::before {
+    display: block;
+  }
+
+  .mobileLogo {
+    display: none;
+  }
+
+  .formSide {
+    flex: 0 0 500px;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+  }
+}
+
+@media (min-width: 1280px) {
+  .formSide {
+    flex: 0 0 540px;
+  }
+
+  .brandingTitle {
+    font-size: 3.25rem;
+  }
+
+  .brandingSubtitle {
+    font-size: 1.125rem;
+  }
+
+  .logoContainer {
+    width: 52px;
+    height: 52px;
+  }
+
+  .card {
+    padding: 3rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .brandingTitle {
+    font-size: 3.5rem;
+  }
+
+  .brandingSubtitle {
+    font-size: 1.1875rem;
+    max-width: 460px;
+  }
+
+  .logoContainer {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Telas pequenas */
+@media (max-width: 480px) {
+  .formSide {
+    padding: 1.5rem;
+  }
+
+  .card {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .cardTitle {
+    font-size: 1.5rem;
+  }
+
+  .mobileLogoIcon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .mobileLogoText {
+    font-size: 1.125rem;
+  }
+}

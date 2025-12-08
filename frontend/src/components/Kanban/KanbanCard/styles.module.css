@@ -1,0 +1,82 @@
+.card {
+  background: #1f2937;
+  border-radius: 8px;
+  padding: 0.875rem;
+  cursor: grab;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.card:hover {
+  border-color: #374151;
+  transform: translateY(-2px);
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.tipo {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: #6b7280;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.prioridade {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  color: white;
+  text-transform: uppercase;
+}
+
+.titulo {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.descricao {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0 0 0.75rem;
+  line-height: 1.4;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.responsavel,
+.prazo {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.projeto {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #374151;
+  font-size: 0.7rem;
+  color: #3b82f6;
+}

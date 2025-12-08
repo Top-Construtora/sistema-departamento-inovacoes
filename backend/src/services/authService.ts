@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { env } from '../config/env.js';
 import { usuarioService } from './usuarioService.js';
 import { JwtPayload, LoginDTO, CreateUsuarioDTO, UsuarioSemSenha } from '../types/usuario.js';
@@ -46,9 +46,10 @@ export class AuthService {
       perfil: usuario.perfil,
     };
 
+    // expiresIn pode ser string (ex: "7d", "1h") ou numero de segundos
     return jwt.sign(payload, env.jwtSecret, {
       expiresIn: env.jwtExpiresIn,
-    });
+    } as SignOptions);
   }
 
   verificarToken(token: string): JwtPayload {

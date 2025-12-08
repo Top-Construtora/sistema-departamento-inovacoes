@@ -1,0 +1,533 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0;
+}
+
+.loading,
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.empty h3 {
+  margin: 1rem 0 0.5rem;
+  color: #9ca3af;
+}
+
+.empty p {
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Section styles */
+.section {
+  background: #111827;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #1f2937;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sectionTitle h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.sectionTitle svg {
+  color: #6b7280;
+}
+
+.count {
+  background: #1f2937;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  margin-left: 0.5rem;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addButton:hover {
+  background: #2563eb;
+}
+
+.emptySection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.emptySection svg {
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.emptySection p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Logo grid */
+.logosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.logoCard {
+  background: #1f2937;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.logoCard:hover {
+  background: #374151;
+}
+
+.logoPreview {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #111827;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.logoPreview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.logoPlaceholder {
+  color: #4b5563;
+}
+
+.logoInfo {
+  text-align: center;
+  width: 100%;
+}
+
+.logoName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  margin: 0 0 0.25rem;
+}
+
+.logoType {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.logoCard:hover .deleteButton,
+.colorCard:hover .deleteButton,
+.fontCard:hover .deleteButton,
+.templateCard:hover .deleteButton {
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* Colors grid */
+.colorsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.colorCard {
+  background: #1f2937;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.colorCard:hover {
+  transform: translateY(-2px);
+}
+
+.colorPreview {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.colorPreview:hover {
+  opacity: 0.9;
+}
+
+.colorHex {
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+}
+
+.colorPreview:hover .colorHex {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.colorInfo {
+  padding: 0.75rem;
+}
+
+.colorName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  margin: 0 0 0.25rem;
+}
+
+.colorCategory {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.colorCard .deleteButton {
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+}
+
+.colorCard .deleteButton:hover {
+  background: rgba(239, 68, 68, 0.8);
+}
+
+/* Fonts grid */
+.fontsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.fontCard {
+  background: #1f2937;
+  border-radius: 12px;
+  padding: 1.25rem;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.fontCard:hover {
+  background: #374151;
+}
+
+.fontName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 0.5rem;
+}
+
+.fontMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.fontUso {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: #3b82f6;
+  color: white;
+}
+
+.fontFamilia {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.fontPreview {
+  font-size: 1.5rem;
+  color: #9ca3af;
+  padding: 0.75rem;
+  background: #111827;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Templates */
+.templateGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.templateGroup h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.templatesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.templateCard {
+  background: #1f2937;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.templateCard:hover {
+  transform: translateY(-2px);
+}
+
+.templatePreview {
+  height: 120px;
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.templatePreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.templatePlaceholder {
+  color: #4b5563;
+}
+
+.templateInfo {
+  padding: 1rem;
+}
+
+.templateName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  margin: 0 0 0.5rem;
+}
+
+.templateMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.templateFormato {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: #374151;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.templateDownloads {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.downloadButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.downloadButton:hover {
+  background: #059669;
+}
+
+.templateCard .deleteButton {
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.templateCard:hover .deleteButton {
+  opacity: 1;
+}
+
+/* Form styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Color input preview */
+.colorInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.colorSwatch {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 2px solid #374151;
+  flex-shrink: 0;
+}
+
+.colorInputWrapper > div {
+  flex: 1;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

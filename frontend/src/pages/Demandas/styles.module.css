@@ -1,0 +1,148 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.viewToggle {
+  display: flex;
+  background: #1f2937;
+  border-radius: 8px;
+  padding: 0.25rem;
+}
+
+.viewButton {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.viewButton:hover {
+  color: white;
+}
+
+.viewButton.active {
+  background: #374151;
+  color: white;
+}
+
+.filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: 1rem;
+  background: #111827;
+  border-radius: 8px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  color: #6b7280;
+}
+
+/* List View */
+.list {
+  background: #111827;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #6b7280;
+  border-bottom: 1px solid #1f2937;
+}
+
+.table td {
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  color: #d1d5db;
+  border-bottom: 1px solid #1f2937;
+}
+
+.table tbody tr {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.demandaTitulo {
+  display: block;
+  color: white;
+  font-weight: 500;
+}
+
+.demandaProjeto {
+  display: block;
+  font-size: 0.75rem;
+  color: #3b82f6;
+  margin-top: 0.25rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.badgeBAIXA { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+.badgeMEDIA { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+.badgeALTA { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+.badgeCRITICA { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+.badgeStatusA_FAZER { background: rgba(107, 114, 128, 0.2); color: #6b7280; }
+.badgeStatusEM_ANDAMENTO { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+.badgeStatusEM_VALIDACAO { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.badgeStatusCONCLUIDA { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
