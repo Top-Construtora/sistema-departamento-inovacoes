@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts';
-import { Layout } from './components';
+import { Layout, DefinirSenhaModal } from './components';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Projetos } from './pages/Projetos';
@@ -18,6 +18,7 @@ export function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <DefinirSenhaModal />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>

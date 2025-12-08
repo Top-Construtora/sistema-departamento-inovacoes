@@ -7,5 +7,6 @@ const router = Router();
 router.post('/register', authController.registrar);
 router.post('/login', authController.login);
 router.get('/me', autenticar, authController.me);
+router.post('/definir-senha', autenticar, authController.definirNovaSenha);
 
 export { router as authRoutes };

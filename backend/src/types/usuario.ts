@@ -13,6 +13,7 @@ export interface Usuario {
   setor?: string | null;
   data_criacao: Date;
   ativo: boolean;
+  deve_trocar_senha: boolean;
 }
 
 export interface UsuarioSemSenha {
@@ -23,6 +24,7 @@ export interface UsuarioSemSenha {
   setor?: string | null;
   data_criacao: Date;
   ativo: boolean;
+  deve_trocar_senha: boolean;
 }
 
 export interface CreateUsuarioDTO {
@@ -31,6 +33,7 @@ export interface CreateUsuarioDTO {
   senha: string;
   perfil?: PerfilUsuario;
   setor?: string;
+  deve_trocar_senha?: boolean;
 }
 
 export interface LoginDTO {

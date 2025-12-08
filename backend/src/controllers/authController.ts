@@ -168,6 +168,45 @@ export class AuthController {
       });
     }
   }
+
+  async definirNovaSenha(req: Request, res: Response): Promise<void> {
+    try {
+      if (!req.usuario) {
+        res.status(401).json({
+          success: false,
+          error: 'Não autenticado',
+        });
+        return;
+      }
+
+      const { novaSenha } = req.body;
+
+      if (!novaSenha || novaSenha.length < 6) {
+        res.status(400).json({
+          success: false,
+          error: 'Senha deve ter pelo menos 6 caracteres',
+        });
+        return;
+      }
+
+      const usuario = await usuarioService.definirSenhaPrimeiroAcesso(req.usuario.userId, novaSenha);
+
+      // Gerar novo token com dados atualizados
+      const token = authService.gerarToken(usuario);
+
+      res.json({
+        success: true,
+        data: { usuario, token },
+        message: 'Senha definida com sucesso',
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao definir senha';
+      res.status(500).json({
+        success: false,
+        error: message,
+      });
+    }
+  }
 }
 
 export const authController = new AuthController();

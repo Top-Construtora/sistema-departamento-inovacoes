@@ -37,6 +37,7 @@ export class UsuarioController {
         senha,
         perfil: perfil || PerfilUsuario.EXTERNO,
         setor: setor || null,
+        deve_trocar_senha: true, // Usuário criado internamente deve trocar senha no primeiro login
       });
 
       res.status(201).json({

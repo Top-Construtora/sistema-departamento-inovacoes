@@ -35,6 +35,16 @@ export const authService = {
     throw new Error(response.data.error || 'Erro ao buscar usuário');
   },
 
+  async definirNovaSenha(novaSenha: string): Promise<AuthResponse> {
+    const response = await api.post<ApiResponse<AuthResponse>>('/auth/definir-senha', { novaSenha });
+    if (response.data.success && response.data.data) {
+      localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('usuario', JSON.stringify(response.data.data.usuario));
+      return response.data.data;
+    }
+    throw new Error(response.data.error || 'Erro ao definir senha');
+  },
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');

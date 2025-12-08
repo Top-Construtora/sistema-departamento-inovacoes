@@ -32,6 +32,7 @@ export class AuthService {
       setor: usuario.setor,
       data_criacao: usuario.data_criacao,
       ativo: usuario.ativo,
+      deve_trocar_senha: usuario.deve_trocar_senha,
     };
 
     const token = this.gerarToken(usuarioSemSenha);

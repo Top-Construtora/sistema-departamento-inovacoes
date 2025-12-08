@@ -7,7 +7,9 @@ interface AuthContextData {
   loading: boolean;
   login: (data: LoginDTO) => Promise<Usuario>;
   logout: () => void;
+  definirNovaSenha: (novaSenha: string) => Promise<Usuario>;
   isAuthenticated: boolean;
+  deveTrocarSenha: boolean;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -35,6 +37,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authService.logout();
   }
 
+  async function definirNovaSenha(novaSenha: string): Promise<Usuario> {
+    const response = await authService.definirNovaSenha(novaSenha);
+    setUsuario(response.usuario);
+    return response.usuario;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -42,7 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         login,
         logout,
+        definirNovaSenha,
         isAuthenticated: !!usuario,
+        deveTrocarSenha: !!usuario?.deve_trocar_senha,
       }}
     >
       {children}

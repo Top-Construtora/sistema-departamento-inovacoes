@@ -62,6 +62,7 @@ export interface Usuario {
   setor?: string | null;
   data_criacao: string;
   ativo: boolean;
+  deve_trocar_senha?: boolean;
 }
 
 export interface Projeto {

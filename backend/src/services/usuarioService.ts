@@ -30,8 +30,9 @@ export class UsuarioService {
         senha: senhaHash,
         perfil: data.perfil || PerfilUsuario.EXTERNO,
         setor: data.setor || null,
+        deve_trocar_senha: data.deve_trocar_senha ?? false,
       })
-      .select('id, nome, email, perfil, setor, data_criacao, ativo')
+      .select('id, nome, email, perfil, setor, data_criacao, ativo, deve_trocar_senha')
       .single();
 
     if (error) {
@@ -47,7 +48,7 @@ export class UsuarioService {
   async listar(filtros: UsuarioFiltros = {}): Promise<UsuarioSemSenha[]> {
     let query = supabase
       .from('usuarios')
-      .select('id, nome, email, perfil, setor, data_criacao, ativo')
+      .select('id, nome, email, perfil, setor, data_criacao, ativo, deve_trocar_senha')
       .order('nome', { ascending: true });
 
     if (filtros.perfil) {
@@ -89,7 +90,7 @@ export class UsuarioService {
   async buscarPorId(id: string): Promise<UsuarioSemSenha | null> {
     const { data: usuario, error } = await supabase
       .from('usuarios')
-      .select('id, nome, email, perfil, setor, data_criacao, ativo')
+      .select('id, nome, email, perfil, setor, data_criacao, ativo, deve_trocar_senha')
       .eq('id', id)
       .single();
 
@@ -105,7 +106,7 @@ export class UsuarioService {
       .from('usuarios')
       .update(data)
       .eq('id', id)
-      .select('id, nome, email, perfil, setor, data_criacao, ativo')
+      .select('id, nome, email, perfil, setor, data_criacao, ativo, deve_trocar_senha')
       .single();
 
     if (error) {
@@ -120,7 +121,7 @@ export class UsuarioService {
       .from('usuarios')
       .update({ ativo })
       .eq('id', id)
-      .select('id, nome, email, perfil, setor, data_criacao, ativo')
+      .select('id, nome, email, perfil, setor, data_criacao, ativo, deve_trocar_senha')
       .single();
 
     if (error) {
@@ -141,6 +142,23 @@ export class UsuarioService {
     if (error) {
       throw new Error(`Erro ao resetar senha: ${error.message}`);
     }
+  }
+
+  async definirSenhaPrimeiroAcesso(id: string, novaSenha: string): Promise<UsuarioSemSenha> {
+    const senhaHash = await bcrypt.hash(novaSenha, BCRYPT_SALT_ROUNDS);
+
+    const { data: usuario, error } = await supabase
+      .from('usuarios')
+      .update({ senha: senhaHash, deve_trocar_senha: false })
+      .eq('id', id)
+      .select('id, nome, email, perfil, setor, data_criacao, ativo, deve_trocar_senha')
+      .single();
+
+    if (error) {
+      throw new Error(`Erro ao definir senha: ${error.message}`);
+    }
+
+    return usuario as UsuarioSemSenha;
   }
 
   async verificarSenha(senha: string, senhaHash: string): Promise<boolean> {
