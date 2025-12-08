@@ -7,6 +7,9 @@ const router = Router();
 // Todas as rotas requerem autenticação
 router.use(autenticar);
 
+// Criar usuário - apenas líderes
+router.post('/', apenasLider, usuarioController.criar);
+
 // Listar usuários - apenas internos podem ver todos
 router.get('/', usuarioController.listar);
 

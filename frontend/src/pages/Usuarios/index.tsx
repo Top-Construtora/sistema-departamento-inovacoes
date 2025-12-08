@@ -9,7 +9,10 @@ import {
   Shield,
   Crown,
   UserCheck,
-  Briefcase
+  Briefcase,
+  Plus,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { Usuario, PerfilUsuario } from '../../types';
 import { usuarioService } from '../../services';
@@ -30,6 +33,14 @@ interface EditModalData {
   setor: string;
 }
 
+interface CreateModalData {
+  nome: string;
+  email: string;
+  senha: string;
+  perfil: PerfilUsuario;
+  setor: string;
+}
+
 export function Usuarios() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +50,9 @@ export function Usuarios() {
   // Modal states
   const [editModal, setEditModal] = useState<EditModalData | null>(null);
   const [passwordModal, setPasswordModal] = useState<{ id: string; nome: string } | null>(null);
+  const [createModal, setCreateModal] = useState<CreateModalData | null>(null);
   const [newPassword, setNewPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -138,6 +151,48 @@ export function Usuarios() {
     }
   }
 
+  async function handleCreateUser() {
+    if (!createModal) return;
+    if (!createModal.nome || !createModal.email || !createModal.senha) {
+      alert('Preencha todos os campos obrigatórios');
+      return;
+    }
+    if (createModal.senha.length < 6) {
+      alert('A senha deve ter no mínimo 6 caracteres');
+      return;
+    }
+    setSaving(true);
+    try {
+      const novoUsuario = await usuarioService.criar({
+        nome: createModal.nome,
+        email: createModal.email,
+        senha: createModal.senha,
+        perfil: createModal.perfil,
+        setor: createModal.setor || undefined,
+      });
+      setUsuarios(prev => [...prev, novoUsuario]);
+      setCreateModal(null);
+      setShowPassword(false);
+      alert('Usuário criado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao criar usuário:', error);
+      alert(error instanceof Error ? error.message : 'Erro ao criar usuário');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function openCreateModal() {
+    setCreateModal({
+      nome: '',
+      email: '',
+      senha: '',
+      perfil: PerfilUsuario.EXTERNO,
+      setor: '',
+    });
+    setShowPassword(false);
+  }
+
   function getInitials(nome: string): string {
     return nome.split(' ').slice(0, 2).map(n => n.charAt(0).toUpperCase()).join('');
   }
@@ -147,7 +202,7 @@ export function Usuarios() {
       <div className={styles.container}>
         <div className={styles.loading}>
           <div className={styles.loadingSpinner} />
-          <span className={styles.loadingText}>Carregando usuarios...</span>
+          <span className={styles.loadingText}>Carregando usuários...</span>
         </div>
       </div>
     );
@@ -159,11 +214,15 @@ export function Usuarios() {
       <div className={styles.header}>
         <div className={styles.headerTop}>
           <div className={styles.headerInfo}>
-            <h1 className={styles.title}>Usuarios</h1>
+            <h1 className={styles.title}>Usuários</h1>
             <p className={styles.subtitle}>
-              Gerencie os usuarios e permissoes do sistema
+              Gerencie os usuários e permissões do sistema
             </p>
           </div>
+          <button className={styles.btnCreate} onClick={openCreateModal}>
+            <Plus size={18} />
+            Novo Usuário
+          </button>
         </div>
 
         {/* Stats Cards */}
@@ -191,7 +250,7 @@ export function Usuarios() {
               </div>
             </div>
             <span className={styles.statValue}>{stats.lideres}</span>
-            <span className={styles.statLabel}>Lideres</span>
+            <span className={styles.statLabel}>Líderes</span>
           </div>
 
           <div
@@ -240,7 +299,7 @@ export function Usuarios() {
             <Search size={18} className={styles.searchIcon} />
             <input
               type="text"
-              placeholder="Buscar usuarios..."
+              placeholder="Buscar usuários..."
               className={styles.searchInput}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -460,6 +519,95 @@ export function Usuarios() {
                 disabled={saving || newPassword.length < 6}
               >
                 {saving ? 'Salvando...' : 'Resetar Senha'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Criar Usuário */}
+      {createModal && (
+        <div className={styles.modalOverlay} onClick={() => setCreateModal(null)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>Novo Usuário</h3>
+              <button className={styles.modalClose} onClick={() => { setCreateModal(null); setShowPassword(false); }}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Nome *</label>
+                <input
+                  type="text"
+                  className={styles.formInput}
+                  value={createModal.nome}
+                  onChange={(e) => setCreateModal({ ...createModal, nome: e.target.value })}
+                  placeholder="Nome completo"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Email *</label>
+                <input
+                  type="email"
+                  className={styles.formInput}
+                  value={createModal.email}
+                  onChange={(e) => setCreateModal({ ...createModal, email: e.target.value })}
+                  placeholder="email@exemplo.com"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Senha *</label>
+                <div className={styles.passwordWrapper}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className={styles.formInput}
+                    value={createModal.senha}
+                    onChange={(e) => setCreateModal({ ...createModal, senha: e.target.value })}
+                    placeholder="Mínimo 6 caracteres"
+                  />
+                  <button
+                    type="button"
+                    className={styles.passwordToggle}
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Perfil</label>
+                <select
+                  className={styles.formSelect}
+                  value={createModal.perfil}
+                  onChange={(e) => setCreateModal({ ...createModal, perfil: e.target.value as PerfilUsuario })}
+                >
+                  <option value="EXTERNO">Externo</option>
+                  <option value="ANALISTA">Analista</option>
+                  <option value="LIDER">Líder</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Setor</label>
+                <input
+                  type="text"
+                  className={styles.formInput}
+                  value={createModal.setor}
+                  onChange={(e) => setCreateModal({ ...createModal, setor: e.target.value })}
+                  placeholder="Ex: Engenharia, Comercial..."
+                />
+              </div>
+            </div>
+            <div className={styles.modalFooter}>
+              <button className={styles.btnCancel} onClick={() => { setCreateModal(null); setShowPassword(false); }}>
+                Cancelar
+              </button>
+              <button
+                className={styles.btnSave}
+                onClick={handleCreateUser}
+                disabled={saving || !createModal.nome || !createModal.email || createModal.senha.length < 6}
+              >
+                {saving ? 'Criando...' : 'Criar Usuário'}
               </button>
             </div>
           </div>

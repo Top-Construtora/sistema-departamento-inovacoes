@@ -3,6 +3,56 @@ import { usuarioService } from '../services/usuarioService.js';
 import { PerfilUsuario } from '../types/usuario.js';
 
 export class UsuarioController {
+  async criar(req: Request, res: Response): Promise<void> {
+    try {
+      const { nome, email, senha, perfil, setor } = req.body;
+
+      if (!nome || !email || !senha) {
+        res.status(400).json({
+          success: false,
+          error: 'Nome, email e senha são obrigatórios',
+        });
+        return;
+      }
+
+      if (senha.length < 6) {
+        res.status(400).json({
+          success: false,
+          error: 'Senha deve ter no mínimo 6 caracteres',
+        });
+        return;
+      }
+
+      if (perfil && !Object.values(PerfilUsuario).includes(perfil)) {
+        res.status(400).json({
+          success: false,
+          error: `Perfil inválido. Use: ${Object.values(PerfilUsuario).join(', ')}`,
+        });
+        return;
+      }
+
+      const usuario = await usuarioService.criar({
+        nome,
+        email,
+        senha,
+        perfil: perfil || PerfilUsuario.EXTERNO,
+        setor: setor || null,
+      });
+
+      res.status(201).json({
+        success: true,
+        data: usuario,
+        message: 'Usuário criado com sucesso',
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao criar usuário';
+      res.status(400).json({
+        success: false,
+        error: message,
+      });
+    }
+  }
+
   async listar(req: Request, res: Response): Promise<void> {
     try {
       const { perfil, ativo, internos } = req.query;

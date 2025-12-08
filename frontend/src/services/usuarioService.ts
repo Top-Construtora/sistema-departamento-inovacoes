@@ -7,7 +7,23 @@ interface UpdateUsuarioDTO {
   setor?: string | null;
 }
 
+interface CreateUsuarioDTO {
+  nome: string;
+  email: string;
+  senha: string;
+  perfil?: PerfilUsuario;
+  setor?: string;
+}
+
 export const usuarioService = {
+  async criar(data: CreateUsuarioDTO): Promise<Usuario> {
+    const response = await api.post<ApiResponse<Usuario>>('/usuarios', data);
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.error || 'Erro ao criar usuário');
+  },
+
   async listar(): Promise<Usuario[]> {
     const response = await api.get<ApiResponse<Usuario[]>>('/usuarios');
     if (response.data.success && response.data.data) {

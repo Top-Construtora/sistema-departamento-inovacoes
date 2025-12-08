@@ -45,7 +45,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         { path: '/portfolio', icon: Briefcase, label: 'Portfolio' },
         { path: '/sistemas-acesso', icon: Key, label: 'Sistemas de Acesso' },
         { path: '/identidade-visual', icon: Palette, label: 'Identidade Visual' },
-        ...(isLider ? [{ path: '/usuarios', icon: Users, label: 'Usuarios' }] : []),
+        ...(isLider ? [{ path: '/usuarios', icon: Users, label: 'Usuários' }] : []),
       ]
     : [
         { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
