@@ -62,8 +62,8 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           </div>
           {!collapsed && (
             <div className={styles.logoText}>
-              <span className={styles.logoTitle}>Inovacoes</span>
-              <span className={styles.logoSubtitle}>Tecnologia</span>
+              <span className={styles.logoTitle}>Inovações</span>
+              <span className={styles.logoSubtitle}>& Tecnologia</span>
             </div>
           )}
         </Link>
