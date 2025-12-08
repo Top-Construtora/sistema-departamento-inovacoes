@@ -54,15 +54,6 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   return (
     <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
-      {/* Toggle Button */}
-      <button
-        className={styles.toggleButton}
-        onClick={onToggle}
-        title={collapsed ? 'Expandir menu' : 'Recolher menu'}
-      >
-        {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-      </button>
-
       {/* Header com Logo */}
       <div className={styles.header}>
         <Link to="/" className={styles.logoLink}>
@@ -120,6 +111,16 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           </>
         )}
       </nav>
+
+      {/* Toggle Button */}
+      <button
+        className={styles.toggleButton}
+        onClick={onToggle}
+        title={collapsed ? 'Expandir menu' : 'Recolher menu'}
+      >
+        {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        {!collapsed && <span className={styles.toggleLabel}>Recolher</span>}
+      </button>
 
       {/* Footer com Usuario */}
       <div className={styles.footer}>
