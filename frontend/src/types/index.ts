@@ -85,6 +85,19 @@ export interface Projeto {
   ativo: boolean;
 }
 
+export interface CreateProjetoDTO {
+  nome: string;
+  descricao?: string;
+  objetivo?: string;
+  tipo?: TipoProjeto;
+  status?: StatusProjeto;
+  lider_id?: string;
+  data_inicio?: string;
+  data_fim_prevista?: string;
+  risco?: NivelRisco;
+  tags?: string[];
+}
+
 export interface Demanda {
   id: string;
   titulo: string;
@@ -214,6 +227,8 @@ export enum TipoSistemaAcesso {
   BANCO_DADOS = 'BANCO_DADOS',
   API_EXTERNA = 'API_EXTERNA',
   FERRAMENTA_INTERNA = 'FERRAMENTA_INTERNA',
+  SISTEMA_EXTERNO = 'SISTEMA_EXTERNO',
+  SISTEMA_INTERNO = 'SISTEMA_INTERNO',
   OUTRO = 'OUTRO',
 }
 

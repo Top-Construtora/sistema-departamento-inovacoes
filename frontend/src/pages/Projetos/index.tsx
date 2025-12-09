@@ -1,13 +1,15 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FolderKanban,
   Calendar,
   Search,
-  FolderOpen
+  FolderOpen,
+  Plus,
 } from 'lucide-react';
-import { Projeto, StatusProjeto } from '../../types';
-import { projetoService } from '../../services';
+import { Button, Input, Select, Modal } from '../../components/ui';
+import { Projeto, StatusProjeto, TipoProjeto, NivelRisco, CreateProjetoDTO, Usuario } from '../../types';
+import { projetoService, usuarioService } from '../../services';
 import styles from './styles.module.css';
 
 const statusLabels: Record<StatusProjeto, string> = {
@@ -37,6 +39,21 @@ const statusProgress: Record<StatusProjeto, number> = {
   ARQUIVADO: 100,
 };
 
+const tipoLabels: Record<TipoProjeto, string> = {
+  SISTEMA_INTERNO: 'Sistema Interno',
+  AUTOMACAO: 'Automação',
+  PESQUISA: 'Pesquisa',
+  INTEGRACAO: 'Integração',
+  MELHORIA: 'Melhoria',
+  OUTRO: 'Outro',
+};
+
+const riscoLabels: Record<NivelRisco, string> = {
+  BAIXO: 'Baixo',
+  MEDIO: 'Médio',
+  ALTO: 'Alto',
+};
+
 type FilterType = 'TODOS' | StatusProjeto;
 
 export function Projetos() {
@@ -44,10 +61,26 @@ export function Projetos() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<FilterType>('TODOS');
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const navigate = useNavigate();
+
+  // Modal de novo projeto
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+  const [formData, setFormData] = useState<CreateProjetoDTO>({
+    nome: '',
+    descricao: '',
+    objetivo: '',
+    tipo: TipoProjeto.OUTRO,
+    status: StatusProjeto.IDEIA,
+    risco: NivelRisco.BAIXO,
+    tags: [],
+  });
+  const [tagsInput, setTagsInput] = useState('');
 
   useEffect(() => {
     loadProjetos();
+    loadUsuarios();
   }, []);
 
   async function loadProjetos() {
@@ -58,6 +91,54 @@ export function Projetos() {
       console.error('Erro ao carregar projetos:', error);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadUsuarios() {
+    try {
+      const data = await usuarioService.listarInternos();
+      setUsuarios(data);
+    } catch (error) {
+      console.error('Erro ao carregar usuarios:', error);
+    }
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setFormLoading(true);
+
+    try {
+      // Converte tags de string para array
+      const tags = tagsInput
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
+
+      const projetoCriado = await projetoService.criar({
+        ...formData,
+        tags,
+      });
+
+      // Reseta o formulário
+      setFormData({
+        nome: '',
+        descricao: '',
+        objetivo: '',
+        tipo: TipoProjeto.OUTRO,
+        status: StatusProjeto.IDEIA,
+        risco: NivelRisco.BAIXO,
+        tags: [],
+      });
+      setTagsInput('');
+      setIsFormOpen(false);
+      loadProjetos();
+
+      // Navega para o projeto criado
+      navigate(`/projetos/${projetoCriado.id}`);
+    } catch (error) {
+      console.error('Erro ao criar projeto:', error);
+    } finally {
+      setFormLoading(false);
     }
   }
 
@@ -116,6 +197,10 @@ export function Projetos() {
               Gerencie todos os projetos do departamento
             </p>
           </div>
+          <button className={styles.newButton} onClick={() => setIsFormOpen(true)}>
+            <Plus size={18} />
+            Novo Projeto
+          </button>
         </div>
 
         {/* Controles de busca e filtro */}
@@ -278,6 +363,111 @@ export function Projetos() {
           ))}
         </div>
       )}
+
+      {/* Modal de novo projeto */}
+      <Modal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title="Novo Projeto"
+        size="lg"
+      >
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <Input
+            label="Nome do Projeto"
+            value={formData.nome}
+            onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+            placeholder="Digite o nome do projeto"
+            required
+          />
+
+          <div className={styles.formRow}>
+            <Select
+              label="Tipo"
+              value={formData.tipo}
+              onChange={(e) => setFormData({ ...formData, tipo: e.target.value as TipoProjeto })}
+              options={Object.entries(tipoLabels).map(([value, label]) => ({ value, label }))}
+            />
+
+            <Select
+              label="Status Inicial"
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value as StatusProjeto })}
+              options={Object.entries(statusLabels).map(([value, label]) => ({ value, label }))}
+            />
+          </div>
+
+          <div className={styles.formRow}>
+            <Select
+              label="Líder do Projeto"
+              value={formData.lider_id || ''}
+              onChange={(e) => setFormData({ ...formData, lider_id: e.target.value || undefined })}
+              options={[
+                { value: '', label: 'Selecione...' },
+                ...usuarios.map((u) => ({ value: u.id, label: u.nome })),
+              ]}
+            />
+
+            <Select
+              label="Nível de Risco"
+              value={formData.risco}
+              onChange={(e) => setFormData({ ...formData, risco: e.target.value as NivelRisco })}
+              options={Object.entries(riscoLabels).map(([value, label]) => ({ value, label }))}
+            />
+          </div>
+
+          <div className={styles.formRow}>
+            <Input
+              label="Data de Início"
+              type="date"
+              value={formData.data_inicio || ''}
+              onChange={(e) => setFormData({ ...formData, data_inicio: e.target.value })}
+            />
+
+            <Input
+              label="Previsão de Conclusão"
+              type="date"
+              value={formData.data_fim_prevista || ''}
+              onChange={(e) => setFormData({ ...formData, data_fim_prevista: e.target.value })}
+            />
+          </div>
+
+          <div className={styles.textareaWrapper}>
+            <label>Descrição</label>
+            <textarea
+              value={formData.descricao || ''}
+              onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+              placeholder="Descreva o projeto de forma breve..."
+              rows={3}
+            />
+          </div>
+
+          <div className={styles.textareaWrapper}>
+            <label>Objetivo</label>
+            <textarea
+              value={formData.objetivo || ''}
+              onChange={(e) => setFormData({ ...formData, objetivo: e.target.value })}
+              placeholder="Qual o objetivo principal do projeto?"
+              rows={2}
+            />
+          </div>
+
+          <Input
+            label="Tags"
+            value={tagsInput}
+            onChange={(e) => setTagsInput(e.target.value)}
+            placeholder="Separe as tags por vírgula (ex: API, Backend, Automação)"
+          />
+
+          <div className={styles.formActions}>
+            <Button type="button" variant="ghost" onClick={() => setIsFormOpen(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit" loading={formLoading}>
+              Criar Projeto
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

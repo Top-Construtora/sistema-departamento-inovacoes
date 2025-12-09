@@ -25,12 +25,14 @@ const tipoLabels: Record<TipoSistemaAcesso, string> = {
   PLATAFORMA_CURSO: 'Plataforma de Curso',
   DESENVOLVIMENTO: 'Desenvolvimento',
   INFRA: 'Infraestrutura',
-  COMUNICACAO: 'Comunicacao',
+  COMUNICACAO: 'Comunicação',
   ANALYTICS: 'Analytics',
   CLOUD: 'Cloud',
   BANCO_DADOS: 'Banco de Dados',
   API_EXTERNA: 'API Externa',
   FERRAMENTA_INTERNA: 'Ferramenta Interna',
+  SISTEMA_EXTERNO: 'Sistema Externo',
+  SISTEMA_INTERNO: 'Sistema Interno',
   OUTRO: 'Outro',
 };
 
@@ -44,6 +46,8 @@ const tipoIcons: Record<TipoSistemaAcesso, typeof Server> = {
   BANCO_DADOS: Database,
   API_EXTERNA: Link2,
   FERRAMENTA_INTERNA: Wrench,
+  SISTEMA_EXTERNO: Globe,
+  SISTEMA_INTERNO: Layers,
   OUTRO: Server,
 };
 
@@ -57,6 +61,8 @@ const tipoColors: Record<TipoSistemaAcesso, string> = {
   BANCO_DADOS: '#ec4899',
   API_EXTERNA: '#14b8a6',
   FERRAMENTA_INTERNA: '#f97316',
+  SISTEMA_EXTERNO: '#0ea5e9',
+  SISTEMA_INTERNO: '#a855f7',
   OUTRO: '#6b7280',
 };
 

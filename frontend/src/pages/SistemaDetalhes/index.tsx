@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useRef, useCallback, FormEvent } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -12,12 +12,16 @@ import {
   Check,
   AlertCircle,
   Trash2,
+  Edit3,
+  Loader2,
+  Shield,
 } from 'lucide-react';
 import { Button, Input, Select, Modal } from '../../components/ui';
 import {
   SistemaAcesso,
   Credencial,
   CreateCredencialDTO,
+  CreateSistemaAcessoDTO,
   AmbienteCredencial,
   TipoSistemaAcesso,
   Usuario,
@@ -29,12 +33,14 @@ const tipoLabels: Record<TipoSistemaAcesso, string> = {
   PLATAFORMA_CURSO: 'Plataforma de Curso',
   DESENVOLVIMENTO: 'Desenvolvimento',
   INFRA: 'Infraestrutura',
-  COMUNICACAO: 'Comunicacao',
+  COMUNICACAO: 'Comunicação',
   ANALYTICS: 'Analytics',
   CLOUD: 'Cloud',
   BANCO_DADOS: 'Banco de Dados',
   API_EXTERNA: 'API Externa',
   FERRAMENTA_INTERNA: 'Ferramenta Interna',
+  SISTEMA_EXTERNO: 'Sistema Externo',
+  SISTEMA_INTERNO: 'Sistema Interno',
   OUTRO: 'Outro',
 };
 
@@ -59,7 +65,7 @@ export function SistemaDetalhes() {
   const [loading, setLoading] = useState(true);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
-  // Modal states
+  // Modal states - Credencial
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
   const [formData, setFormData] = useState<CreateCredencialDTO>({
@@ -68,10 +74,25 @@ export function SistemaDetalhes() {
     ambiente: AmbienteCredencial.PRODUCAO,
   });
 
+  // Modal states - Sistema (editar/excluir)
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [editData, setEditData] = useState<CreateSistemaAcessoDTO>({
+    nome: '',
+    url: '',
+    tipo: TipoSistemaAcesso.OUTRO,
+    observacoes: '',
+    instrucoes_acesso: '',
+  });
+
   // Senha revelada
   const [senhasReveladas, setSenhasReveladas] = useState<Record<string, string>>({});
   const [loadingSenha, setLoadingSenha] = useState<string | null>(null);
   const [copiadoId, setCopiadoId] = useState<string | null>(null);
+  const [loginCopiado, setLoginCopiado] = useState<string | null>(null);
+  const senhaTimers = useRef<Record<string, NodeJS.Timeout>>({});
 
   useEffect(() => {
     if (id) {
@@ -131,9 +152,35 @@ export function SistemaDetalhes() {
     }
   }
 
+  // Limpa timers quando o componente desmonta
+  useEffect(() => {
+    return () => {
+      Object.values(senhaTimers.current).forEach(clearTimeout);
+    };
+  }, []);
+
+  const ocultarSenhaAutomaticamente = useCallback((credencialId: string) => {
+    // Limpa timer anterior se existir
+    if (senhaTimers.current[credencialId]) {
+      clearTimeout(senhaTimers.current[credencialId]);
+    }
+
+    // Oculta a senha apos 30 segundos
+    senhaTimers.current[credencialId] = setTimeout(() => {
+      setSenhasReveladas((prev) => {
+        const { [credencialId]: _, ...rest } = prev;
+        return rest;
+      });
+    }, 30000);
+  }, []);
+
   async function handleRevelarSenha(credencialId: string) {
     if (senhasReveladas[credencialId]) {
-      // Se ja esta revelada, esconder
+      // Se ja esta revelada, esconder e limpar timer
+      if (senhaTimers.current[credencialId]) {
+        clearTimeout(senhaTimers.current[credencialId]);
+        delete senhaTimers.current[credencialId];
+      }
       setSenhasReveladas((prev) => {
         const { [credencialId]: _, ...rest } = prev;
         return rest;
@@ -145,6 +192,7 @@ export function SistemaDetalhes() {
     try {
       const senha = await sistemaAcessoService.revelarSenha(credencialId);
       setSenhasReveladas((prev) => ({ ...prev, [credencialId]: senha }));
+      ocultarSenhaAutomaticamente(credencialId);
     } catch (error) {
       console.error('Erro ao revelar senha:', error);
     } finally {
@@ -154,11 +202,32 @@ export function SistemaDetalhes() {
 
   async function handleCopiarSenha(credencialId: string) {
     const senha = senhasReveladas[credencialId];
-    if (!senha) return;
+    if (!senha) {
+      // Se a senha nao esta revelada, revela e copia
+      setLoadingSenha(credencialId);
+      try {
+        const senhaRevelada = await sistemaAcessoService.revelarSenha(credencialId);
+        await navigator.clipboard.writeText(senhaRevelada);
+        setCopiadoId(credencialId);
+        setTimeout(() => setCopiadoId(null), 2000);
+        // Nao revela visualmente, apenas copia
+      } catch (error) {
+        console.error('Erro ao copiar senha:', error);
+      } finally {
+        setLoadingSenha(null);
+      }
+      return;
+    }
 
     await navigator.clipboard.writeText(senha);
     setCopiadoId(credencialId);
     setTimeout(() => setCopiadoId(null), 2000);
+  }
+
+  async function handleCopiarLogin(credencialId: string, login: string) {
+    await navigator.clipboard.writeText(login);
+    setLoginCopiado(credencialId);
+    setTimeout(() => setLoginCopiado(null), 2000);
   }
 
   async function handleExcluirCredencial(credencialId: string) {
@@ -169,6 +238,48 @@ export function SistemaDetalhes() {
       loadCredenciais();
     } catch (error) {
       console.error('Erro ao excluir credencial:', error);
+    }
+  }
+
+  function handleOpenEdit() {
+    if (sistema) {
+      setEditData({
+        nome: sistema.nome,
+        url: sistema.url || '',
+        tipo: sistema.tipo,
+        observacoes: sistema.observacoes || '',
+        instrucoes_acesso: sistema.instrucoes_acesso || '',
+        responsavel_id: sistema.responsavel_id || undefined,
+      });
+      setIsEditOpen(true);
+    }
+  }
+
+  async function handleEditSubmit(e: FormEvent) {
+    e.preventDefault();
+    setEditLoading(true);
+
+    try {
+      await sistemaAcessoService.atualizar(id!, editData);
+      setIsEditOpen(false);
+      loadSistema();
+    } catch (error) {
+      console.error('Erro ao atualizar sistema:', error);
+    } finally {
+      setEditLoading(false);
+    }
+  }
+
+  async function handleDelete() {
+    setDeleteLoading(true);
+
+    try {
+      await sistemaAcessoService.excluir(id!);
+      navigate('/sistemas-acesso');
+    } catch (error) {
+      console.error('Erro ao excluir sistema:', error);
+    } finally {
+      setDeleteLoading(false);
     }
   }
 
@@ -193,6 +304,16 @@ export function SistemaDetalhes() {
           <ArrowLeft size={20} />
           Voltar
         </button>
+        <div className={styles.headerActions}>
+          <Button variant="ghost" size="sm" onClick={handleOpenEdit}>
+            <Edit3 size={16} />
+            Editar
+          </Button>
+          <Button variant="danger" size="sm" onClick={() => setIsDeleteOpen(true)}>
+            <Trash2 size={16} />
+            Excluir
+          </Button>
+        </div>
       </div>
 
       <div className={styles.content}>
@@ -277,43 +398,80 @@ export function SistemaDetalhes() {
                     </div>
 
                     <div className={styles.credencialBody}>
+                      {/* Campo Login */}
                       <div className={styles.credencialField}>
                         <label>Login</label>
-                        <div className={styles.fieldValue}>
+                        <div className={styles.fieldWithCopy}>
                           <code>{credencial.login}</code>
+                          <button
+                            className={`${styles.copyButton} ${loginCopiado === credencial.id ? styles.copied : ''}`}
+                            onClick={() => handleCopiarLogin(credencial.id, credencial.login)}
+                            title="Copiar login"
+                          >
+                            {loginCopiado === credencial.id ? (
+                              <Check size={14} />
+                            ) : (
+                              <Copy size={14} />
+                            )}
+                          </button>
                         </div>
                       </div>
 
+                      {/* Campo Senha - Redesenhado */}
                       <div className={styles.credencialField}>
-                        <label>Senha</label>
-                        <div className={styles.senhaField}>
-                          <code>
-                            {senhasReveladas[credencial.id] || '••••••••••••'}
-                          </code>
+                        <label>
+                          <Shield size={12} />
+                          Senha
+                        </label>
+                        <div className={`${styles.senhaContainer} ${senhasReveladas[credencial.id] ? styles.revealed : ''}`}>
+                          <div className={styles.senhaContent}>
+                            {loadingSenha === credencial.id ? (
+                              <div className={styles.senhaLoading}>
+                                <Loader2 size={16} className={styles.spinner} />
+                                <span>Carregando...</span>
+                              </div>
+                            ) : senhasReveladas[credencial.id] ? (
+                              <code className={styles.senhaText}>
+                                {senhasReveladas[credencial.id]}
+                              </code>
+                            ) : (
+                              <span className={styles.senhaMasked}>
+                                ••••••••••••
+                              </span>
+                            )}
+                          </div>
                           <div className={styles.senhaActions}>
                             <button
+                              className={`${styles.senhaBtn} ${styles.viewBtn}`}
                               onClick={() => handleRevelarSenha(credencial.id)}
                               disabled={loadingSenha === credencial.id}
+                              title={senhasReveladas[credencial.id] ? 'Ocultar senha' : 'Revelar senha'}
                             >
-                              {loadingSenha === credencial.id ? (
-                                '...'
-                              ) : senhasReveladas[credencial.id] ? (
+                              {senhasReveladas[credencial.id] ? (
                                 <EyeOff size={16} />
                               ) : (
                                 <Eye size={16} />
                               )}
                             </button>
-                            {senhasReveladas[credencial.id] && (
-                              <button onClick={() => handleCopiarSenha(credencial.id)}>
-                                {copiadoId === credencial.id ? (
-                                  <Check size={16} />
-                                ) : (
-                                  <Copy size={16} />
-                                )}
-                              </button>
-                            )}
+                            <button
+                              className={`${styles.senhaBtn} ${styles.copyBtn} ${copiadoId === credencial.id ? styles.copied : ''}`}
+                              onClick={() => handleCopiarSenha(credencial.id)}
+                              disabled={loadingSenha === credencial.id}
+                              title={copiadoId === credencial.id ? 'Copiado!' : 'Copiar senha'}
+                            >
+                              {copiadoId === credencial.id ? (
+                                <Check size={16} />
+                              ) : (
+                                <Copy size={16} />
+                              )}
+                            </button>
                           </div>
                         </div>
+                        {senhasReveladas[credencial.id] && (
+                          <span className={styles.senhaTimer}>
+                            A senha sera ocultada automaticamente em 30s
+                          </span>
+                        )}
                       </div>
 
                       {(credencial.usuario_referente || credencial.usuario_referente_nome) && (
@@ -449,6 +607,102 @@ export function SistemaDetalhes() {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Modal de editar sistema */}
+      <Modal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        title="Editar Sistema"
+        size="md"
+      >
+        <form onSubmit={handleEditSubmit} className={styles.form}>
+          <Input
+            label="Nome"
+            value={editData.nome}
+            onChange={(e) => setEditData({ ...editData, nome: e.target.value })}
+            placeholder="Nome do sistema"
+            required
+          />
+
+          <Input
+            label="URL"
+            type="url"
+            value={editData.url || ''}
+            onChange={(e) => setEditData({ ...editData, url: e.target.value })}
+            placeholder="https://..."
+          />
+
+          <Select
+            label="Tipo"
+            value={editData.tipo}
+            onChange={(e) => setEditData({ ...editData, tipo: e.target.value as TipoSistemaAcesso })}
+            options={Object.entries(tipoLabels).map(([value, label]) => ({ value, label }))}
+          />
+
+          <Select
+            label="Responsável"
+            value={editData.responsavel_id || ''}
+            onChange={(e) => setEditData({ ...editData, responsavel_id: e.target.value || undefined })}
+            options={[
+              { value: '', label: 'Selecione...' },
+              ...usuarios.map((u) => ({ value: u.id, label: u.nome })),
+            ]}
+          />
+
+          <div className={styles.textareaWrapper}>
+            <label>Observações</label>
+            <textarea
+              value={editData.observacoes || ''}
+              onChange={(e) => setEditData({ ...editData, observacoes: e.target.value })}
+              placeholder="Descrição do sistema..."
+              rows={3}
+            />
+          </div>
+
+          <div className={styles.textareaWrapper}>
+            <label>Instruções de Acesso</label>
+            <textarea
+              value={editData.instrucoes_acesso || ''}
+              onChange={(e) => setEditData({ ...editData, instrucoes_acesso: e.target.value })}
+              placeholder="Como acessar o sistema..."
+              rows={3}
+            />
+          </div>
+
+          <div className={styles.formActions}>
+            <Button type="button" variant="ghost" onClick={() => setIsEditOpen(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit" loading={editLoading}>
+              Salvar Alterações
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Modal de confirmação de exclusão */}
+      <Modal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Excluir Sistema"
+        size="sm"
+      >
+        <div className={styles.deleteConfirm}>
+          <AlertCircle size={48} className={styles.deleteIcon} />
+          <p>Tem certeza que deseja excluir o sistema <strong>{sistema.nome}</strong>?</p>
+          <p className={styles.deleteWarning}>
+            Esta ação não pode ser desfeita. Todas as credenciais associadas também serão excluídas.
+          </p>
+          <div className={styles.formActions}>
+            <Button type="button" variant="ghost" onClick={() => setIsDeleteOpen(false)}>
+              Cancelar
+            </Button>
+            <Button variant="danger" onClick={handleDelete} loading={deleteLoading}>
+              Excluir Sistema
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   );
