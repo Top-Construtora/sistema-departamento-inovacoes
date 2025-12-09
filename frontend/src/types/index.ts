@@ -305,6 +305,7 @@ export enum TipoLogo {
 }
 
 export enum UsoFonte {
+  GERAL = 'GERAL',
   TITULO = 'TITULO',
   SUBTITULO = 'SUBTITULO',
   CORPO = 'CORPO',
@@ -367,7 +368,7 @@ export interface FonteTipografica {
   peso?: string | null;
   estilo?: string | null;
   arquivo_url?: string | null;
-  fonte_google?: string | null;
+  fonte_url?: string | null;
   descricao?: string | null;
   exemplo?: string | null;
   ordem: number;
@@ -412,8 +413,7 @@ export interface CreateCorDTO {
 export interface CreateFonteDTO {
   nome: string;
   uso: UsoFonte;
-  familia?: string;
-  fonte_google?: string;
+  fonte_url?: string;
   descricao?: string;
 }
 

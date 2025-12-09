@@ -8,3 +8,4 @@ export * from './sistemaAcessoService';
 export * from './identidadeVisualService';
 export * from './metricsService';
 export * from './portfolioService';
+export * from './uploadService';

@@ -10,6 +10,7 @@ import { sistemaAcessoRoutes } from './sistemaAcessoRoutes.js';
 import { identidadeVisualRoutes } from './identidadeVisualRoutes.js';
 import { metricsRoutes } from './metricsRoutes.js';
 import { auditRoutes } from './auditRoutes.js';
+import { uploadRoutes } from './uploadRoutes.js';
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use('/sistemas-acesso', sistemaAcessoRoutes);
 router.use('/identidade-visual', identidadeVisualRoutes);
 router.use('/metrics', metricsRoutes);
 router.use('/audit', auditRoutes);
+router.use('/upload', uploadRoutes);
 
 export { router };

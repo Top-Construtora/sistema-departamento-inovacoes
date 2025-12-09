@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts';
 import { Layout, DefinirSenhaModal } from './components';
 import { Login } from './pages/Login';
+import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
 import { Projetos } from './pages/Projetos';
 import { ProjetoDetalhes } from './pages/ProjetoDetalhes';
@@ -22,7 +23,8 @@ export function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<Home />} />
+            <Route path="home" element={<Home />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="projetos" element={<Projetos />} />
             <Route path="projetos/:id" element={<ProjetoDetalhes />} />

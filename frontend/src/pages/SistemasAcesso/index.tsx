@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, FormEvent } from 'react';
+import { useState, useEffect, useMemo, FormEvent, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Plus,
@@ -8,25 +8,26 @@ import {
   Database,
   Code,
   BookOpen,
-  MessageSquare,
-  BarChart,
   Wrench,
   Link2,
   Search,
+  Globe,
+  Eye,
+  EyeOff,
+  Copy,
+  Check,
+  Loader2,
   Layers,
-  Globe
 } from 'lucide-react';
 import { Button, Input, Select, Modal } from '../../components/ui';
-import { SistemaAcesso, TipoSistemaAcesso, CreateSistemaAcessoDTO, Usuario } from '../../types';
+import { SistemaAcesso, TipoSistemaAcesso, CreateSistemaAcessoDTO, Usuario, Credencial } from '../../types';
 import { sistemaAcessoService, usuarioService } from '../../services';
 import styles from './styles.module.css';
 
-const tipoLabels: Record<TipoSistemaAcesso, string> = {
+const tipoLabels: Partial<Record<TipoSistemaAcesso, string>> = {
   PLATAFORMA_CURSO: 'Plataforma de Curso',
   DESENVOLVIMENTO: 'Desenvolvimento',
   INFRA: 'Infraestrutura',
-  COMUNICACAO: 'Comunicação',
-  ANALYTICS: 'Analytics',
   CLOUD: 'Cloud',
   BANCO_DADOS: 'Banco de Dados',
   API_EXTERNA: 'API Externa',
@@ -36,12 +37,10 @@ const tipoLabels: Record<TipoSistemaAcesso, string> = {
   OUTRO: 'Outro',
 };
 
-const tipoIcons: Record<TipoSistemaAcesso, typeof Server> = {
+const tipoIcons: Partial<Record<TipoSistemaAcesso, typeof Server>> = {
   PLATAFORMA_CURSO: BookOpen,
   DESENVOLVIMENTO: Code,
   INFRA: Server,
-  COMUNICACAO: MessageSquare,
-  ANALYTICS: BarChart,
   CLOUD: Cloud,
   BANCO_DADOS: Database,
   API_EXTERNA: Link2,
@@ -51,19 +50,17 @@ const tipoIcons: Record<TipoSistemaAcesso, typeof Server> = {
   OUTRO: Server,
 };
 
-const tipoColors: Record<TipoSistemaAcesso, string> = {
-  PLATAFORMA_CURSO: '#8b5cf6',
-  DESENVOLVIMENTO: '#3b82f6',
-  INFRA: '#6b7280',
-  COMUNICACAO: '#22c55e',
-  ANALYTICS: '#f59e0b',
-  CLOUD: '#06b6d4',
-  BANCO_DADOS: '#ec4899',
-  API_EXTERNA: '#14b8a6',
-  FERRAMENTA_INTERNA: '#f97316',
-  SISTEMA_EXTERNO: '#0ea5e9',
-  SISTEMA_INTERNO: '#a855f7',
-  OUTRO: '#6b7280',
+const tipoColors: Partial<Record<TipoSistemaAcesso, string>> = {
+  PLATAFORMA_CURSO: '#8b5cf6',    // Roxo
+  DESENVOLVIMENTO: '#3b82f6',     // Azul
+  INFRA: '#6b7280',               // Cinza
+  CLOUD: '#06b6d4',               // Ciano
+  BANCO_DADOS: '#ef4444',         // Vermelho
+  API_EXTERNA: '#14b8a6',         // Teal
+  FERRAMENTA_INTERNA: '#f97316',  // Laranja
+  SISTEMA_EXTERNO: '#64748b',     // Slate/Cinza azulado
+  SISTEMA_INTERNO: '#ec4899',     // Rosa
+  OUTRO: '#78716c',               // Marrom/Cinza
 };
 
 export function SistemasAcesso() {
@@ -74,6 +71,16 @@ export function SistemasAcesso() {
   const [busca, setBusca] = useState('');
   const [filtroTipo, setFiltroTipo] = useState('');
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+
+  // Credenciais por sistema (primeira credencial de cada)
+  const [credenciaisPorSistema, setCredenciaisPorSistema] = useState<Record<string, Credencial | null>>({});
+
+  // Senhas reveladas e copiadas
+  const [senhasReveladas, setSenhasReveladas] = useState<Record<string, string>>({});
+  const [loadingSenha, setLoadingSenha] = useState<string | null>(null);
+  const [copiadoId, setCopiadoId] = useState<string | null>(null);
+  const [loginCopiado, setLoginCopiado] = useState<string | null>(null);
+  const senhaTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   // Form state
   const [formData, setFormData] = useState<CreateSistemaAcessoDTO>({
@@ -90,11 +97,32 @@ export function SistemasAcesso() {
     loadUsuarios();
   }, []);
 
+  // Limpa timers quando o componente desmonta
+  useEffect(() => {
+    return () => {
+      Object.values(senhaTimers.current).forEach(clearTimeout);
+    };
+  }, []);
+
   async function loadSistemas() {
     try {
       setLoading(true);
       const data = await sistemaAcessoService.listar();
       setSistemas(data);
+
+      // Carregar primeira credencial de cada sistema
+      const credenciais: Record<string, Credencial | null> = {};
+      await Promise.all(
+        data.map(async (sistema) => {
+          try {
+            const creds = await sistemaAcessoService.listarCredenciais(sistema.id);
+            credenciais[sistema.id] = creds.length > 0 ? creds[0] : null;
+          } catch {
+            credenciais[sistema.id] = null;
+          }
+        })
+      );
+      setCredenciaisPorSistema(credenciais);
     } catch (error) {
       console.error('Erro ao carregar sistemas:', error);
     } finally {
@@ -133,43 +161,111 @@ export function SistemasAcesso() {
     }
   }
 
-  // Filtrar sistemas
+  // Ordem dos tipos para agrupamento
+  const ordemTipos: TipoSistemaAcesso[] = [
+    TipoSistemaAcesso.PLATAFORMA_CURSO,
+    TipoSistemaAcesso.DESENVOLVIMENTO,
+    TipoSistemaAcesso.CLOUD,
+    TipoSistemaAcesso.INFRA,
+    TipoSistemaAcesso.BANCO_DADOS,
+    TipoSistemaAcesso.API_EXTERNA,
+    TipoSistemaAcesso.FERRAMENTA_INTERNA,
+    TipoSistemaAcesso.SISTEMA_INTERNO,
+    TipoSistemaAcesso.SISTEMA_EXTERNO,
+    TipoSistemaAcesso.OUTRO,
+  ];
+
+  // Filtrar e ordenar sistemas por tipo
   const sistemasFiltrados = useMemo(() => {
-    return sistemas.filter((sistema) => {
+    const filtrados = sistemas.filter((sistema) => {
       const matchBusca = sistema.nome.toLowerCase().includes(busca.toLowerCase()) ||
         sistema.observacoes?.toLowerCase().includes(busca.toLowerCase());
       const matchTipo = !filtroTipo || sistema.tipo === filtroTipo;
       return matchBusca && matchTipo;
     });
+
+    // Ordenar por tipo (ordem definida) e depois por nome
+    return filtrados.sort((a, b) => {
+      const ordemA = ordemTipos.indexOf(a.tipo);
+      const ordemB = ordemTipos.indexOf(b.tipo);
+      if (ordemA !== ordemB) return ordemA - ordemB;
+      return a.nome.localeCompare(b.nome);
+    });
   }, [sistemas, busca, filtroTipo]);
-
-  // Agrupar por tipo
-  const sistemasPorTipo = useMemo(() => {
-    return sistemasFiltrados.reduce((acc, sistema) => {
-      const tipo = sistema.tipo;
-      if (!acc[tipo]) {
-        acc[tipo] = [];
-      }
-      acc[tipo].push(sistema);
-      return acc;
-    }, {} as Record<TipoSistemaAcesso, SistemaAcesso[]>);
-  }, [sistemasFiltrados]);
-
-  // Estatisticas
-  const stats = useMemo(() => {
-    const total = sistemas.length;
-    const desenvolvimento = sistemas.filter(s => s.tipo === 'DESENVOLVIMENTO').length;
-    const cloud = sistemas.filter(s => s.tipo === 'CLOUD').length;
-    const infra = sistemas.filter(s => s.tipo === 'INFRA').length;
-    const bancoDados = sistemas.filter(s => s.tipo === 'BANCO_DADOS').length;
-    return { total, desenvolvimento, cloud, infra, bancoDados };
-  }, [sistemas]);
 
   // Verifica se tem filtros ativos
   const hasActiveFilters = busca || filtroTipo;
 
   function getInitials(nome: string): string {
     return nome.split(' ').slice(0, 2).map(n => n.charAt(0).toUpperCase()).join('');
+  }
+
+  const ocultarSenhaAutomaticamente = useCallback((credencialId: string) => {
+    if (senhaTimers.current[credencialId]) {
+      clearTimeout(senhaTimers.current[credencialId]);
+    }
+    senhaTimers.current[credencialId] = setTimeout(() => {
+      setSenhasReveladas((prev) => {
+        const { [credencialId]: _, ...rest } = prev;
+        return rest;
+      });
+    }, 30000);
+  }, []);
+
+  async function handleRevelarSenha(e: React.MouseEvent, credencialId: string) {
+    e.stopPropagation();
+    if (senhasReveladas[credencialId]) {
+      if (senhaTimers.current[credencialId]) {
+        clearTimeout(senhaTimers.current[credencialId]);
+        delete senhaTimers.current[credencialId];
+      }
+      setSenhasReveladas((prev) => {
+        const { [credencialId]: _, ...rest } = prev;
+        return rest;
+      });
+      return;
+    }
+
+    setLoadingSenha(credencialId);
+    try {
+      const senha = await sistemaAcessoService.revelarSenha(credencialId);
+      setSenhasReveladas((prev) => ({ ...prev, [credencialId]: senha }));
+      ocultarSenhaAutomaticamente(credencialId);
+    } catch (error) {
+      console.error('Erro ao revelar senha:', error);
+    } finally {
+      setLoadingSenha(null);
+    }
+  }
+
+  async function handleCopiarSenha(e: React.MouseEvent, credencialId: string) {
+    e.stopPropagation();
+    const senha = senhasReveladas[credencialId];
+    if (!senha) {
+      setLoadingSenha(credencialId);
+      try {
+        const senhaRevelada = await sistemaAcessoService.revelarSenha(credencialId);
+        await navigator.clipboard.writeText(senhaRevelada);
+        setCopiadoId(credencialId);
+        setTimeout(() => setCopiadoId(null), 2000);
+      } catch (error) {
+        console.error('Erro ao copiar senha:', error);
+      } finally {
+        setLoadingSenha(null);
+      }
+      return;
+    }
+
+    await navigator.clipboard.writeText(senha);
+    setCopiadoId(credencialId);
+    setTimeout(() => setCopiadoId(null), 2000);
+  }
+
+  async function handleCopiarLogin(e: React.MouseEvent, credencialId: string, login: string) {
+    e.stopPropagation();
+    await navigator.clipboard.writeText(login);
+    setLoginCopiado(credencialId);
+    setTimeout(() => setLoginCopiado(null), 2000);
   }
 
   if (loading) {
@@ -198,74 +294,6 @@ export function SistemasAcesso() {
           <Plus size={18} />
           Novo Sistema
         </button>
-      </div>
-
-      {/* Stats Cards */}
-      <div className={styles.statsGrid}>
-        <div
-          className={`${styles.statCard} ${styles.statCardTotal} ${!filtroTipo ? styles.active : ''}`}
-          onClick={() => setFiltroTipo('')}
-        >
-          <div className={styles.statHeader}>
-            <div className={styles.statIcon}>
-              <Layers size={16} />
-            </div>
-          </div>
-          <span className={styles.statValue}>{stats.total}</span>
-          <span className={styles.statLabel}>Total</span>
-        </div>
-
-        <div
-          className={`${styles.statCard} ${styles.statCardDev} ${filtroTipo === 'DESENVOLVIMENTO' ? styles.active : ''}`}
-          onClick={() => setFiltroTipo(filtroTipo === 'DESENVOLVIMENTO' ? '' : 'DESENVOLVIMENTO')}
-        >
-          <div className={styles.statHeader}>
-            <div className={styles.statIcon}>
-              <Code size={16} />
-            </div>
-          </div>
-          <span className={styles.statValue}>{stats.desenvolvimento}</span>
-          <span className={styles.statLabel}>Desenvolvimento</span>
-        </div>
-
-        <div
-          className={`${styles.statCard} ${styles.statCardCloud} ${filtroTipo === 'CLOUD' ? styles.active : ''}`}
-          onClick={() => setFiltroTipo(filtroTipo === 'CLOUD' ? '' : 'CLOUD')}
-        >
-          <div className={styles.statHeader}>
-            <div className={styles.statIcon}>
-              <Cloud size={16} />
-            </div>
-          </div>
-          <span className={styles.statValue}>{stats.cloud}</span>
-          <span className={styles.statLabel}>Cloud</span>
-        </div>
-
-        <div
-          className={`${styles.statCard} ${styles.statCardInfra} ${filtroTipo === 'INFRA' ? styles.active : ''}`}
-          onClick={() => setFiltroTipo(filtroTipo === 'INFRA' ? '' : 'INFRA')}
-        >
-          <div className={styles.statHeader}>
-            <div className={styles.statIcon}>
-              <Server size={16} />
-            </div>
-          </div>
-          <span className={styles.statValue}>{stats.infra}</span>
-          <span className={styles.statLabel}>Infraestrutura</span>
-        </div>
-
-        <div
-          className={`${styles.statCard} ${styles.statCardData} ${filtroTipo === 'BANCO_DADOS' ? styles.active : ''}`}
-          onClick={() => setFiltroTipo(filtroTipo === 'BANCO_DADOS' ? '' : 'BANCO_DADOS')}
-        >
-          <div className={styles.statHeader}>
-            <div className={styles.statIcon}>
-              <Database size={16} />
-            </div>
-          </div>
-          <span className={styles.statValue}>{stats.bancoDados}</span>
-          <span className={styles.statLabel}>Banco de Dados</span>
-        </div>
       </div>
 
       {/* Filters */}
@@ -315,83 +343,137 @@ export function SistemasAcesso() {
           )}
         </div>
       ) : (
-        <div className={styles.content}>
-          {Object.entries(sistemasPorTipo).map(([tipo, sistemasDoTipo]) => {
-            const Icon = tipoIcons[tipo as TipoSistemaAcesso];
-            const color = tipoColors[tipo as TipoSistemaAcesso];
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Sistema</th>
+                <th>Login</th>
+                <th>Senha</th>
+                <th>Tipo</th>
+                <th>Responsavel</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {sistemasFiltrados.map((sistema) => {
+                const Icon = tipoIcons[sistema.tipo] || Server;
+                const color = tipoColors[sistema.tipo] || '#6b7280';
+                const credencial = credenciaisPorSistema[sistema.id];
 
-            return (
-              <div key={tipo} className={styles.section}>
-                <div className={styles.sectionHeader} style={{ borderColor: color }}>
-                  <div className={styles.sectionIcon} style={{ background: `${color}20`, color }}>
-                    <Icon size={18} />
-                  </div>
-                  <h2 className={styles.sectionTitle}>{tipoLabels[tipo as TipoSistemaAcesso]}</h2>
-                  <span className={styles.sectionCount}>{sistemasDoTipo.length}</span>
-                </div>
-
-                <div className={styles.grid}>
-                  {sistemasDoTipo.map((sistema) => (
-                    <div
-                      key={sistema.id}
-                      className={styles.card}
-                      style={{ '--card-color': color } as React.CSSProperties}
-                      onClick={() => navigate(`/sistemas-acesso/${sistema.id}`)}
-                    >
-                      <div className={styles.cardHeader}>
+                return (
+                  <tr
+                    key={sistema.id}
+                    className={styles.tableRow}
+                    onClick={() => navigate(`/sistemas-acesso/${sistema.id}`)}
+                  >
+                    <td>
+                      <div className={styles.sistemaCell}>
                         <div
-                          className={styles.cardIcon}
+                          className={styles.sistemaIcon}
                           style={{ background: `${color}20`, color }}
                         >
-                          <Icon size={24} />
+                          <Icon size={18} />
                         </div>
+                        <div className={styles.sistemaInfo}>
+                          <span className={styles.sistemaNome}>{sistema.nome}</span>
+                          {sistema.observacoes && (
+                            <span className={styles.sistemaDesc}>
+                              {sistema.observacoes.substring(0, 50)}
+                              {sistema.observacoes.length > 50 ? '...' : ''}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      {credencial ? (
+                        <div className={styles.credencialCell}>
+                          <code>{credencial.login}</code>
+                          <button
+                            className={`${styles.miniBtn} ${loginCopiado === credencial.id ? styles.copied : ''}`}
+                            onClick={(e) => handleCopiarLogin(e, credencial.id, credencial.login)}
+                            title="Copiar login"
+                          >
+                            {loginCopiado === credencial.id ? <Check size={12} /> : <Copy size={12} />}
+                          </button>
+                        </div>
+                      ) : (
+                        <span className={styles.semCredencial}>-</span>
+                      )}
+                    </td>
+                    <td>
+                      {credencial ? (
+                        <div className={styles.credencialCell}>
+                          {loadingSenha === credencial.id ? (
+                            <Loader2 size={14} className={styles.spinner} />
+                          ) : senhasReveladas[credencial.id] ? (
+                            <code>{senhasReveladas[credencial.id]}</code>
+                          ) : (
+                            <span className={styles.senhaMasked}>••••••••</span>
+                          )}
+                          <button
+                            className={styles.miniBtn}
+                            onClick={(e) => handleRevelarSenha(e, credencial.id)}
+                            disabled={loadingSenha === credencial.id}
+                            title={senhasReveladas[credencial.id] ? 'Ocultar' : 'Revelar'}
+                          >
+                            {senhasReveladas[credencial.id] ? <EyeOff size={12} /> : <Eye size={12} />}
+                          </button>
+                          <button
+                            className={`${styles.miniBtn} ${copiadoId === credencial.id ? styles.copied : ''}`}
+                            onClick={(e) => handleCopiarSenha(e, credencial.id)}
+                            disabled={loadingSenha === credencial.id}
+                            title="Copiar senha"
+                          >
+                            {copiadoId === credencial.id ? <Check size={12} /> : <Copy size={12} />}
+                          </button>
+                        </div>
+                      ) : (
+                        <span className={styles.semCredencial}>-</span>
+                      )}
+                    </td>
+                    <td>
+                      <span
+                        className={styles.tipoBadge}
+                        style={{ background: `${color}20`, color }}
+                      >
+                        {tipoLabels[sistema.tipo]}
+                      </span>
+                    </td>
+                    <td>
+                      {sistema.responsavel ? (
+                        <div className={styles.responsavelCell}>
+                          <div className={styles.responsavelAvatar}>
+                            {getInitials(sistema.responsavel.nome)}
+                          </div>
+                          <span>{sistema.responsavel.nome.split(' ')[0]}</span>
+                        </div>
+                      ) : (
+                        <span className={styles.semCredencial}>-</span>
+                      )}
+                    </td>
+                    <td>
+                      <div className={styles.actionsCell}>
                         {sistema.url && (
                           <a
                             href={sistema.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className={styles.externalLink}
+                            className={styles.actionBtn}
+                            title="Abrir URL"
                           >
                             <ExternalLink size={16} />
                           </a>
                         )}
                       </div>
-
-                      <h3 className={styles.cardTitle}>{sistema.nome}</h3>
-
-                      {sistema.observacoes && (
-                        <p className={styles.cardDescription}>
-                          {sistema.observacoes.substring(0, 100)}
-                          {sistema.observacoes.length > 100 ? '...' : ''}
-                        </p>
-                      )}
-
-                      <div className={styles.cardFooter}>
-                        {sistema.responsavel ? (
-                          <div className={styles.responsavel}>
-                            <div className={styles.responsavelAvatar}>
-                              {getInitials(sistema.responsavel.nome)}
-                            </div>
-                            <span>{sistema.responsavel.nome.split(' ')[0]}</span>
-                          </div>
-                        ) : (
-                          <span className={styles.responsavel}>Sem responsavel</span>
-                        )}
-
-                        {sistema.url && (
-                          <span className={styles.urlBadge}>
-                            <Globe size={12} />
-                            URL
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
 

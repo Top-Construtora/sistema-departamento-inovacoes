@@ -96,7 +96,7 @@ export function ProjetoDetalhes() {
         {projeto.lider && (
           <div className={styles.metaItem}>
             <Users size={16} />
-            <span>Lider: {projeto.lider.nome}</span>
+            <span>Responsável: {projeto.lider.nome}</span>
           </div>
         )}
 

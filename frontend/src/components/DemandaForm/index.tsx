@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { Button, Input, Select, Modal } from '../ui';
-import { Demanda, CreateDemandaDTO, TipoDemanda, PrioridadeDemanda, Projeto } from '../../types';
-import { projetoService } from '../../services';
+import { Demanda, CreateDemandaDTO, TipoDemanda, PrioridadeDemanda, Projeto, Usuario } from '../../types';
+import { projetoService, usuarioService } from '../../services';
 import styles from './styles.module.css';
 
 interface DemandaFormProps {
@@ -31,18 +31,21 @@ const prioridadeOptions = [
 export function DemandaForm({ isOpen, onClose, onSubmit, demanda }: DemandaFormProps) {
   const [loading, setLoading] = useState(false);
   const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [formData, setFormData] = useState<CreateDemandaDTO>({
     titulo: '',
     descricao: '',
     tipo: TipoDemanda.OUTRO,
     prioridade: PrioridadeDemanda.MEDIA,
     projeto_id: '',
+    responsavel_id: '',
     prazo: '',
   });
 
   useEffect(() => {
     if (isOpen) {
       loadProjetos();
+      loadUsuarios();
       if (demanda) {
         setFormData({
           titulo: demanda.titulo,
@@ -50,6 +53,7 @@ export function DemandaForm({ isOpen, onClose, onSubmit, demanda }: DemandaFormP
           tipo: demanda.tipo,
           prioridade: demanda.prioridade,
           projeto_id: demanda.projeto_id || '',
+          responsavel_id: demanda.responsavel_id || '',
           prazo: demanda.prazo ? demanda.prazo.split('T')[0] : '',
         });
       } else {
@@ -59,6 +63,7 @@ export function DemandaForm({ isOpen, onClose, onSubmit, demanda }: DemandaFormP
           tipo: TipoDemanda.OUTRO,
           prioridade: PrioridadeDemanda.MEDIA,
           projeto_id: '',
+          responsavel_id: '',
           prazo: '',
         });
       }
@@ -71,6 +76,15 @@ export function DemandaForm({ isOpen, onClose, onSubmit, demanda }: DemandaFormP
       setProjetos(data);
     } catch (error) {
       console.error('Erro ao carregar projetos:', error);
+    }
+  }
+
+  async function loadUsuarios() {
+    try {
+      const data = await usuarioService.listar();
+      setUsuarios(data);
+    } catch (error) {
+      console.error('Erro ao carregar usuários:', error);
     }
   }
 
@@ -130,13 +144,27 @@ export function DemandaForm({ isOpen, onClose, onSubmit, demanda }: DemandaFormP
           />
         </div>
 
-        <Select
-          label="Projeto (opcional)"
-          value={formData.projeto_id || ''}
-          onChange={(e) => setFormData({ ...formData, projeto_id: e.target.value })}
-          options={projetos.map((p) => ({ value: p.id, label: p.nome }))}
-          placeholder="Selecione um projeto"
-        />
+        <div className={styles.row}>
+          <Select
+            label="Projeto (opcional)"
+            value={formData.projeto_id || ''}
+            onChange={(e) => setFormData({ ...formData, projeto_id: e.target.value })}
+            options={[
+              { value: '', label: 'Selecione um projeto' },
+              ...projetos.map((p) => ({ value: p.id, label: p.nome }))
+            ]}
+          />
+
+          <Select
+            label="Responsável (opcional)"
+            value={formData.responsavel_id || ''}
+            onChange={(e) => setFormData({ ...formData, responsavel_id: e.target.value })}
+            options={[
+              { value: '', label: 'Selecione um responsável' },
+              ...usuarios.map((u) => ({ value: u.id, label: u.nome }))
+            ]}
+          />
+        </div>
 
         <Input
           label="Prazo (opcional)"

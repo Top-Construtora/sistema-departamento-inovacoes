@@ -29,12 +29,10 @@ import {
 import { sistemaAcessoService, usuarioService } from '../../services';
 import styles from './styles.module.css';
 
-const tipoLabels: Record<TipoSistemaAcesso, string> = {
+const tipoLabels: Partial<Record<TipoSistemaAcesso, string>> = {
   PLATAFORMA_CURSO: 'Plataforma de Curso',
   DESENVOLVIMENTO: 'Desenvolvimento',
   INFRA: 'Infraestrutura',
-  COMUNICACAO: 'Comunicação',
-  ANALYTICS: 'Analytics',
   CLOUD: 'Cloud',
   BANCO_DADOS: 'Banco de Dados',
   API_EXTERNA: 'API Externa',
@@ -55,6 +53,14 @@ const ambienteColors: Record<AmbienteCredencial, string> = {
   HOMOLOGACAO: '#f59e0b',
   DESENVOLVIMENTO: '#22c55e',
 };
+
+// Tipos de sistema que precisam de seleção de ambiente
+const tiposComAmbiente: TipoSistemaAcesso[] = [
+  TipoSistemaAcesso.DESENVOLVIMENTO,
+  TipoSistemaAcesso.INFRA,
+  TipoSistemaAcesso.CLOUD,
+  TipoSistemaAcesso.API_EXTERNA,
+];
 
 export function SistemaDetalhes() {
   const { id } = useParams<{ id: string }>();
@@ -379,15 +385,17 @@ export function SistemaDetalhes() {
                             {credencial.descricao}
                           </span>
                         )}
-                        <span
-                          className={styles.ambiente}
-                          style={{
-                            background: `${ambienteColors[credencial.ambiente]}20`,
-                            color: ambienteColors[credencial.ambiente],
-                          }}
-                        >
-                          {ambienteLabels[credencial.ambiente]}
-                        </span>
+                        {sistema && tiposComAmbiente.includes(sistema.tipo) && (
+                          <span
+                            className={styles.ambiente}
+                            style={{
+                              background: `${ambienteColors[credencial.ambiente]}20`,
+                              color: ambienteColors[credencial.ambiente],
+                            }}
+                          >
+                            {ambienteLabels[credencial.ambiente]}
+                          </span>
+                        )}
                       </div>
                       <button
                         className={styles.deleteButton}
@@ -564,12 +572,14 @@ export function SistemaDetalhes() {
             required
           />
 
-          <Select
-            label="Ambiente"
-            value={formData.ambiente}
-            onChange={(e) => setFormData({ ...formData, ambiente: e.target.value as AmbienteCredencial })}
-            options={Object.entries(ambienteLabels).map(([value, label]) => ({ value, label }))}
-          />
+          {sistema && tiposComAmbiente.includes(sistema.tipo) && (
+            <Select
+              label="Ambiente"
+              value={formData.ambiente}
+              onChange={(e) => setFormData({ ...formData, ambiente: e.target.value as AmbienteCredencial })}
+              options={Object.entries(ambienteLabels).map(([value, label]) => ({ value, label }))}
+            />
+          )}
 
           <Select
             label="Usuario Referente"

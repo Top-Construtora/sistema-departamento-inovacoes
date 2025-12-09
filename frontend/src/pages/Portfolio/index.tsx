@@ -7,8 +7,6 @@ import {
   EyeOff,
   Layers,
   TrendingUp,
-  Clock,
-  FolderOpen,
   Building2
 } from 'lucide-react';
 import {
@@ -86,14 +84,6 @@ export function Portfolio() {
     return counts;
   }, [projetos]);
 
-  // Estatisticas
-  const stats = useMemo(() => {
-    const totalHoras = projetos.reduce((acc, p) => acc + (p.horas_economizadas || 0), 0);
-    const totalImpacto = projetos.reduce((acc, p) => acc + (p.impacto_financeiro_estimado || 0), 0);
-    const publicados = projetos.filter(p => p.publicado).length;
-    return { totalHoras, totalImpacto, publicados, total: projetos.length };
-  }, [projetos]);
-
   function formatCurrency(value: number): string {
     if (value >= 1000000) {
       return `R$ ${(value / 1000000).toFixed(1)}M`;
@@ -134,56 +124,11 @@ export function Portfolio() {
     <div className={styles.container}>
       {/* Header */}
       <div className={styles.header}>
-        <div className={styles.headerTop}>
-          <div className={styles.headerInfo}>
-            <h1 className={styles.title}>Portfolio</h1>
-            <p className={styles.subtitle}>
-              Projetos concluidos e seus impactos na organizacao
-            </p>
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className={styles.statsGrid}>
-          <div className={`${styles.statCard} ${styles.statCardProjetos}`}>
-            <div className={styles.statHeader}>
-              <div className={styles.statIcon}>
-                <FolderOpen size={18} />
-              </div>
-            </div>
-            <span className={styles.statValue}>{stats.total}</span>
-            <span className={styles.statLabel}>Projetos</span>
-          </div>
-
-          <div className={`${styles.statCard} ${styles.statCardPublicados}`}>
-            <div className={styles.statHeader}>
-              <div className={styles.statIcon}>
-                <Eye size={18} />
-              </div>
-            </div>
-            <span className={styles.statValue}>{stats.publicados}</span>
-            <span className={styles.statLabel}>Publicados</span>
-          </div>
-
-          <div className={`${styles.statCard} ${styles.statCardHoras}`}>
-            <div className={styles.statHeader}>
-              <div className={styles.statIcon}>
-                <Clock size={18} />
-              </div>
-            </div>
-            <span className={styles.statValue}>{formatHours(stats.totalHoras)}h</span>
-            <span className={styles.statLabel}>Horas Economizadas</span>
-          </div>
-
-          <div className={`${styles.statCard} ${styles.statCardImpacto}`}>
-            <div className={styles.statHeader}>
-              <div className={styles.statIcon}>
-                <TrendingUp size={18} />
-              </div>
-            </div>
-            <span className={styles.statValue}>{formatCurrency(stats.totalImpacto)}</span>
-            <span className={styles.statLabel}>Impacto Financeiro</span>
-          </div>
+        <div className={styles.headerInfo}>
+          <h1 className={styles.title}>Portfolio</h1>
+          <p className={styles.subtitle}>
+            Projetos concluidos e seus impactos na organizacao
+          </p>
         </div>
 
         {/* Search */}

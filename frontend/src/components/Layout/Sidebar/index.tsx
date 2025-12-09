@@ -11,6 +11,7 @@ import {
   Briefcase,
   ChevronLeft,
   ChevronRight,
+  Home,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts';
 import { PerfilUsuario } from '../../../types';
@@ -38,7 +39,8 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   const menuItems = isInterno
     ? [
-        { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
+        { path: '/', icon: Home, label: 'Início' },
+        { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/projetos', icon: FolderKanban, label: 'Projetos' },
         { path: '/demandas', icon: ClipboardList, label: 'Demandas' },
         { path: '/chamados', icon: Headphones, label: 'Chamados' },
@@ -48,7 +50,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         ...(isLider ? [{ path: '/usuarios', icon: Users, label: 'Usuários' }] : []),
       ]
     : [
-        { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
+        { path: '/', icon: Home, label: 'Início' },
         { path: '/chamados', icon: Headphones, label: 'Meus Chamados' },
       ];
 
@@ -73,7 +75,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       <nav className={styles.nav}>
         <div className={styles.navSection}>
           {!collapsed && <p className={styles.navSectionTitle}>Menu Principal</p>}
-          {menuItems.slice(0, 4).map((item) => (
+          {menuItems.slice(0, 5).map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
@@ -89,12 +91,12 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           ))}
         </div>
 
-        {isInterno && menuItems.length > 4 && (
+        {isInterno && menuItems.length > 5 && (
           <>
             <div className={styles.divider} />
             <div className={styles.navSection}>
               {!collapsed && <p className={styles.navSectionTitle}>Configuracoes</p>}
-              {menuItems.slice(4).map((item) => (
+              {menuItems.slice(5).map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}

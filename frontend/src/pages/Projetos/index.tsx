@@ -398,7 +398,7 @@ export function Projetos() {
 
           <div className={styles.formRow}>
             <Select
-              label="Líder do Projeto"
+              label="Responsável"
               value={formData.lider_id || ''}
               onChange={(e) => setFormData({ ...formData, lider_id: e.target.value || undefined })}
               options={[
