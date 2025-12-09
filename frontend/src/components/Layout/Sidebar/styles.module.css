@@ -5,8 +5,8 @@
 .sidebar {
   width: 260px;
   height: 100vh;
-  background: linear-gradient(180deg, #0a0a12 0%, #0d0d18 50%, #0a0a12 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--gradient-bg);
+  border-right: 1px solid var(--color-border-subtle);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -14,7 +14,7 @@
   top: 0;
   z-index: 100;
   overflow: hidden;
-  transition: width 0.3s ease;
+  transition: width var(--transition-slow);
 }
 
 .sidebar.collapsed {
@@ -29,7 +29,7 @@
   left: 0;
   right: 0;
   height: 200px;
-  background: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse at top, var(--color-primary-subtle) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -44,22 +44,22 @@
   gap: 0.75rem;
   margin: 0 0.875rem 0.5rem;
   padding: 0.625rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--color-hover-overlay);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 10px;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
   position: relative;
   z-index: 1;
 }
 
 .toggleButton:hover {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.2);
-  color: #a5b4fc;
+  background: var(--color-primary-subtle);
+  border-color: var(--color-primary-muted);
+  color: var(--color-secondary-default);
 }
 
 .toggleButton:active {
@@ -96,8 +96,8 @@
   text-decoration: none;
   padding: 0.5rem;
   margin: -0.5rem;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
 }
 
 .sidebar.collapsed .logoLink {
@@ -107,26 +107,26 @@
 }
 
 .logoLink:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--color-hover-overlay);
 }
 
 .logoIcon {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 12px;
+  background: linear-gradient(135deg, var(--color-primary-subtle), var(--color-secondary-subtle));
+  border: 1px solid var(--color-primary-muted);
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 8px;
-  transition: all 0.3s ease;
+  transition: all var(--transition-slow);
   flex-shrink: 0;
 }
 
 .logoLink:hover .logoIcon {
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  border-color: var(--color-primary-default);
+  box-shadow: var(--shadow-glow-primary);
 }
 
 .logoIcon img {
@@ -140,13 +140,13 @@
   flex-direction: column;
   gap: 0.125rem;
   opacity: 1;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-normal);
 }
 
 .logoTitle {
   font-size: 1rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--color-text-primary);
   letter-spacing: -0.01em;
   line-height: 1.2;
   white-space: nowrap;
@@ -154,7 +154,7 @@
 
 .logoSubtitle {
   font-size: 0.6875rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-weight: 500;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -190,12 +190,12 @@
 }
 
 .nav::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-border-hover);
   border-radius: 2px;
 }
 
 .nav::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--color-text-disabled);
 }
 
 /* Secao do menu */
@@ -206,14 +206,14 @@
 .navSectionTitle {
   font-size: 0.625rem;
   font-weight: 600;
-  color: #4b5563;
+  color: var(--color-text-disabled);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 0.75rem 1rem 0.5rem;
   margin: 0;
   white-space: nowrap;
   opacity: 1;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-normal);
 }
 
 /* Item de navegacao */
@@ -222,10 +222,10 @@
   align-items: center;
   gap: 0.875rem;
   padding: 0.75rem 1rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   text-decoration: none;
   border-radius: 10px;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
   position: relative;
   font-size: 0.875rem;
   font-weight: 500;
@@ -245,9 +245,9 @@
   transform: translateY(-50%);
   width: 3px;
   height: 0;
-  background: linear-gradient(180deg, #6366f1, #8b5cf6);
+  background: var(--gradient-primary);
   border-radius: 0 2px 2px 0;
-  transition: height 0.2s ease;
+  transition: height var(--transition-normal);
 }
 
 .sidebar.collapsed .navItem::before {
@@ -255,22 +255,22 @@
 }
 
 .navItem:hover {
-  background: rgba(255, 255, 255, 0.04);
-  color: #e5e7eb;
+  background: var(--color-hover-overlay);
+  color: var(--color-text-primary);
 }
 
 .navItem:hover .navIcon {
-  color: #a5b4fc;
+  color: var(--color-secondary-default);
 }
 
 /* Item ativo */
 .navItem.active {
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05));
-  color: #f8fafc;
+  background: linear-gradient(90deg, var(--color-primary-subtle), transparent);
+  color: var(--color-text-primary);
 }
 
 .sidebar.collapsed .navItem.active {
-  background: rgba(99, 102, 241, 0.15);
+  background: var(--color-primary-subtle);
 }
 
 .navItem.active::before {
@@ -278,14 +278,14 @@
 }
 
 .navItem.active .navIcon {
-  color: #818cf8;
+  color: var(--color-primary-default);
 }
 
 .navIcon {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  transition: color 0.2s ease;
+  transition: color var(--transition-normal);
 }
 
 .navLabel {
@@ -294,7 +294,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   opacity: 1;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-normal);
 }
 
 /* Badge de notificacao */
@@ -302,11 +302,11 @@
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
+  background: linear-gradient(135deg, var(--color-error-default), var(--color-error-hover));
+  color: var(--color-text-primary);
   font-size: 0.625rem;
   font-weight: 700;
-  border-radius: 9px;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -318,7 +318,7 @@
 
 .divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  background: linear-gradient(90deg, transparent, var(--color-border-subtle), transparent);
   margin: 0.5rem 1rem;
 }
 
@@ -332,7 +332,7 @@
 
 .footer {
   padding: 0.875rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--color-border-subtle);
   position: relative;
   z-index: 1;
 }
@@ -346,15 +346,15 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  background: var(--color-hover-overlay);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
 }
 
 .userCard:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.06);
+  background: var(--color-active-overlay);
+  border-color: var(--color-border-default);
 }
 
 .userCardCollapsed {
@@ -366,16 +366,16 @@
 .userAvatar {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--gradient-primary);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
   font-size: 0.9375rem;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: var(--shadow-glow-primary);
 }
 
 .userCardCollapsed .userAvatar {
@@ -391,13 +391,13 @@
   flex-direction: column;
   gap: 0.125rem;
   opacity: 1;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-normal);
 }
 
 .userName {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--color-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -405,7 +405,7 @@
 
 .userRole {
   font-size: 0.6875rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-weight: 500;
   text-transform: capitalize;
 }
@@ -413,11 +413,11 @@
 .logoutButton {
   background: transparent;
   border: none;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   cursor: pointer;
   padding: 0.625rem;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -428,8 +428,8 @@
 }
 
 .logoutButton:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: #f87171;
+  background: var(--color-error-subtle);
+  color: var(--color-error-default);
 }
 
 .logoutButton:active {
@@ -443,13 +443,13 @@
 .statusDot {
   width: 8px;
   height: 8px;
-  background: #22c55e;
+  background: var(--color-success-default);
   border-radius: 50%;
   position: absolute;
   bottom: 2px;
   right: 2px;
-  border: 2px solid #0a0a12;
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+  border: 2px solid var(--color-bg-default);
+  box-shadow: var(--shadow-glow-success);
 }
 
 /* ========================================
@@ -460,7 +460,7 @@
   text-align: center;
   padding: 0.5rem;
   font-size: 0.625rem;
-  color: #374151;
+  color: var(--color-text-disabled);
   letter-spacing: 0.05em;
 }
 
@@ -478,17 +478,17 @@
   left: 100%;
   top: 50%;
   transform: translateY(-50%);
-  background: #1f2937;
-  color: #f8fafc;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
   padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: 0.75rem;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
   margin-left: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
   z-index: 1000;
 }
 
@@ -514,7 +514,7 @@
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s ease, width 0.3s ease;
+    transition: transform var(--transition-slow), width var(--transition-slow);
   }
 
   .sidebar.open {

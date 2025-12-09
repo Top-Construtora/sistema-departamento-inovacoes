@@ -7,35 +7,46 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #d1d5db;
+  color: var(--color-text-secondary);
 }
 
 .select {
   padding: 0.6rem 0.8rem;
-  background: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 8px;
-  color: white;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
   font-size: 0.9rem;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: border-color var(--transition-normal);
 }
 
 .select:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-primary-default);
+}
+
+.select:disabled {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
 }
 
 .select option {
-  background: #1f2937;
-  color: white;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
 }
 
 .selectError {
-  border-color: #ef4444;
+  border-color: var(--color-error-default);
+}
+
+.selectError:focus {
+  border-color: var(--color-error-default);
+  box-shadow: 0 0 0 2px var(--color-error-subtle);
 }
 
 .error {
   font-size: 0.75rem;
-  color: #ef4444;
+  color: var(--color-error-default);
 }

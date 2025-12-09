@@ -47,12 +47,12 @@
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .subtitle {
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -69,10 +69,10 @@
 
 .statCard {
   position: relative;
-  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
-  border-radius: 12px;
+  background: var(--gradient-card);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
-  transition: all 0.25s ease;
+  transition: all var(--transition-normal);
   border: 1px solid transparent;
   overflow: hidden;
 }
@@ -84,14 +84,14 @@
   left: 0;
   right: 0;
   height: 3px;
-  border-radius: 12px 12px 0 0;
-  transition: height 0.3s ease;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  transition: height var(--transition-slow);
 }
 
 .statCard:hover {
   transform: translateY(-2px);
-  border-color: #374151;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-lg);
 }
 
 .statCard:hover::before {
@@ -100,8 +100,8 @@
 
 .statCardLogos::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
 .statCardCores::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
-.statCardFontes::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-.statCardTemplates::before { background: linear-gradient(90deg, #22c55e, #4ade80); }
+.statCardFontes::before { background: var(--gradient-primary); }
+.statCardTemplates::before { background: linear-gradient(90deg, var(--color-success-default), var(--color-success-hover)); }
 
 .statHeader {
   display: flex;
@@ -116,25 +116,25 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .statCardLogos .statIcon { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
 .statCardCores .statIcon { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
-.statCardFontes .statIcon { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-.statCardTemplates .statIcon { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.statCardFontes .statIcon { background: var(--color-primary-subtle); color: var(--color-primary-default); }
+.statCardTemplates .statIcon { background: var(--color-success-subtle); color: var(--color-success-default); }
 
 .statValue {
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
   line-height: 1;
 }
 
 .statLabel {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-weight: 500;
   margin-top: 0.25rem;
 }
@@ -155,8 +155,8 @@
 .loadingSpinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #1f2937;
-  border-top-color: #8b5cf6;
+  border: 3px solid var(--color-primary-subtle);
+  border-top-color: var(--color-primary-default);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -166,7 +166,7 @@
 }
 
 .loadingText {
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-size: 0.875rem;
 }
 
@@ -175,10 +175,10 @@
 ======================================== */
 
 .section {
-  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
-  border-radius: 16px;
+  background: var(--gradient-card);
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
-  border: 1px solid #1f2937;
+  border: 1px solid var(--color-border-subtle);
 }
 
 .sectionHeader {
@@ -187,7 +187,7 @@
   justify-content: space-between;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #1f2937;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .sectionTitle {
@@ -199,21 +199,21 @@
 .sectionTitle h2 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .sectionTitle svg {
-  color: #6b7280;
+  color: var(--color-text-disabled);
 }
 
 .sectionCount {
-  background: rgba(255, 255, 255, 0.1);
-  color: #9ca3af;
+  background: var(--color-hover-overlay);
+  color: var(--color-text-secondary);
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.25rem 0.625rem;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   margin-left: 0.5rem;
 }
 
@@ -231,12 +231,12 @@
 }
 
 .empty svg {
-  color: #4b5563;
+  color: var(--color-text-disabled);
   margin-bottom: 1rem;
 }
 
 .empty p {
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -252,29 +252,29 @@
 }
 
 .logoCard {
-  background: linear-gradient(145deg, #1f2937 0%, #1a1f2e 100%);
-  border-radius: 14px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
   position: relative;
-  transition: all 0.25s ease;
+  transition: all var(--transition-normal);
   border: 1px solid transparent;
 }
 
 .logoCard:hover {
-  border-color: #374151;
+  border-color: var(--color-border-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .logoPreview {
   width: 100%;
   aspect-ratio: 16/10;
-  background: #111827;
-  border-radius: 10px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,7 +296,7 @@
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -304,7 +304,7 @@
   display: inline-block;
   font-size: 0.7rem;
   padding: 0.2rem 0.6rem;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   background: rgba(139, 92, 246, 0.2);
   color: #a78bfa;
 }
@@ -316,7 +316,7 @@
   display: flex;
   gap: 0.5rem;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity var(--transition-normal);
 }
 
 .logoCard:hover .logoActions {
@@ -330,15 +330,15 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-normal);
 }
 
 .logoActions a {
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
+  background: var(--color-info-subtle);
+  color: var(--color-info-default);
 }
 
 .logoActions a:hover {
@@ -346,12 +346,12 @@
 }
 
 .logoActions button {
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
+  background: var(--color-error-subtle);
+  color: var(--color-error-default);
 }
 
 .logoActions button:hover {
-  background: rgba(239, 68, 68, 0.3);
+  background: var(--color-error-muted);
 }
 
 /* ========================================
@@ -365,18 +365,18 @@
 }
 
 .corCard {
-  background: linear-gradient(145deg, #1f2937 0%, #1a1f2e 100%);
-  border-radius: 14px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   position: relative;
-  transition: all 0.25s ease;
+  transition: all var(--transition-normal);
   border: 1px solid transparent;
 }
 
 .corCard:hover {
-  border-color: #374151;
+  border-color: var(--color-border-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .corPreview {
@@ -398,7 +398,7 @@
 .corNome {
   font-size: 0.9rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .corCodigos {
@@ -411,35 +411,35 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #111827;
-  border: 1px solid #374151;
-  border-radius: 6px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
   padding: 0.4rem 0.6rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-normal);
   width: 100%;
 }
 
 .corCodigo:hover {
-  border-color: #4b5563;
-  background: #1f2937;
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-elevated);
 }
 
 .corCodigo code {
   font-family: 'Monaco', 'Consolas', monospace;
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   flex: 1;
 }
 
 .corCodigo svg {
-  color: #6b7280;
+  color: var(--color-text-disabled);
   flex-shrink: 0;
 }
 
 .corDescricao {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
 }
 
 .deleteBtn {
@@ -447,17 +447,17 @@
   top: 0.5rem;
   right: 0.5rem;
   background: rgba(0, 0, 0, 0.5);
-  color: white;
+  color: var(--color-text-primary);
   border: none;
   width: 28px;
   height: 28px;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   opacity: 0;
-  transition: all 0.2s;
+  transition: all var(--transition-normal);
 }
 
 .corCard:hover .deleteBtn,
@@ -467,7 +467,7 @@
 }
 
 .deleteBtn:hover {
-  background: rgba(239, 68, 68, 0.8);
+  background: var(--color-error-default);
 }
 
 /* ========================================
@@ -481,18 +481,18 @@
 }
 
 .fonteCard {
-  background: linear-gradient(145deg, #1f2937 0%, #1a1f2e 100%);
-  border-radius: 14px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
   position: relative;
-  transition: all 0.25s ease;
+  transition: all var(--transition-normal);
   border: 1px solid transparent;
 }
 
 .fonteCard:hover {
-  border-color: #374151;
+  border-color: var(--color-border-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .fonteHeader {
@@ -505,23 +505,23 @@
 .fonteNome {
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .fonteUso {
   font-size: 0.7rem;
   padding: 0.25rem 0.6rem;
-  border-radius: 20px;
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-default);
 }
 
 .fonteExemplo {
   font-size: 1.75rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   padding: 1rem;
-  background: #111827;
-  border-radius: 10px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
   text-align: center;
   margin-top: 0.5rem;
   letter-spacing: 0.05em;
@@ -532,14 +532,14 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.75rem;
-  color: #60a5fa;
+  color: var(--color-primary-default);
   text-decoration: none;
   margin-top: 0.75rem;
-  transition: color 0.2s;
+  transition: color var(--transition-normal);
 }
 
 .fonteLink:hover {
-  color: #93c5fd;
+  color: var(--color-secondary-default);
 }
 
 /* ========================================
@@ -555,7 +555,7 @@
 .templateGrupo h3 {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   margin: 0 0 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -568,7 +568,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, #374151 0%, transparent 100%);
+  background: linear-gradient(90deg, var(--color-border-default) 0%, transparent 100%);
 }
 
 .templatesGrid {
@@ -578,23 +578,23 @@
 }
 
 .templateCard {
-  background: linear-gradient(145deg, #1f2937 0%, #1a1f2e 100%);
-  border-radius: 14px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   position: relative;
-  transition: all 0.25s ease;
+  transition: all var(--transition-normal);
   border: 1px solid transparent;
 }
 
 .templateCard:hover {
-  border-color: #374151;
+  border-color: var(--color-border-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .templatePreview {
   height: 140px;
-  background: #111827;
+  background: var(--color-bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -605,7 +605,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-slow);
 }
 
 .templateCard:hover .templatePreview img {
@@ -613,7 +613,7 @@
 }
 
 .templatePlaceholder {
-  color: #4b5563;
+  color: var(--color-text-disabled);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -634,12 +634,12 @@
 .templateNome {
   font-size: 0.9rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .templateDescricao {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -648,7 +648,7 @@
 
 .templateDownloads {
   font-size: 0.7rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -659,7 +659,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  border-top: 1px solid #1f2937;
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .templateActions button:first-child {
@@ -685,7 +685,7 @@
 .colorInputWrapper label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #e5e7eb;
+  color: var(--color-text-secondary);
 }
 
 .colorInput {
@@ -699,7 +699,7 @@
   height: 40px;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   background: transparent;
 }
@@ -709,26 +709,26 @@
 }
 
 .colorInput input[type="color"]::-webkit-color-swatch {
-  border-radius: 6px;
-  border: 2px solid #374151;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border-default);
 }
 
 .colorInput input[type="text"] {
   flex: 1;
-  background: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 8px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
   padding: 0.625rem 0.75rem;
-  color: white;
+  color: var(--color-text-primary);
   font-family: 'Monaco', 'Consolas', monospace;
   font-size: 0.875rem;
-  transition: all 0.2s;
+  transition: all var(--transition-normal);
 }
 
 .colorInput input[type="text"]:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--color-primary-default);
+  box-shadow: 0 0 0 3px var(--color-primary-subtle);
 }
 
 .formActions {

@@ -1,0 +1,114 @@
+/* ========================================
+   DESIGN TOKENS - DARK THEME
+   Fonte única de verdade para cores do sistema
+   ======================================== */
+
+:root {
+  /* ========================================
+     BACKGROUND
+     ======================================== */
+  --color-bg-default: #0F0F0F;
+  --color-bg-card: #181818;
+  --color-bg-elevated: #212121;
+
+  /* ========================================
+     BORDER / DIVISORES
+     ======================================== */
+  --color-border-default: #282828;
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-hover: rgba(255, 255, 255, 0.1);
+
+  /* ========================================
+     PRIMARY (Ações principais)
+     ======================================== */
+  --color-primary-default: #2F80ED;
+  --color-primary-hover: #3F8FFF;
+  --color-primary-subtle: rgba(47, 128, 237, 0.1);
+  --color-primary-muted: rgba(47, 128, 237, 0.2);
+
+  /* ========================================
+     SECONDARY (Ações secundárias, acentos)
+     ======================================== */
+  --color-secondary-default: #56CCF2;
+  --color-secondary-hover: #6DD5F5;
+  --color-secondary-subtle: rgba(86, 204, 242, 0.1);
+
+  /* ========================================
+     TEXT
+     ======================================== */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #B3B3B3;
+  --color-text-disabled: #5F5F5F;
+  --color-text-muted: #808080;
+
+  /* ========================================
+     FEEDBACK - Erro
+     ======================================== */
+  --color-error-default: #E44D4D;
+  --color-error-hover: #F05656;
+  --color-error-subtle: rgba(228, 77, 77, 0.1);
+  --color-error-muted: rgba(228, 77, 77, 0.2);
+
+  /* ========================================
+     FEEDBACK - Sucesso
+     ======================================== */
+  --color-success-default: #2ECC71;
+  --color-success-hover: #3DD882;
+  --color-success-subtle: rgba(46, 204, 113, 0.1);
+  --color-success-muted: rgba(46, 204, 113, 0.2);
+
+  /* ========================================
+     FEEDBACK - Warning (opcional)
+     ======================================== */
+  --color-warning-default: #F2994A;
+  --color-warning-hover: #F5A85D;
+  --color-warning-subtle: rgba(242, 153, 74, 0.1);
+
+  /* ========================================
+     FEEDBACK - Info (opcional)
+     ======================================== */
+  --color-info-default: #56CCF2;
+  --color-info-subtle: rgba(86, 204, 242, 0.1);
+
+  /* ========================================
+     INTERATIVOS - Hover, Focus, Active
+     ======================================== */
+  --color-hover-overlay: rgba(255, 255, 255, 0.08);
+  --color-active-overlay: rgba(255, 255, 255, 0.12);
+  --color-focus-ring: rgba(47, 128, 237, 0.4);
+
+  /* ========================================
+     SHADOWS
+     ======================================== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow-primary: 0 0 20px rgba(47, 128, 237, 0.3);
+  --shadow-glow-error: 0 0 20px rgba(228, 77, 77, 0.3);
+  --shadow-glow-success: 0 0 20px rgba(46, 204, 113, 0.3);
+
+  /* ========================================
+     GRADIENTS
+     ======================================== */
+  --gradient-bg: linear-gradient(135deg, #0F0F0F 0%, #141414 50%, #0F0F0F 100%);
+  --gradient-primary: linear-gradient(135deg, #2F80ED 0%, #56CCF2 100%);
+  --gradient-card: linear-gradient(165deg, rgba(24, 24, 24, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
+
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+}

@@ -1,3 +1,7 @@
+/* ========================================
+   SISTEMA DETALHES - Premium Design
+======================================== */
+
 .container {
   display: flex;
   flex-direction: column;
@@ -11,13 +15,13 @@
   align-items: center;
   justify-content: center;
   padding: 4rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   text-align: center;
   gap: 1rem;
 }
 
 .notFound h2 {
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -33,17 +37,17 @@
   gap: 0.5rem;
   background: none;
   border: none;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
   cursor: pointer;
   padding: 0.5rem;
-  border-radius: 6px;
-  transition: all 0.2s;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
 }
 
 .backButton:hover {
-  color: white;
-  background: #1f2937;
+  color: var(--color-text-primary);
+  background: var(--color-bg-elevated);
 }
 
 .content {
@@ -65,9 +69,10 @@
 }
 
 .titleSection {
-  background: #111827;
-  border-radius: 12px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
+  border: 1px solid var(--color-border-subtle);
 }
 
 .titleHeader {
@@ -81,7 +86,7 @@
 .title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
@@ -89,49 +94,50 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #3b82f6;
+  color: var(--color-primary-default);
   font-size: 0.875rem;
   text-decoration: none;
   padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  transition: background 0.2s;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-normal);
 }
 
 .urlLink:hover {
-  background: rgba(59, 130, 246, 0.1);
+  background: var(--color-primary-subtle);
 }
 
 .tipo {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
 }
 
 .section {
-  background: #111827;
-  border-radius: 12px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
+  border: 1px solid var(--color-border-subtle);
 }
 
 .section h3 {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   margin: 0 0 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .section p {
-  color: #e5e7eb;
+  color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
 }
 
 .instrucoes {
-  background: #1f2937;
-  border-radius: 8px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-md);
   padding: 1rem;
-  color: #e5e7eb;
+  color: var(--color-text-secondary);
   line-height: 1.6;
   white-space: pre-wrap;
   font-size: 0.875rem;
@@ -139,9 +145,10 @@
 
 /* Credenciais */
 .credenciaisSection {
-  background: #111827;
-  border-radius: 12px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
+  border: 1px solid var(--color-border-subtle);
 }
 
 .credenciaisHeader {
@@ -158,7 +165,7 @@
   gap: 0.5rem;
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
@@ -167,7 +174,7 @@
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   gap: 0.5rem;
 }
 
@@ -178,10 +185,10 @@
 }
 
 .credencialCard {
-  background: #1f2937;
-  border-radius: 8px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-md);
   padding: 1rem;
-  border: 1px solid #374151;
+  border: 1px solid var(--color-border-default);
 }
 
 .credencialHeader {
@@ -199,7 +206,7 @@
 
 .credencialDescricao {
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
   font-size: 0.9rem;
 }
 
@@ -207,23 +214,23 @@
   font-size: 0.65rem;
   font-weight: 600;
   padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   text-transform: uppercase;
 }
 
 .deleteButton {
   background: none;
   border: none;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   cursor: pointer;
   padding: 0.25rem;
-  border-radius: 4px;
-  transition: all 0.2s;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
 }
 
 .deleteButton:hover {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error-default);
+  background: var(--color-error-subtle);
 }
 
 .credencialBody {
@@ -240,7 +247,7 @@
 
 .credencialField label {
   font-size: 0.7rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   text-transform: uppercase;
 }
 
@@ -249,28 +256,28 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #e5e7eb;
+  color: var(--color-text-secondary);
 }
 
 .fieldValue code {
   font-family: monospace;
-  background: #111827;
+  background: var(--color-bg-card);
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .senhaField {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #111827;
-  border-radius: 4px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
   padding: 0.25rem 0.5rem;
 }
 
 .senhaField code {
   font-family: monospace;
-  color: #e5e7eb;
+  color: var(--color-text-secondary);
   background: none;
   padding: 0;
 }
@@ -283,24 +290,24 @@
 .senhaActions button {
   background: none;
   border: none;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   cursor: pointer;
   padding: 0.25rem;
-  border-radius: 4px;
-  transition: all 0.2s;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
 }
 
 .senhaActions button:hover {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-primary-default);
+  background: var(--color-primary-subtle);
 }
 
 .credencialObs {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   font-style: italic;
   padding-top: 0.5rem;
-  border-top: 1px solid #374151;
+  border-top: 1px solid var(--color-border-default);
 }
 
 /* Sidebar */
@@ -311,15 +318,16 @@
 }
 
 .infoCard {
-  background: #111827;
-  border-radius: 12px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
+  border: 1px solid var(--color-border-subtle);
 }
 
 .infoCard h3 {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   margin: 0 0 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -330,7 +338,7 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #1f2937;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .infoItem:last-child {
@@ -339,7 +347,7 @@
 
 .infoLabel {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
 }
 
 .infoValue {
@@ -347,7 +355,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: white;
+  color: var(--color-text-primary);
 }
 
 /* Form styles */
@@ -366,22 +374,22 @@
 .textareaWrapper label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #e5e7eb;
+  color: var(--color-text-secondary);
 }
 
 .textareaWrapper textarea {
-  background: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 8px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
   padding: 0.75rem;
-  color: white;
+  color: var(--color-text-primary);
   font-size: 0.875rem;
   resize: vertical;
 }
 
 .textareaWrapper textarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-primary-default);
 }
 
 .formActions {

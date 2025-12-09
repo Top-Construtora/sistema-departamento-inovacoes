@@ -35,8 +35,8 @@
 .loadingSpinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(99, 102, 241, 0.2);
-  border-top-color: #6366f1;
+  border: 3px solid var(--color-primary-subtle);
+  border-top-color: var(--color-primary-default);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -48,7 +48,7 @@
 }
 
 .loadingText {
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-size: 0.9rem;
 }
 
@@ -77,20 +77,20 @@
 
 .greeting {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   margin: 0;
 }
 
 .title {
   font-size: 1.875rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0;
   letter-spacing: -0.02em;
 }
 
 .subtitle {
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   font-size: 0.9375rem;
   margin: 0;
   max-width: 500px;
@@ -101,10 +101,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: var(--color-primary-subtle);
+  border: 1px solid var(--color-primary-muted);
   border-radius: 10px;
-  color: #a5b4fc;
+  color: var(--color-secondary-default);
   font-size: 0.8125rem;
   font-weight: 500;
 }
@@ -119,14 +119,14 @@
 }
 
 .statCard {
-  background: linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7));
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
   padding: 1.25rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: all 0.3s ease;
+  transition: all var(--transition-slow);
   position: relative;
   overflow: hidden;
 }
@@ -135,15 +135,15 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.02) 100%);
+  background: linear-gradient(135deg, transparent 0%, var(--color-hover-overlay) 100%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-slow);
 }
 
 .statCard:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-lg);
 }
 
 .statCard:hover::before {
@@ -182,14 +182,14 @@
 .statValue {
   font-size: 1.625rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .statLabel {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -206,11 +206,11 @@
 }
 
 .trendUp {
-  color: #22c55e;
+  color: var(--color-success-default);
 }
 
 .trendDown {
-  color: #ef4444;
+  color: var(--color-error-default);
 }
 
 /* ========================================
@@ -223,11 +223,11 @@
 }
 
 .chartCard {
-  background: linear-gradient(145deg, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.8));
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
-  transition: all 0.3s ease;
+  transition: all var(--transition-slow);
   position: relative;
   overflow: hidden;
 }
@@ -239,12 +239,12 @@
   left: 20%;
   right: 20%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, var(--color-primary-muted), transparent);
 }
 
 .chartCard:hover {
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.4);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-lg);
 }
 
 .chartHeader {
@@ -263,7 +263,7 @@
 .chartIconWrapper {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -272,14 +272,14 @@
 .chartTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0;
   letter-spacing: -0.01em;
 }
 
 .chartSubtitle {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   margin: 0.125rem 0 0;
 }
 
@@ -291,17 +291,17 @@
 
 .chartAction {
   padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  color: #9ca3af;
+  background: var(--color-hover-overlay);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .chartAction:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
+  background: var(--color-active-overlay);
+  color: var(--color-text-primary);
 }
 
 .chartContainer {
@@ -321,16 +321,16 @@
 .emptyChartIcon {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
-  background: rgba(107, 114, 128, 0.1);
+  border-radius: var(--radius-lg);
+  background: var(--color-hover-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #4b5563;
+  color: var(--color-text-disabled);
 }
 
 .emptyChartText {
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-size: 0.875rem;
 }
 
@@ -350,7 +350,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
 }
 
 .legendDot {
@@ -372,21 +372,21 @@
 .pieCenterValue {
   font-size: 1.5rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .pieCenterLabel {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
 }
 
 /* ========================================
    QUICK ACTIONS / ALERTS SECTION
    ======================================== */
 .alertsSection {
-  background: linear-gradient(145deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 16px;
+  background: var(--color-error-subtle);
+  border: 1px solid var(--color-error-muted);
+  border-radius: var(--radius-xl);
   padding: 1.25rem;
 }
 
@@ -401,17 +401,17 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(239, 68, 68, 0.2);
+  background: var(--color-error-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #f87171;
+  color: var(--color-error-default);
 }
 
 .alertsTitle {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #fca5a5;
+  color: var(--color-error-default);
   margin: 0;
 }
 
@@ -428,7 +428,7 @@
   padding: 0.75rem 1rem;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .alertItem:hover {
@@ -443,12 +443,13 @@
 
 .alertText {
   font-size: 0.875rem;
-  color: #fecaca;
+  color: var(--color-error-default);
 }
 
 .alertMeta {
   font-size: 0.75rem;
-  color: #f87171;
+  color: var(--color-error-default);
+  opacity: 0.8;
 }
 
 /* ========================================

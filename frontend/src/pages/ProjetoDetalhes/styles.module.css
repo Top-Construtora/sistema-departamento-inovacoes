@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   padding: 4rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .backButton {
@@ -18,15 +18,15 @@
   gap: 0.5rem;
   background: transparent;
   border: none;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
   cursor: pointer;
   padding: 0;
-  transition: color 0.2s;
+  transition: color var(--transition-normal);
 }
 
 .backButton:hover {
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .header {
@@ -45,7 +45,7 @@
 .tipo {
   font-size: 0.75rem;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   font-weight: 600;
   letter-spacing: 0.5px;
 }
@@ -53,7 +53,7 @@
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
@@ -63,13 +63,13 @@
   font-weight: 600;
   padding: 0.25rem 0.75rem;
   background: #3b82f6;
-  color: white;
+  color: var(--color-text-primary);
   border-radius: 20px;
   width: fit-content;
 }
 
 .descricao {
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
 }
@@ -85,7 +85,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .section {
@@ -102,7 +102,7 @@
 .sectionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0 0 1rem;
 }
 
@@ -121,8 +121,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: #1f2937;
-  border-radius: 8px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
   color: #d1d5db;
 }
@@ -130,14 +130,14 @@
 .membroAvatar {
   width: 28px;
   height: 28px;
-  background: #374151;
-  border-radius: 50%;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 0.75rem;
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .links {
@@ -151,14 +151,14 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.5rem 0.75rem;
-  background: #1f2937;
-  border-radius: 8px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
   color: #3b82f6;
   text-decoration: none;
-  transition: background 0.2s;
+  transition: background var(--transition-normal);
 }
 
 .link:hover {
-  background: #374151;
+  background: var(--color-bg-elevated);
 }

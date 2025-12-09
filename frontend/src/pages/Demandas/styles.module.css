@@ -35,8 +35,8 @@
 .loadingSpinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(99, 102, 241, 0.2);
-  border-top-color: #6366f1;
+  border: 3px solid var(--color-primary-subtle);
+  border-top-color: var(--color-primary-default);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -48,7 +48,7 @@
 }
 
 .loadingText {
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-size: 0.9rem;
 }
 
@@ -78,13 +78,13 @@
 .title {
   font-size: 1.875rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text-primary);
   margin: 0;
   letter-spacing: -0.02em;
 }
 
 .subtitle {
-  color: #6b7280;
+  color: var(--color-text-disabled);
   font-size: 0.9375rem;
   margin: 0;
 }
@@ -101,8 +101,8 @@
 
 .viewToggle {
   display: flex;
-  background: rgba(17, 24, 39, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
   border-radius: 10px;
   padding: 0.25rem;
 }
@@ -110,24 +110,24 @@
 .viewButton {
   background: transparent;
   border: none;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .viewButton:hover {
-  color: #e5e7eb;
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-primary);
+  background: var(--color-hover-overlay);
 }
 
 .viewButton.active {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.15));
-  color: #a5b4fc;
+  background: var(--color-primary-subtle);
+  color: var(--color-secondary-default);
 }
 
 .filterButton {
@@ -136,25 +136,25 @@
   gap: 0.5rem;
   padding: 0.625rem 1rem;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border-default);
   border-radius: 10px;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .filterButton:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #e5e7eb;
+  background: var(--color-hover-overlay);
+  border-color: var(--color-border-hover);
+  color: var(--color-text-primary);
 }
 
 .filterButton.active {
-  background: rgba(99, 102, 241, 0.15);
-  border-color: rgba(99, 102, 241, 0.3);
-  color: #a5b4fc;
+  background: var(--color-primary-subtle);
+  border-color: var(--color-primary-muted);
+  color: var(--color-secondary-default);
 }
 
 .newButton {
@@ -162,20 +162,21 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--color-primary-default);
   border: none;
   border-radius: 10px;
-  color: white;
+  color: var(--color-text-primary);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-glow-primary);
 }
 
 .newButton:hover {
+  background: var(--color-primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 6px 20px var(--color-primary-muted);
 }
 
 .newButton:active {
@@ -196,11 +197,11 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.875rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
+  background: var(--color-hover-overlay);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
 }
 
 .statDot {
@@ -211,7 +212,7 @@
 
 .statValue {
   font-weight: 600;
-  color: #e5e7eb;
+  color: var(--color-text-primary);
 }
 
 /* ========================================
@@ -222,9 +223,9 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  background: linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7));
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
   flex-wrap: wrap;
   animation: slideDown 0.2s ease-out;
 }
@@ -250,48 +251,48 @@
 .filterLabel {
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .filterSelect {
   padding: 0.5rem 0.875rem;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  color: #f1f5f9;
+  background: var(--color-bg-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
   font-size: 0.8125rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .filterSelect:hover {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--color-border-hover);
 }
 
 .filterSelect:focus {
   outline: none;
-  border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--color-primary-default);
+  box-shadow: 0 0 0 3px var(--color-primary-subtle);
 }
 
 .clearFiltersButton {
   padding: 0.5rem 1rem;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  color: #9ca3af;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
   font-size: 0.8125rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
   margin-top: auto;
 }
 
 .clearFiltersButton:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #f87171;
+  background: var(--color-error-subtle);
+  border-color: var(--color-error-muted);
+  color: var(--color-error-default);
 }
 
 /* ========================================
@@ -306,9 +307,9 @@
    LIST VIEW - TABELA
    ======================================== */
 .listContainer {
-  background: linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7));
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
+  background: var(--gradient-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
   overflow: hidden;
 }
 
@@ -321,18 +322,18 @@
   text-align: left;
   padding: 1rem 1.25rem;
   background: rgba(0, 0, 0, 0.2);
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .table td {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  color: #e5e7eb;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
   font-size: 0.875rem;
 }
 
@@ -342,15 +343,15 @@
 
 .table tbody tr {
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--color-hover-overlay);
 }
 
 .table tbody tr:hover td:first-child {
-  color: #a5b4fc;
+  color: var(--color-secondary-default);
 }
 
 /* Célula de título */
@@ -362,8 +363,8 @@
 
 .demandaTitulo {
   font-weight: 600;
-  color: #f8fafc;
-  transition: color 0.2s ease;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
 }
 
 .demandaProjeto {
@@ -371,7 +372,7 @@
   align-items: center;
   gap: 0.375rem;
   font-size: 0.75rem;
-  color: #818cf8;
+  color: var(--color-primary-default);
 }
 
 .demandaProjeto svg {
@@ -384,7 +385,7 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -392,28 +393,28 @@
 }
 
 .tipoBUG {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
+  background: var(--color-error-subtle);
+  color: var(--color-error-default);
 }
 
 .tipoMELHORIA {
-  background: rgba(34, 197, 94, 0.15);
-  color: #86efac;
+  background: var(--color-success-subtle);
+  color: var(--color-success-default);
 }
 
 .tipoNOVA_FEATURE {
-  background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
+  background: var(--color-primary-subtle);
+  color: var(--color-secondary-default);
 }
 
 .tipoESTUDO {
-  background: rgba(251, 191, 36, 0.15);
-  color: #fcd34d;
+  background: var(--color-warning-subtle);
+  color: var(--color-warning-default);
 }
 
 .tipoSUPORTE_INTERNO {
-  background: rgba(14, 165, 233, 0.15);
-  color: #7dd3fc;
+  background: var(--color-info-subtle);
+  color: var(--color-info-default);
 }
 
 .tipoDOCUMENTACAO {
@@ -422,8 +423,8 @@
 }
 
 .tipoOUTRO {
-  background: rgba(107, 114, 128, 0.15);
-  color: #d1d5db;
+  background: var(--color-hover-overlay);
+  color: var(--color-text-secondary);
 }
 
 /* Badges de prioridade */
@@ -432,7 +433,7 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.25rem 0.625rem;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   font-size: 0.6875rem;
   font-weight: 600;
 }
@@ -444,16 +445,16 @@
 }
 
 .prioridadeBAIXA {
-  background: rgba(34, 197, 94, 0.15);
-  color: #86efac;
+  background: var(--color-success-subtle);
+  color: var(--color-success-default);
 }
-.prioridadeBAIXA .dot { background: #22c55e; }
+.prioridadeBAIXA .dot { background: var(--color-success-default); }
 
 .prioridadeMEDIA {
-  background: rgba(251, 191, 36, 0.15);
-  color: #fcd34d;
+  background: var(--color-warning-subtle);
+  color: var(--color-warning-default);
 }
-.prioridadeMEDIA .dot { background: #f59e0b; }
+.prioridadeMEDIA .dot { background: var(--color-warning-default); }
 
 .prioridadeALTA {
   background: rgba(249, 115, 22, 0.15);
@@ -462,10 +463,10 @@
 .prioridadeALTA .dot { background: #f97316; }
 
 .prioridadeCRITICA {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
+  background: var(--color-error-subtle);
+  color: var(--color-error-default);
 }
-.prioridadeCRITICA .dot { background: #ef4444; }
+.prioridadeCRITICA .dot { background: var(--color-error-default); }
 
 /* Badges de status */
 .statusBadge {
@@ -473,7 +474,7 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -481,23 +482,23 @@
 }
 
 .statusA_FAZER {
-  background: rgba(107, 114, 128, 0.15);
-  color: #d1d5db;
+  background: var(--color-hover-overlay);
+  color: var(--color-text-secondary);
 }
 
 .statusEM_ANDAMENTO {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-default);
 }
 
 .statusEM_VALIDACAO {
-  background: rgba(251, 191, 36, 0.15);
-  color: #fcd34d;
+  background: var(--color-warning-subtle);
+  color: var(--color-warning-default);
 }
 
 .statusCONCLUIDA {
-  background: rgba(34, 197, 94, 0.15);
-  color: #86efac;
+  background: var(--color-success-subtle);
+  color: var(--color-success-default);
 }
 
 /* Célula de responsável */
@@ -510,24 +511,24 @@
 .responsavelAvatar {
   width: 28px;
   height: 28px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  border-radius: 8px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.625rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
   flex-shrink: 0;
 }
 
 .responsavelNome {
-  color: #e5e7eb;
+  color: var(--color-text-primary);
   font-size: 0.8125rem;
 }
 
 .semResponsavel {
-  color: #4b5563;
+  color: var(--color-text-disabled);
   font-style: italic;
 }
 
@@ -536,7 +537,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   font-size: 0.8125rem;
 }
 
@@ -545,11 +546,11 @@
 }
 
 .prazoAtrasado {
-  color: #f87171;
+  color: var(--color-error-default);
 }
 
 .prazoProximo {
-  color: #fcd34d;
+  color: var(--color-warning-default);
 }
 
 /* ========================================
@@ -567,25 +568,25 @@
 .emptyIcon {
   width: 80px;
   height: 80px;
-  background: rgba(99, 102, 241, 0.1);
-  border-radius: 20px;
+  background: var(--color-primary-subtle);
+  border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6366f1;
+  color: var(--color-primary-default);
   margin-bottom: 1.5rem;
 }
 
 .emptyTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--color-text-primary);
   margin: 0 0 0.5rem;
 }
 
 .emptyText {
   font-size: 0.9375rem;
-  color: #6b7280;
+  color: var(--color-text-disabled);
   margin: 0 0 1.5rem;
   max-width: 400px;
 }
@@ -595,19 +596,20 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--color-primary-default);
   border: none;
   border-radius: 10px;
-  color: white;
+  color: var(--color-text-primary);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .emptyButton:hover {
+  background: var(--color-primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: var(--shadow-glow-primary);
 }
 
 /* ========================================
