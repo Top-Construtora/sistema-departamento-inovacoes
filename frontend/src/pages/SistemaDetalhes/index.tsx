@@ -92,7 +92,7 @@ export function SistemaDetalhes() {
   const [loadingSenha, setLoadingSenha] = useState<string | null>(null);
   const [copiadoId, setCopiadoId] = useState<string | null>(null);
   const [loginCopiado, setLoginCopiado] = useState<string | null>(null);
-  const senhaTimers = useRef<Record<string, NodeJS.Timeout>>({});
+  const senhaTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   useEffect(() => {
     if (id) {
