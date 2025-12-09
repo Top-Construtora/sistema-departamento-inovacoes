@@ -34,19 +34,19 @@ export function Home() {
   const carouselSlides: CarouselSlide[] = [
     {
       id: 1,
-      image: '/images/carousel/slide1.jpg',
+      image: '/images/carousel/slide1.png',
       title: 'Inovação e Tecnologia',
       description: 'Transformando ideias em soluções digitais',
     },
     {
       id: 2,
-      image: '/images/carousel/slide2.jpg',
+      image: '/images/carousel/slide2.png',
       title: 'Gestão de Projetos',
       description: 'Acompanhe o progresso de todas as iniciativas',
     },
     {
       id: 3,
-      image: '/images/carousel/slide3.jpg',
+      image: '/images/carousel/slide3.png',
       title: 'Suporte Integrado',
       description: 'Atendimento rápido e eficiente para sua equipe',
     },
