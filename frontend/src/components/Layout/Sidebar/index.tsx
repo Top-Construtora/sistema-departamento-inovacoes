@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Home,
+  MessageSquare,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts';
 import { PerfilUsuario } from '../../../types';
@@ -44,6 +45,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         { path: '/projetos', icon: FolderKanban, label: 'Projetos' },
         { path: '/demandas', icon: ClipboardList, label: 'Demandas' },
         { path: '/chamados', icon: Headphones, label: 'Chamados' },
+        { path: '/notas', icon: MessageSquare, label: 'Notas' },
         { path: '/portfolio', icon: Briefcase, label: 'Portfolio' },
         { path: '/sistemas-acesso', icon: Key, label: 'Sistemas de Acesso' },
         { path: '/identidade-visual', icon: Palette, label: 'Identidade Visual' },
@@ -75,7 +77,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       <nav className={styles.nav}>
         <div className={styles.navSection}>
           {!collapsed && <p className={styles.navSectionTitle}>Menu Principal</p>}
-          {menuItems.slice(0, 5).map((item) => (
+          {menuItems.slice(0, 7).map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
@@ -91,12 +93,12 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           ))}
         </div>
 
-        {isInterno && menuItems.length > 5 && (
+        {isInterno && menuItems.length > 7 && (
           <>
             <div className={styles.divider} />
             <div className={styles.navSection}>
               {!collapsed && <p className={styles.navSectionTitle}>Configurações</p>}
-              {menuItems.slice(5).map((item) => (
+              {menuItems.slice(7).map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}

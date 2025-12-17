@@ -105,4 +105,44 @@ export const uploadController = {
       });
     }
   },
+
+  async uploadAnexo(req: Request, res: Response) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          error: 'Nenhum arquivo enviado',
+        });
+      }
+
+      const { buffer, originalname, mimetype, size } = req.file;
+
+      // Valida o tamanho (max 10MB)
+      const maxSize = 10 * 1024 * 1024;
+      if (buffer.length > maxSize) {
+        return res.status(400).json({
+          success: false,
+          error: 'Arquivo muito grande. Tamanho máximo: 10MB.',
+        });
+      }
+
+      const url = await uploadService.uploadFile(buffer, originalname, mimetype, 'anexos');
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          url,
+          nome: originalname,
+          tipo: mimetype,
+          tamanho: size,
+        },
+      });
+    } catch (error) {
+      console.error('Erro no upload:', error);
+      return res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Erro ao fazer upload',
+      });
+    }
+  },
 };

@@ -7,3 +7,4 @@ export * from './sistemaAcesso.js';
 export * from './identidadeVisual.js';
 export * from './metrics.js';
 export * from './audit.js';
+export * from './nota.js';

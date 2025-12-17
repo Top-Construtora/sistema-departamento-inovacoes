@@ -14,6 +14,7 @@ import { SistemaDetalhes } from './pages/SistemaDetalhes';
 import { IdentidadeVisual } from './pages/IdentidadeVisual';
 import { Usuarios } from './pages/Usuarios';
 import { Portfolio } from './pages/Portfolio';
+import { Notas } from './pages/Notas';
 
 export function App() {
   return (
@@ -36,6 +37,7 @@ export function App() {
             <Route path="identidade-visual" element={<IdentidadeVisual />} />
             <Route path="usuarios" element={<Usuarios />} />
             <Route path="portfolio" element={<Portfolio />} />
+            <Route path="notas" element={<Notas />} />
           </Route>
         </Routes>
       </BrowserRouter>

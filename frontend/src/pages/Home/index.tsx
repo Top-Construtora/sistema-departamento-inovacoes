@@ -14,10 +14,11 @@ import {
   FolderKanban,
   Plus,
   Zap,
+  BarChart3,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { demandaService } from '../../services';
-import { Demanda, StatusDemanda, PrioridadeDemanda } from '../../types';
+import { demandaService, projetoService } from '../../services';
+import { Demanda, StatusDemanda, PrioridadeDemanda, Projeto } from '../../types';
 import styles from './styles.module.css';
 
 interface CarouselSlide {
@@ -48,6 +49,8 @@ export function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [demandas, setDemandas] = useState<Demanda[]>([]);
   const [loadingDemandas, setLoadingDemandas] = useState(true);
+  const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [loadingProjetos, setLoadingProjetos] = useState(true);
 
   const carouselSlides: CarouselSlide[] = [
     {
@@ -110,6 +113,22 @@ export function Home() {
     loadDemandas();
   }, [usuario]);
 
+  // Carregar projetos recentes
+  useEffect(() => {
+    async function loadProjetos() {
+      try {
+        setLoadingProjetos(true);
+        const data = await projetoService.listar();
+        setProjetos(data.slice(0, 2));
+      } catch (error) {
+        console.error('Erro ao carregar projetos:', error);
+      } finally {
+        setLoadingProjetos(false);
+      }
+    }
+    loadProjetos();
+  }, []);
+
   // Estatísticas das demandas
   const stats = useMemo(() => {
     const aFazer = demandas.filter(d => d.status === 'A_FAZER').length;
@@ -131,7 +150,7 @@ export function Home() {
         if (b.prazo) return 1;
         return new Date(b.data_criacao).getTime() - new Date(a.data_criacao).getTime();
       })
-      .slice(0, 5);
+      .slice(0, 2);
   }, [demandas]);
 
   // Próximos prazos (para o calendário)
@@ -443,6 +462,63 @@ export function Home() {
                         {new Date(demanda.prazo).toLocaleDateString('pt-BR')}
                       </div>
                     )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Projetos Recentes */}
+          <section className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionTitleWrapper}>
+                <FolderKanban size={20} className={styles.sectionIcon} />
+                <h2 className={styles.sectionTitle}>Projetos Recentes</h2>
+              </div>
+              <button className={styles.viewAllButton} onClick={() => navigate('/projetos')}>
+                Ver todos
+                <ArrowRight size={14} />
+              </button>
+            </div>
+
+            {loadingProjetos ? (
+              <div className={styles.loadingContainer}>
+                <div className={styles.loadingSpinner} />
+                <span>Carregando projetos...</span>
+              </div>
+            ) : projetos.length === 0 ? (
+              <div className={styles.emptyState}>
+                <FolderKanban size={32} className={styles.emptyIcon} />
+                <p>Nenhum projeto encontrado</p>
+              </div>
+            ) : (
+              <div className={styles.projetosGrid}>
+                {projetos.map((projeto) => (
+                  <button
+                    key={projeto.id}
+                    className={styles.projetoCard}
+                    onClick={() => navigate('/projetos')}
+                  >
+                    <div className={styles.projetoHeader}>
+                      <span className={`${styles.projetoStatus} ${styles[`projetoStatus${projeto.status}`]}`}>
+                        {projeto.status.replace(/_/g, ' ')}
+                      </span>
+                    </div>
+                    <h4 className={styles.projetoNome}>{projeto.nome}</h4>
+                    {projeto.descricao && (
+                      <p className={styles.projetoDescricao}>{projeto.descricao}</p>
+                    )}
+                    <div className={styles.projetoFooter}>
+                      <span className={styles.projetoTipo}>
+                        <BarChart3 size={12} />
+                        {projeto.tipo.replace(/_/g, ' ')}
+                      </span>
+                      {projeto.lider && (
+                        <span className={styles.projetoLider}>
+                          {projeto.lider.nome.split(' ')[0]}
+                        </span>
+                      )}
+                    </div>
                   </button>
                 ))}
               </div>

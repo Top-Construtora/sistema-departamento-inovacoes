@@ -9,3 +9,4 @@ export * from './identidadeVisualService';
 export * from './metricsService';
 export * from './portfolioService';
 export * from './uploadService';
+export * from './notaService';

@@ -22,6 +22,9 @@ router.post('/logo', upload.single('file'), uploadController.uploadLogo);
 // Upload de template
 router.post('/template', upload.single('file'), uploadController.uploadTemplate);
 
+// Upload de anexo generico (para notas, etc)
+router.post('/anexo', upload.single('file'), uploadController.uploadAnexo);
+
 // Excluir arquivo
 router.delete('/', uploadController.deleteFile);
 
