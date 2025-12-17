@@ -352,16 +352,18 @@ export function Notas() {
 
   return (
     <div className={styles.container}>
-      {/* Header */}
-      <div className={styles.header}>
-        <h1>
-          <MessageSquare size={22} /> Notas
-        </h1>
-        <p>Chat</p>
+      {/* Header da página */}
+      <div className={styles.pageHeader}>
+        <div className={styles.headerInfo}>
+          <h1 className={styles.title}>Notas</h1>
+          <p className={styles.subtitle}>Chat interno da equipe</p>
+        </div>
       </div>
 
-      {/* Messages Area */}
-      <div className={styles.messagesArea}>
+      {/* Chat Card */}
+      <div className={styles.chatCard}>
+        {/* Messages Area */}
+        <div className={styles.messagesArea}>
         {loading ? (
           <div className={styles.loading}>Carregando...</div>
         ) : notasAgrupadas.length === 0 ? (
@@ -631,6 +633,7 @@ export function Notas() {
             <Send size={20} />
           </button>
         </div>
+      </div>
       </div>
 
       {/* Modal de imagem expandida */}
