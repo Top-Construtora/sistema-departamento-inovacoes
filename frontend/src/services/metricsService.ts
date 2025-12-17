@@ -7,6 +7,7 @@ import {
   TempoMedioResolucao,
   DemandasPorResponsavel,
   DemandasPorPrioridade,
+  DemandasPorStatus,
   ChamadosPorCategoria,
   ChamadosPorStatus,
   EvolucaoMensal,
@@ -49,6 +50,11 @@ export const metricsService = {
 
   async getDemandasPorPrioridade(): Promise<DemandasPorPrioridade[]> {
     const response = await api.get<ApiResponse<DemandasPorPrioridade[]>>('/metrics/demandas-por-prioridade');
+    return response.data.data || [];
+  },
+
+  async getDemandasPorStatus(): Promise<DemandasPorStatus[]> {
+    const response = await api.get<ApiResponse<DemandasPorStatus[]>>('/metrics/demandas-por-status');
     return response.data.data || [];
   },
 

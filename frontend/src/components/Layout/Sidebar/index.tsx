@@ -95,7 +95,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           <>
             <div className={styles.divider} />
             <div className={styles.navSection}>
-              {!collapsed && <p className={styles.navSectionTitle}>Configuracoes</p>}
+              {!collapsed && <p className={styles.navSectionTitle}>Configurações</p>}
               {menuItems.slice(5).map((item) => (
                 <NavLink
                   key={item.path}

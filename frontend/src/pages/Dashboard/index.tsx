@@ -8,7 +8,6 @@ import {
   Ticket,
   TrendingUp,
   Calendar,
-  BarChart3,
   PieChart as PieChartIcon,
 } from 'lucide-react';
 import {
@@ -29,9 +28,9 @@ import {
 import {
   ResumoGeral,
   ProjetosPorStatus,
-  ChamadosPorSetor,
   EvolucaoMensal,
-  DemandasPorResponsavel,
+  DemandasPorStatus,
+  DemandasPorPrioridade,
 } from '../../types';
 import { metricsService } from '../../services';
 import styles from './styles.module.css';
@@ -50,6 +49,20 @@ const STATUS_COLORS: Record<string, string> = {
   ARQUIVADO: '#374151',
 };
 
+const DEMANDA_STATUS_COLORS: Record<string, string> = {
+  A_FAZER: '#6b7280',
+  EM_ANDAMENTO: '#3b82f6',
+  EM_VALIDACAO: '#f59e0b',
+  CONCLUIDA: '#22c55e',
+};
+
+const PRIORIDADE_COLORS: Record<string, string> = {
+  BAIXA: '#6b7280',
+  MEDIA: '#3b82f6',
+  ALTA: '#f59e0b',
+  CRITICA: '#ef4444',
+};
+
 function formatStatus(status: string): string {
   const statusMap: Record<string, string> = {
     IDEIA: 'Ideia',
@@ -60,6 +73,26 @@ function formatStatus(status: string): string {
     ARQUIVADO: 'Arquivado',
   };
   return statusMap[status] || status.replace(/_/g, ' ');
+}
+
+function formatDemandaStatus(status: string): string {
+  const statusMap: Record<string, string> = {
+    A_FAZER: 'A Fazer',
+    EM_ANDAMENTO: 'Em Andamento',
+    EM_VALIDACAO: 'Em Validação',
+    CONCLUIDA: 'Concluída',
+  };
+  return statusMap[status] || status.replace(/_/g, ' ');
+}
+
+function formatPrioridade(prioridade: string): string {
+  const prioridadeMap: Record<string, string> = {
+    BAIXA: 'Baixa',
+    MEDIA: 'Média',
+    ALTA: 'Alta',
+    CRITICA: 'Crítica',
+  };
+  return prioridadeMap[prioridade] || prioridade;
 }
 
 function formatMes(mes: string): string {
@@ -131,9 +164,9 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [resumo, setResumo] = useState<ResumoGeral | null>(null);
   const [projetosPorStatus, setProjetosPorStatus] = useState<ProjetosPorStatus[]>([]);
-  const [chamadosPorSetor, setChamadosPorSetor] = useState<ChamadosPorSetor[]>([]);
   const [evolucaoMensal, setEvolucaoMensal] = useState<EvolucaoMensal[]>([]);
-  const [demandasPorResponsavel, setDemandasPorResponsavel] = useState<DemandasPorResponsavel[]>([]);
+  const [demandasPorStatus, setDemandasPorStatus] = useState<DemandasPorStatus[]>([]);
+  const [demandasPorPrioridade, setDemandasPorPrioridade] = useState<DemandasPorPrioridade[]>([]);
 
   useEffect(() => {
     loadData();
@@ -144,22 +177,22 @@ export function Dashboard() {
       const [
         resumoData,
         projetosStatusData,
-        chamadosSetorData,
         evolucaoData,
-        demandasResponsavelData,
+        demandasStatusData,
+        demandasPrioridadeData,
       ] = await Promise.all([
         metricsService.getResumoGeral(),
         metricsService.getProjetosPorStatus(),
-        metricsService.getChamadosPorSetor(),
         metricsService.getEvolucaoMensal(6),
-        metricsService.getDemandasPorResponsavel(),
+        metricsService.getDemandasPorStatus(),
+        metricsService.getDemandasPorPrioridade(),
       ]);
 
       setResumo(resumoData);
       setProjetosPorStatus(projetosStatusData);
-      setChamadosPorSetor(chamadosSetorData);
       setEvolucaoMensal(evolucaoData);
-      setDemandasPorResponsavel(demandasResponsavelData.slice(0, 5));
+      setDemandasPorStatus(demandasStatusData);
+      setDemandasPorPrioridade(demandasPrioridadeData);
     } catch (error) {
       console.error('Erro ao carregar métricas:', error);
     } finally {
@@ -435,96 +468,167 @@ export function Dashboard() {
           </div>
         </div>
 
-        {/* Chamados por Setor */}
+        {/* Demandas por Status */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
             <div className={styles.chartHeaderLeft}>
-              <div className={styles.chartIconWrapper} style={{ background: 'rgba(245, 158, 11, 0.15)' }}>
-                <BarChart3 size={20} color="#f59e0b" />
+              <div className={styles.chartIconWrapper} style={{ background: 'rgba(59, 130, 246, 0.15)' }}>
+                <ClipboardList size={20} color="#3b82f6" />
               </div>
               <div>
-                <h3 className={styles.chartTitle}>Chamados por Setor</h3>
-                <p className={styles.chartSubtitle}>Top 6 setores</p>
+                <h3 className={styles.chartTitle}>Demandas por Status</h3>
+                <p className={styles.chartSubtitle}>Distribuicao atual</p>
               </div>
             </div>
           </div>
           <div className={styles.chartContainer}>
-            {chamadosPorSetor.length > 0 ? (
+            {demandasPorStatus.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={chamadosPorSetor.slice(0, 6)} layout="vertical" barGap={4}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
-                  <XAxis type="number" stroke="#4b5563" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis
-                    type="category"
-                    dataKey="setor"
-                    stroke="#4b5563"
-                    fontSize={11}
-                    width={100}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => (value.length > 12 ? `${value.slice(0, 12)}...` : value)}
+                <PieChart>
+                  <Pie
+                    data={demandasPorStatus as ChartData[]}
+                    dataKey="total"
+                    nameKey="status"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                  >
+                    {demandasPorStatus.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={DEMANDA_STATUS_COLORS[entry.status] || COLORS[index % COLORS.length]}
+                        stroke="transparent"
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload as DemandasPorStatus;
+                        return (
+                          <div
+                            style={{
+                              background: 'rgba(17, 24, 39, 0.95)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              borderRadius: '12px',
+                              padding: '12px 16px',
+                              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+                            }}
+                          >
+                            <p style={{ color: '#e5e7eb', fontSize: '13px', fontWeight: 600 }}>
+                              {formatDemandaStatus(data.status)}
+                            </p>
+                            <p style={{ color: '#9ca3af', fontSize: '12px', marginTop: '4px' }}>
+                              {data.total} demandas ({data.percentual}%)
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
                   />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend
-                    wrapperStyle={{ paddingTop: '20px' }}
-                    formatter={(value) => <span style={{ color: '#9ca3af', fontSize: '12px' }}>{value}</span>}
-                  />
-                  <Bar dataKey="abertos" name="Abertos" fill="#f59e0b" radius={[0, 6, 6, 0]} barSize={16} />
-                  <Bar dataKey="concluidos" name="Concluídos" fill="#22c55e" radius={[0, 6, 6, 0]} barSize={16} />
-                </BarChart>
+                </PieChart>
               </ResponsiveContainer>
             ) : (
               <div className={styles.emptyChart}>
                 <div className={styles.emptyChartIcon}>
-                  <BarChart3 size={24} />
+                  <ClipboardList size={24} />
                 </div>
                 <span className={styles.emptyChartText}>Sem dados para exibir</span>
+              </div>
+            )}
+            {demandasPorStatus.length > 0 && (
+              <div className={styles.legendWrapper}>
+                {demandasPorStatus.map((entry, index) => (
+                  <div key={index} className={styles.legendItem}>
+                    <span
+                      className={styles.legendDot}
+                      style={{ background: DEMANDA_STATUS_COLORS[entry.status] || COLORS[index % COLORS.length] }}
+                    />
+                    <span>{formatDemandaStatus(entry.status)}</span>
+                  </div>
+                ))}
               </div>
             )}
           </div>
         </div>
 
-        {/* Demandas por Responsável */}
+        {/* Demandas por Prioridade */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
             <div className={styles.chartHeaderLeft}>
-              <div className={styles.chartIconWrapper} style={{ background: 'rgba(6, 182, 212, 0.15)' }}>
-                <Users size={20} color="#06b6d4" />
+              <div className={styles.chartIconWrapper} style={{ background: 'rgba(245, 158, 11, 0.15)' }}>
+                <AlertTriangle size={20} color="#f59e0b" />
               </div>
               <div>
-                <h3 className={styles.chartTitle}>Demandas por Responsável</h3>
-                <p className={styles.chartSubtitle}>Top 5 responsáveis</p>
+                <h3 className={styles.chartTitle}>Demandas por Prioridade</h3>
+                <p className={styles.chartSubtitle}>Distribuicao por urgencia</p>
               </div>
             </div>
           </div>
           <div className={styles.chartContainer}>
-            {demandasPorResponsavel.length > 0 ? (
+            {demandasPorPrioridade.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={demandasPorResponsavel} barGap={2}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis
-                    dataKey="responsavel_nome"
+                <BarChart data={demandasPorPrioridade} layout="vertical" barGap={4}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                  <XAxis type="number" stroke="#4b5563" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis
+                    type="category"
+                    dataKey="prioridade"
                     stroke="#4b5563"
                     fontSize={11}
+                    width={80}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => value.split(' ')[0]}
+                    tickFormatter={formatPrioridade}
                   />
-                  <YAxis stroke="#4b5563" fontSize={12} tickLine={false} axisLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend
-                    wrapperStyle={{ paddingTop: '20px' }}
-                    formatter={(value) => <span style={{ color: '#9ca3af', fontSize: '12px' }}>{value}</span>}
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload as DemandasPorPrioridade;
+                        return (
+                          <div
+                            style={{
+                              background: 'rgba(17, 24, 39, 0.95)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              borderRadius: '12px',
+                              padding: '12px 16px',
+                              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+                            }}
+                          >
+                            <p style={{ color: '#e5e7eb', fontSize: '13px', fontWeight: 600 }}>
+                              {formatPrioridade(data.prioridade)}
+                            </p>
+                            <p style={{ color: '#9ca3af', fontSize: '12px', marginTop: '4px' }}>
+                              {data.total} demandas ({data.percentual}%)
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
                   />
-                  <Bar dataKey="a_fazer" name="A Fazer" stackId="a" fill="#6b7280" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="em_andamento" name="Em Andamento" stackId="a" fill="#6366f1" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="concluidas" name="Concluídas" stackId="a" fill="#22c55e" radius={[6, 6, 0, 0]} />
+                  <Bar
+                    dataKey="total"
+                    name="Demandas"
+                    radius={[0, 6, 6, 0]}
+                    barSize={24}
+                  >
+                    {demandasPorPrioridade.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={PRIORIDADE_COLORS[entry.prioridade] || COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             ) : (
               <div className={styles.emptyChart}>
                 <div className={styles.emptyChartIcon}>
-                  <Users size={24} />
+                  <AlertTriangle size={24} />
                 </div>
                 <span className={styles.emptyChartText}>Sem dados para exibir</span>
               </div>

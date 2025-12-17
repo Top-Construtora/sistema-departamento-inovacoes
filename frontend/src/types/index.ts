@@ -479,6 +479,12 @@ export interface DemandasPorPrioridade {
   percentual: number;
 }
 
+export interface DemandasPorStatus {
+  status: string;
+  total: number;
+  percentual: number;
+}
+
 export interface ChamadosPorCategoria {
   categoria: string;
   total: number;

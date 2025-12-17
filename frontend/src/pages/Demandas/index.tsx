@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { KanbanBoard } from '../../components/Kanban';
 import { DemandaForm } from '../../components/DemandaForm';
+import { useAuth } from '../../contexts/AuthContext';
 import { Demanda, StatusDemanda, TipoDemanda, PrioridadeDemanda, CreateDemandaDTO } from '../../types';
 import { demandaService, DemandaFiltros } from '../../services';
 import styles from './styles.module.css';
@@ -42,6 +43,7 @@ const prioridadeLabels: Record<PrioridadeDemanda, string> = {
 };
 
 export function Demandas() {
+  const { usuario } = useAuth();
   const [demandas, setDemandas] = useState<Demanda[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('kanban');
@@ -52,12 +54,13 @@ export function Demandas() {
 
   useEffect(() => {
     loadDemandas();
-  }, [filtros]);
+  }, [filtros, usuario]);
 
   async function loadDemandas() {
+    if (!usuario) return;
     try {
       setLoading(true);
-      const data = await demandaService.listar(filtros);
+      const data = await demandaService.listar({ ...filtros, responsavel_id: usuario.id });
       setDemandas(data);
     } catch (error) {
       console.error('Erro ao carregar demandas:', error);
