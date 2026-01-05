@@ -73,6 +73,16 @@ export const metricsController = {
     }
   },
 
+  async getDemandasPorStatus(_req: Request, res: Response) {
+    try {
+      const data = await metricsService.getDemandasPorStatus();
+      res.json({ success: true, data });
+    } catch (error) {
+      console.error('Erro ao buscar demandas por status:', error);
+      res.status(500).json({ success: false, error: 'Erro ao buscar demandas por status' });
+    }
+  },
+
   async getChamadosPorCategoria(_req: Request, res: Response) {
     try {
       const data = await metricsService.getChamadosPorCategoria();

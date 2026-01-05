@@ -7,6 +7,7 @@ import {
   TempoMedioResolucao,
   DemandasPorResponsavel,
   DemandasPorPrioridade,
+  DemandasPorStatus,
   ChamadosPorCategoria,
   ChamadosPorStatus,
   EvolucaoMensal,
@@ -373,6 +374,30 @@ export const metricsService = {
         percentual: Math.round((count / total) * 100 * 10) / 10,
       }))
       .sort((a, b) => ordem.indexOf(a.prioridade) - ordem.indexOf(b.prioridade));
+  },
+
+  async getDemandasPorStatus(): Promise<DemandasPorStatus[]> {
+    const { data: demandas } = await supabase
+      .from('demandas')
+      .select('status')
+      .eq('ativo', true);
+
+    if (!demandas || demandas.length === 0) return [];
+
+    const statusMap = new Map<string, number>();
+    (demandas as { status: string }[]).forEach((demanda) => {
+      const status = demanda.status;
+      statusMap.set(status, (statusMap.get(status) || 0) + 1);
+    });
+
+    const total = demandas.length;
+    return Array.from(statusMap.entries())
+      .map(([status, count]) => ({
+        status,
+        total: count,
+        percentual: Math.round((count / total) * 100 * 10) / 10,
+      }))
+      .sort((a, b) => b.total - a.total);
   },
 
   async getChamadosPorCategoria(): Promise<ChamadosPorCategoria[]> {

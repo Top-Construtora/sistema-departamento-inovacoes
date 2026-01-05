@@ -21,9 +21,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('usuario');
-      window.location.href = '/login';
+      // Não redirecionar se for erro de login (credenciais inválidas)
+      const isAuthRoute = error.config?.url?.startsWith('/auth/');
+      if (!isAuthRoute) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

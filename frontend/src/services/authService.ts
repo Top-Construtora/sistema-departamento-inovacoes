@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { api } from './api';
 import { ApiResponse, AuthResponse, LoginDTO, Usuario } from '../types';
 
@@ -10,13 +11,20 @@ interface RegisterDTO {
 
 export const authService = {
   async login(data: LoginDTO): Promise<AuthResponse> {
-    const response = await api.post<ApiResponse<AuthResponse>>('/auth/login', data);
-    if (response.data.success && response.data.data) {
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('usuario', JSON.stringify(response.data.data.usuario));
-      return response.data.data;
+    try {
+      const response = await api.post<ApiResponse<AuthResponse>>('/auth/login', data);
+      if (response.data.success && response.data.data) {
+        localStorage.setItem('token', response.data.data.token);
+        localStorage.setItem('usuario', JSON.stringify(response.data.data.usuario));
+        return response.data.data;
+      }
+      throw new Error(response.data.error || 'Erro ao fazer login');
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw error;
     }
-    throw new Error(response.data.error || 'Erro ao fazer login');
   },
 
   async register(data: RegisterDTO): Promise<Usuario> {

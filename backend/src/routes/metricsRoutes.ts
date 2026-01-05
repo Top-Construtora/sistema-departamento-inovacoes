@@ -24,6 +24,7 @@ router.get('/top-projetos', metricsController.getTopProjetos);
 // Demandas
 router.get('/demandas-por-responsavel', metricsController.getDemandasPorResponsavel);
 router.get('/demandas-por-prioridade', metricsController.getDemandasPorPrioridade);
+router.get('/demandas-por-status', metricsController.getDemandasPorStatus);
 
 // Evolução temporal
 router.get('/evolucao-mensal', metricsController.getEvolucaoMensal);
