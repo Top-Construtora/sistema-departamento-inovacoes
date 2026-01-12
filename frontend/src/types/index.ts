@@ -98,6 +98,8 @@ export interface CreateProjetoDTO {
   tags?: string[];
 }
 
+export interface UpdateProjetoDTO extends Partial<CreateProjetoDTO> {}
+
 export interface Demanda {
   id: string;
   titulo: string;

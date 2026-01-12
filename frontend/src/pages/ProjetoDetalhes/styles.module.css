@@ -162,3 +162,64 @@
 .link:hover {
   background: var(--color-bg-elevated);
 }
+
+/* Formulário de Edição */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.textareaWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.textareaWrapper label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.textareaWrapper textarea {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color var(--transition-normal);
+}
+
+.textareaWrapper textarea::placeholder {
+  color: var(--color-text-disabled);
+}
+
+.textareaWrapper textarea:focus {
+  outline: none;
+  border-color: var(--color-primary-default);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-subtle);
+}

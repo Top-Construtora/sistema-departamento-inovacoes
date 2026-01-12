@@ -24,8 +24,8 @@ interface KanbanBoardProps {
 const columns: { status: StatusDemanda; title: string }[] = [
   { status: StatusDemanda.A_FAZER, title: 'A Fazer' },
   { status: StatusDemanda.EM_ANDAMENTO, title: 'Em Andamento' },
-  { status: StatusDemanda.EM_VALIDACAO, title: 'Em Validacao' },
-  { status: StatusDemanda.CONCLUIDA, title: 'Concluida' },
+  { status: StatusDemanda.EM_VALIDACAO, title: 'Em Validação' },
+  { status: StatusDemanda.CONCLUIDA, title: 'Concluída' },
 ];
 
 export function KanbanBoard({ demandas, onStatusChange, onCardClick }: KanbanBoardProps) {
@@ -64,8 +64,17 @@ export function KanbanBoard({ demandas, onStatusChange, onCardClick }: KanbanBoa
     const demandaId = active.id as string;
     const overId = over.id as string;
 
-    // Verificar se soltou em uma coluna
-    const targetStatus = columns.find((col) => col.status === overId)?.status;
+    // Verificar se soltou em uma coluna diretamente
+    let targetStatus = columns.find((col) => col.status === overId)?.status;
+
+    // Se não soltou em uma coluna, verificar se soltou em um card
+    // e pegar o status desse card para determinar a coluna de destino
+    if (!targetStatus) {
+      const targetDemanda = getDemandaById(overId);
+      if (targetDemanda) {
+        targetStatus = targetDemanda.status;
+      }
+    }
 
     if (targetStatus) {
       const demanda = getDemandaById(demandaId);

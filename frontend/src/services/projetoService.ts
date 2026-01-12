@@ -1,5 +1,5 @@
 import { api } from './api';
-import { ApiResponse, Projeto, CreateProjetoDTO } from '../types';
+import { ApiResponse, Projeto, CreateProjetoDTO, UpdateProjetoDTO } from '../types';
 
 export const projetoService = {
   async listar(): Promise<Projeto[]> {
@@ -24,5 +24,13 @@ export const projetoService = {
       return response.data.data;
     }
     throw new Error(response.data.error || 'Erro ao criar projeto');
+  },
+
+  async atualizar(id: string, data: UpdateProjetoDTO): Promise<Projeto> {
+    const response = await api.put<ApiResponse<Projeto>>(`/projetos/${id}`, data);
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.error || 'Erro ao atualizar projeto');
   },
 };

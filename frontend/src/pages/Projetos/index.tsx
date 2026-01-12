@@ -6,10 +6,12 @@ import {
   Search,
   FolderOpen,
   Plus,
+  Pencil,
 } from 'lucide-react';
 import { Button, Input, Select, Modal } from '../../components/ui';
 import { Projeto, StatusProjeto, TipoProjeto, NivelRisco, CreateProjetoDTO, Usuario } from '../../types';
 import { projetoService, usuarioService } from '../../services';
+import { formatDateBR } from '../../utils';
 import styles from './styles.module.css';
 
 const statusLabels: Record<StatusProjeto, string> = {
@@ -64,9 +66,10 @@ export function Projetos() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const navigate = useNavigate();
 
-  // Modal de novo projeto
+  // Modal de novo/editar projeto
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+  const [editingProjeto, setEditingProjeto] = useState<Projeto | null>(null);
   const [formData, setFormData] = useState<CreateProjetoDTO>({
     nome: '',
     descricao: '',
@@ -103,6 +106,49 @@ export function Projetos() {
     }
   }
 
+  function resetForm() {
+    setFormData({
+      nome: '',
+      descricao: '',
+      objetivo: '',
+      tipo: TipoProjeto.OUTRO,
+      status: StatusProjeto.IDEIA,
+      risco: NivelRisco.BAIXO,
+      tags: [],
+    });
+    setTagsInput('');
+    setEditingProjeto(null);
+  }
+
+  function openNewForm() {
+    resetForm();
+    setIsFormOpen(true);
+  }
+
+  function openEditForm(projeto: Projeto, e: React.MouseEvent) {
+    e.stopPropagation();
+    setEditingProjeto(projeto);
+    setFormData({
+      nome: projeto.nome,
+      descricao: projeto.descricao || '',
+      objetivo: projeto.objetivo || '',
+      tipo: projeto.tipo,
+      status: projeto.status,
+      lider_id: projeto.lider_id,
+      data_inicio: projeto.data_inicio || '',
+      data_fim_prevista: projeto.data_fim_prevista || '',
+      risco: projeto.risco || NivelRisco.BAIXO,
+      tags: projeto.tags || [],
+    });
+    setTagsInput(projeto.tags?.join(', ') || '');
+    setIsFormOpen(true);
+  }
+
+  function closeForm() {
+    setIsFormOpen(false);
+    resetForm();
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setFormLoading(true);
@@ -114,29 +160,27 @@ export function Projetos() {
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0);
 
-      const projetoCriado = await projetoService.criar({
-        ...formData,
-        tags,
-      });
-
-      // Reseta o formulário
-      setFormData({
-        nome: '',
-        descricao: '',
-        objetivo: '',
-        tipo: TipoProjeto.OUTRO,
-        status: StatusProjeto.IDEIA,
-        risco: NivelRisco.BAIXO,
-        tags: [],
-      });
-      setTagsInput('');
-      setIsFormOpen(false);
-      loadProjetos();
-
-      // Navega para o projeto criado
-      navigate(`/projetos/${projetoCriado.id}`);
+      if (editingProjeto) {
+        // Modo edição
+        await projetoService.atualizar(editingProjeto.id, {
+          ...formData,
+          tags,
+        });
+        closeForm();
+        loadProjetos();
+      } else {
+        // Modo criação
+        const projetoCriado = await projetoService.criar({
+          ...formData,
+          tags,
+        });
+        closeForm();
+        loadProjetos();
+        // Navega para o projeto criado
+        navigate(`/projetos/${projetoCriado.id}`);
+      }
     } catch (error) {
-      console.error('Erro ao criar projeto:', error);
+      console.error('Erro ao salvar projeto:', error);
     } finally {
       setFormLoading(false);
     }
@@ -197,7 +241,7 @@ export function Projetos() {
               Gerencie todos os projetos do departamento
             </p>
           </div>
-          <button className={styles.newButton} onClick={() => setIsFormOpen(true)}>
+          <button className={styles.newButton} onClick={openNewForm}>
             <Plus size={18} />
             Novo Projeto
           </button>
@@ -289,23 +333,32 @@ export function Projetos() {
                     <FolderKanban size={20} />
                   </div>
                 </div>
-                <span
-                  className={styles.cardStatus}
-                  style={{
-                    background: `${statusColors[projeto.status]}20`,
-                    color: statusColors[projeto.status]
-                  }}
-                >
+                <div className={styles.cardActions}>
+                  <button
+                    className={styles.editButton}
+                    onClick={(e) => openEditForm(projeto, e)}
+                    title="Editar projeto"
+                  >
+                    <Pencil size={14} />
+                  </button>
                   <span
+                    className={styles.cardStatus}
                     style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: '50%',
-                      background: statusColors[projeto.status]
+                      background: `${statusColors[projeto.status]}20`,
+                      color: statusColors[projeto.status]
                     }}
-                  />
-                  {statusLabels[projeto.status]}
-                </span>
+                  >
+                    <span
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: '50%',
+                        background: statusColors[projeto.status]
+                      }}
+                    />
+                    {statusLabels[projeto.status]}
+                  </span>
+                </div>
               </div>
 
               <h3 className={styles.cardTitle}>{projeto.nome}</h3>
@@ -344,7 +397,7 @@ export function Projetos() {
                 {projeto.data_inicio && (
                   <div className={styles.cardMetaItem}>
                     <Calendar size={14} />
-                    <span>{new Date(projeto.data_inicio).toLocaleDateString('pt-BR')}</span>
+                    <span>{formatDateBR(projeto.data_inicio)}</span>
                   </div>
                 )}
               </div>
@@ -364,11 +417,11 @@ export function Projetos() {
         </div>
       )}
 
-      {/* Modal de novo projeto */}
+      {/* Modal de novo/editar projeto */}
       <Modal
         isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        title="Novo Projeto"
+        onClose={closeForm}
+        title={editingProjeto ? 'Editar Projeto' : 'Novo Projeto'}
         size="lg"
       >
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -459,11 +512,11 @@ export function Projetos() {
           />
 
           <div className={styles.formActions}>
-            <Button type="button" variant="ghost" onClick={() => setIsFormOpen(false)}>
+            <Button type="button" variant="ghost" onClick={closeForm}>
               Cancelar
             </Button>
             <Button type="submit" loading={formLoading}>
-              Criar Projeto
+              {editingProjeto ? 'Salvar Alterações' : 'Criar Projeto'}
             </Button>
           </div>
         </form>

@@ -19,7 +19,7 @@ export class AuthController {
     try {
       const { nome, email, senha, perfil, setor } = req.body as CreateUsuarioDTO;
 
-      // Validacao de campos obrigatorios
+      // Validação de campos obrigatorios
       if (!nome || !email || !senha) {
         res.status(400).json({
           success: false,
@@ -28,7 +28,7 @@ export class AuthController {
         return;
       }
 
-      // Validacao de formato de email
+      // Validação de formato de email
       if (!EMAIL_REGEX.test(email)) {
         res.status(400).json({
           success: false,
@@ -37,7 +37,7 @@ export class AuthController {
         return;
       }
 
-      // Validacao de forca da senha
+      // Validação de forca da senha
       if (senha.length < 6) {
         res.status(400).json({
           success: false,
@@ -87,7 +87,7 @@ export class AuthController {
     try {
       const { email, senha } = req.body as LoginDTO;
 
-      // Validacao de campos obrigatorios
+      // Validação de campos obrigatorios
       if (!email || !senha) {
         res.status(400).json({
           success: false,
@@ -96,7 +96,7 @@ export class AuthController {
         return;
       }
 
-      // Validacao de formato de email (evita queries desnecessarias)
+      // Validação de formato de email (evita queries desnecessarias)
       if (!EMAIL_REGEX.test(email)) {
         // Log interno - nao revelar ao cliente que o formato esta errado
         console.error('[AUTH] Tentativa de login com email mal formatado');

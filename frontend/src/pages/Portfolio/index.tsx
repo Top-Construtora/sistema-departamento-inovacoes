@@ -14,6 +14,7 @@ import {
   PortfolioProjeto,
   CategoriaPortfolio
 } from '../../services/portfolioService';
+import { formatDateBR } from '../../utils';
 import styles from './styles.module.css';
 
 const categoriaLabels: Record<CategoriaPortfolio, string> = {
@@ -284,7 +285,7 @@ export function Portfolio() {
                   {projeto.data_conclusao && (
                     <div className={styles.cardMetaItem}>
                       <Calendar size={14} />
-                      <span>{new Date(projeto.data_conclusao).toLocaleDateString('pt-BR')}</span>
+                      <span>{formatDateBR(projeto.data_conclusao)}</span>
                     </div>
                   )}
                 </div>

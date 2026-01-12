@@ -35,7 +35,7 @@ const statusLabels: Record<StatusChamado, string> = {
   EM_TRIAGEM: 'Em Triagem',
   EM_ATENDIMENTO: 'Em Atendimento',
   AGUARDANDO_USUARIO: 'Aguardando',
-  EM_VALIDACAO: 'Em Validacao',
+  EM_VALIDACAO: 'Em Validação',
   CONCLUIDO: 'Concluido',
   CANCELADO: 'Cancelado',
   REABERTO: 'Reaberto',
