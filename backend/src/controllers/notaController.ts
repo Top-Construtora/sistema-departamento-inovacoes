@@ -55,7 +55,7 @@ export class NotaController {
 
   async atualizar(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as UpdateNotaDTO;
 
       if (!data.conteudo || data.conteudo.trim() === '') {
@@ -91,7 +91,7 @@ export class NotaController {
 
   async excluir(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const sucesso = await notaService.excluir(id, req.usuario!.userId);
 
@@ -118,7 +118,7 @@ export class NotaController {
 
   async uploadAnexo(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       if (!req.body.url || !req.body.nome || !req.body.tipo || !req.body.tamanho) {
         res.status(400).json({

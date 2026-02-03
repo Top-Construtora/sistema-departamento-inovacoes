@@ -125,7 +125,7 @@ export class IdentidadeVisualController {
 
   async excluirLogo(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       await identidadeVisualService.excluirLogo(id);
 
@@ -200,7 +200,7 @@ export class IdentidadeVisualController {
 
   async atualizarCor(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const dados = req.body as Partial<CreatePaletaCorDTO>;
 
       if (dados.codigo_hex && !/^#[0-9A-Fa-f]{6}$/.test(dados.codigo_hex)) {
@@ -228,7 +228,7 @@ export class IdentidadeVisualController {
 
   async excluirCor(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       await identidadeVisualService.excluirCor(id);
 
@@ -302,7 +302,7 @@ export class IdentidadeVisualController {
 
   async excluirFonte(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       await identidadeVisualService.excluirFonte(id);
 
@@ -376,7 +376,7 @@ export class IdentidadeVisualController {
 
   async registrarDownload(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       await identidadeVisualService.registrarDownload(id);
 
@@ -395,7 +395,7 @@ export class IdentidadeVisualController {
 
   async excluirTemplate(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       await identidadeVisualService.excluirTemplate(id);
 

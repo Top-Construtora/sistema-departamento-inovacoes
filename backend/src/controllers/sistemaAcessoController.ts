@@ -82,7 +82,7 @@ export class SistemaAcessoController {
 
   async buscarSistemaPorId(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const sistema = await sistemaAcessoService.buscarSistemaPorId(id);
 
@@ -109,7 +109,7 @@ export class SistemaAcessoController {
 
   async atualizarSistema(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as UpdateSistemaAcessoDTO;
 
       if (data.tipo && !Object.values(TipoSistemaAcesso).includes(data.tipo)) {
@@ -145,7 +145,7 @@ export class SistemaAcessoController {
 
   async excluirSistema(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const sistema = await sistemaAcessoService.buscarSistemaPorId(id);
 
@@ -175,7 +175,7 @@ export class SistemaAcessoController {
   // Credenciais
   async criarCredencial(req: Request, res: Response): Promise<void> {
     try {
-      const { id: sistemaId } = req.params;
+      const sistemaId = req.params.id as string;
       const data = req.body as CreateCredencialDTO;
       const usuarioId = req.usuario!.userId;
 
@@ -233,7 +233,7 @@ export class SistemaAcessoController {
 
   async listarCredenciais(req: Request, res: Response): Promise<void> {
     try {
-      const { id: sistemaId } = req.params;
+      const sistemaId = req.params.id as string;
 
       const sistema = await sistemaAcessoService.buscarSistemaPorId(sistemaId);
 
@@ -263,7 +263,7 @@ export class SistemaAcessoController {
 
   async revelarSenha(req: Request, res: Response): Promise<void> {
     try {
-      const { credencialId } = req.params;
+      const credencialId = req.params.credencialId as string;
       const usuarioId = req.usuario!.userId;
       const ipAddress = req.ip || req.headers['x-forwarded-for'] as string;
 
@@ -284,7 +284,7 @@ export class SistemaAcessoController {
 
   async atualizarCredencial(req: Request, res: Response): Promise<void> {
     try {
-      const { credencialId } = req.params;
+      const credencialId = req.params.credencialId as string;
       const data = req.body as UpdateCredencialDTO;
       const usuarioId = req.usuario!.userId;
 
@@ -321,7 +321,7 @@ export class SistemaAcessoController {
 
   async excluirCredencial(req: Request, res: Response): Promise<void> {
     try {
-      const { credencialId } = req.params;
+      const credencialId = req.params.credencialId as string;
       const usuarioId = req.usuario!.userId;
 
       const credencial = await sistemaAcessoService.buscarCredencialPorId(credencialId);
@@ -355,7 +355,7 @@ export class SistemaAcessoController {
 
   async listarLogsCredencial(req: Request, res: Response): Promise<void> {
     try {
-      const { credencialId } = req.params;
+      const credencialId = req.params.credencialId as string;
 
       const logs = await sistemaAcessoService.listarLogsCredencial(credencialId);
 

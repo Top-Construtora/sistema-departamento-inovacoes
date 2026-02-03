@@ -121,7 +121,7 @@ export class DemandaController {
 
   async buscarPorId(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const demanda = await demandaService.buscarPorId(id);
 
@@ -148,7 +148,7 @@ export class DemandaController {
 
   async atualizar(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as UpdateDemandaDTO;
 
       // Validar tipo se fornecido
@@ -203,7 +203,7 @@ export class DemandaController {
 
   async atualizarStatus(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const { status } = req.body;
 
       if (!status) {
@@ -247,7 +247,7 @@ export class DemandaController {
 
   async excluir(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const demanda = await demandaService.buscarPorId(id);
 

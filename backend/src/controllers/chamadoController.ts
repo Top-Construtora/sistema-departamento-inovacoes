@@ -118,7 +118,7 @@ export class ChamadoController {
 
   async buscarPorId(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const usuario = req.usuario!;
       const isInterno = this.isInterno(usuario.perfil);
 
@@ -161,7 +161,7 @@ export class ChamadoController {
 
   async atualizar(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as UpdateChamadoDTO;
       const usuario = req.usuario!;
       const isInterno = this.isInterno(usuario.perfil);
@@ -216,7 +216,7 @@ export class ChamadoController {
 
   async atualizarStatus(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const { status } = req.body;
       const usuario = req.usuario!;
       const isInterno = this.isInterno(usuario.perfil);
@@ -287,7 +287,7 @@ export class ChamadoController {
 
   async adicionarComentario(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as CreateComentarioDTO;
       const usuario = req.usuario!;
       const isInterno = this.isInterno(usuario.perfil);
@@ -344,7 +344,7 @@ export class ChamadoController {
 
   async avaliar(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as AvaliacaoDTO;
       const usuario = req.usuario!;
 

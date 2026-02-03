@@ -90,7 +90,7 @@ export class UsuarioController {
 
   async buscarPorId(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const usuario = await usuarioService.buscarPorId(id);
 
@@ -117,7 +117,7 @@ export class UsuarioController {
 
   async atualizar(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body;
 
       // Validar perfil se fornecido
@@ -154,7 +154,7 @@ export class UsuarioController {
 
   async alterarStatus(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const { ativo } = req.body;
 
       if (typeof ativo !== 'boolean') {
@@ -191,7 +191,7 @@ export class UsuarioController {
 
   async resetarSenha(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const { novaSenha } = req.body;
 
       if (!novaSenha || novaSenha.length < 6) {

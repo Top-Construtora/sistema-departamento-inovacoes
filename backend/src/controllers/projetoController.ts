@@ -112,7 +112,7 @@ export class ProjetoController {
 
   async buscarPorId(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const projeto = await projetoService.buscarPorId(id);
 
@@ -139,7 +139,7 @@ export class ProjetoController {
 
   async atualizar(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as UpdateProjetoDTO;
 
       // Validar tipo se fornecido
@@ -194,7 +194,7 @@ export class ProjetoController {
 
   async excluir(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const projeto = await projetoService.buscarPorId(id);
 

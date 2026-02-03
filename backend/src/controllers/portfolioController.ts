@@ -107,7 +107,7 @@ export class PortfolioController {
 
   async buscarPorId(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const portfolio = await portfolioService.buscarPorId(id);
 
@@ -134,7 +134,7 @@ export class PortfolioController {
 
   async atualizar(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as UpdatePortfolioDTO;
 
       // Validar categoria se fornecida
@@ -192,7 +192,7 @@ export class PortfolioController {
 
   async excluir(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const portfolio = await portfolioService.buscarPorId(id);
 
@@ -222,7 +222,7 @@ export class PortfolioController {
   // Versoes
   async criarVersao(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const data = req.body as CreateVersaoDTO;
       const usuarioId = req.usuario!.userId;
 
@@ -251,7 +251,7 @@ export class PortfolioController {
 
   async listarVersoes(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       const portfolio = await portfolioService.buscarPorId(id);
 
