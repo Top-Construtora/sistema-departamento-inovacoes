@@ -109,7 +109,7 @@ export interface UpdateCredencialDTO {
   usuario_referente_id?: string | null;
   usuario_referente_nome?: string | null;
   login?: string;
-  senha?: string; // Se fornecida, sera criptografada
+  senha?: string; // Se fornecida, será criptografada
   ambiente?: AmbienteCredencial;
   observacoes?: string | null;
 }

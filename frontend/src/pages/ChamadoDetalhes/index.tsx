@@ -434,7 +434,7 @@ export function ChamadoDetalhes() {
           </div>
         </div>
 
-        {/* Sidebar com informacoes e acoes */}
+        {/* Sidebar com Informações e acoes */}
         <div className={styles.sidebar}>
           <div className={styles.infoCard}>
             <h3>Informacoes</h3>

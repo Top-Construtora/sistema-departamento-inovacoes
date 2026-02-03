@@ -477,7 +477,7 @@ export function SistemaDetalhes() {
                         </div>
                         {senhasReveladas[credencial.id] && (
                           <span className={styles.senhaTimer}>
-                            A senha sera ocultada automaticamente em 30s
+                            A senha será ocultada automaticamente em 30s
                           </span>
                         )}
                       </div>
