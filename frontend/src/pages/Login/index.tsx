@@ -140,7 +140,7 @@ export function Login() {
           {/* Logo no topo esquerdo */}
           <div className={styles.logoHeader}>
             <div className={styles.logoContainer}>
-              <img src="/images/logo.png" alt="GIO" />
+              <img src="images/logo.png" alt="GIO" />
             </div>
           </div>
 
@@ -163,7 +163,7 @@ export function Login() {
             {/* Logo mobile */}
             <div className={styles.mobileLogo}>
               <div className={styles.mobileLogoIcon}>
-                <img src="/images/logo.png" alt="Logo" />
+                <img src="images/logo.png" alt="Logo" />
               </div>
               <span className={styles.mobileLogoText}>GIO</span>
             </div>

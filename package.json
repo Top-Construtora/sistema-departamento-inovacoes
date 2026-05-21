@@ -9,7 +9,10 @@
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "npm run build --prefix frontend",
     "build:backend": "npm run build --prefix backend",
-    "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend"
+    "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend",
+    "install:desktop": "npm install --prefix desktop",
+    "desktop:dev": "concurrently -k -n vite,electron -c blue,magenta \"npm run dev --prefix frontend\" \"npm run dev --prefix desktop\"",
+    "desktop:build": "npm run build --prefix frontend && npm run dist --prefix desktop"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

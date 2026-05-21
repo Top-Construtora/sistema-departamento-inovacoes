@@ -1,0 +1,67 @@
+{
+  "name": "sistema-inovacoes-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App desktop do Sistema de Inovações - Top Construtora",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .",
+    "dist": "electron-builder --win --x64",
+    "dist:dir": "electron-builder --win --x64 --dir"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.topconstrutora.sistema-inovacoes",
+    "productName": "Sistema de Inovacoes",
+    "copyright": "Copyright © 2026 Top Construtora",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../frontend/dist",
+        "to": "app",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Sistema-Inovacoes-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Sistema de Inovações",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    }
+  },
+  "dependencies": {
+    "sistema-inovacoes": "file:.."
+  }
+}

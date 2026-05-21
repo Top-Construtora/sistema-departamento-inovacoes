@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts';
 import { Layout, DefinirSenhaModal } from './components';
 import { Login } from './pages/Login';
@@ -19,7 +19,7 @@ import { Notas } from './pages/Notas';
 export function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <HashRouter>
         <DefinirSenhaModal />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -40,7 +40,7 @@ export function App() {
             <Route path="notas" element={<Notas />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   );
 }

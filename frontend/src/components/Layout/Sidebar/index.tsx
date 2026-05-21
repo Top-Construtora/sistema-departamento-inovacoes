@@ -62,7 +62,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       <div className={styles.header}>
         <Link to="/" className={styles.logoLink}>
           <div className={styles.logoIcon}>
-            <img src="/images/logo.png" alt="GIO" />
+            <img src="images/logo.png" alt="GIO" />
           </div>
           {!collapsed && (
             <div className={styles.logoText}>
