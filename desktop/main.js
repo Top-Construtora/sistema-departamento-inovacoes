@@ -1,7 +1,37 @@
-const { app, BrowserWindow, Menu, shell } = require('electron');
+const { app, BrowserWindow, Menu, shell, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
+const { autoUpdater } = require('electron-updater');
+const log = require('electron-log');
 
 const isDev = process.env.NODE_ENV === 'development';
+
+autoUpdater.logger = log;
+log.transports.file.level = 'info';
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
+
+function loadUpdateToken() {
+  try {
+    const configPath = app.isPackaged
+      ? path.join(process.resourcesPath, 'update-config.json')
+      : path.join(__dirname, 'update-config.json');
+    if (!fs.existsSync(configPath)) return null;
+    const cfg = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    return cfg.githubToken || null;
+  } catch (err) {
+    log.error('Falha ao ler update-config.json:', err);
+    return null;
+  }
+}
+
+const updateToken = loadUpdateToken();
+if (updateToken) {
+  autoUpdater.requestHeaders = {
+    Authorization: `token ${updateToken}`,
+    Accept: 'application/octet-stream',
+  };
+}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -47,6 +77,46 @@ function createWindow() {
   });
 
   buildMenu();
+
+  if (!isDev) {
+    setupAutoUpdater(win);
+  }
+}
+
+function setupAutoUpdater(win) {
+  autoUpdater.on('update-available', (info) => {
+    log.info('Update disponível:', info.version);
+  });
+
+  autoUpdater.on('update-downloaded', (info) => {
+    log.info('Update baixado:', info.version);
+    dialog
+      .showMessageBox(win, {
+        type: 'info',
+        title: 'Atualização disponível',
+        message: `Versão ${info.version} pronta para instalar`,
+        detail:
+          'A atualização será aplicada agora. O app vai reiniciar.\n\nVocê pode adiar e instalar depois ao fechar o app.',
+        buttons: ['Reiniciar agora', 'Depois'],
+        defaultId: 0,
+        cancelId: 1,
+      })
+      .then(({ response }) => {
+        if (response === 0) autoUpdater.quitAndInstall();
+      });
+  });
+
+  autoUpdater.on('error', (err) => {
+    log.error('Erro no auto-update:', err);
+  });
+
+  autoUpdater.checkForUpdatesAndNotify().catch((err) => {
+    log.error('Falha ao verificar updates:', err);
+  });
+
+  setInterval(() => {
+    autoUpdater.checkForUpdates().catch(() => {});
+  }, 60 * 60 * 1000);
 }
 
 function buildMenu() {

@@ -8,7 +8,8 @@
     "start": "electron .",
     "dev": "wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .",
     "dist": "electron-builder --win --x64",
-    "dist:dir": "electron-builder --win --x64 --dir"
+    "dist:dir": "electron-builder --win --x64 --dir",
+    "release": "electron-builder --win --x64 --publish always"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
@@ -36,6 +37,10 @@
         "filter": [
           "**/*"
         ]
+      },
+      {
+        "from": "update-config.json",
+        "to": "update-config.json"
       }
     ],
     "win": {
@@ -59,9 +64,19 @@
       "shortcutName": "Sistema de Inovações",
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Top-Construtora",
+        "repo": "sistema-departamento-inovacoes",
+        "releaseType": "release"
+      }
+    ]
   },
   "dependencies": {
+    "electron-log": "^5.4.4",
+    "electron-updater": "^6.8.3",
     "sistema-inovacoes": "file:.."
   }
 }

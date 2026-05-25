@@ -1,0 +1,4 @@
+{
+  "_comment": "Copie este arquivo para update-config.json e preencha com seu token. Esse arquivo NUNCA é commitado.",
+  "githubToken": "ghp_seu_token_aqui"
+}
