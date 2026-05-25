@@ -69,9 +69,67 @@
   .main {
     margin-left: 0;
     padding: 1rem;
+    padding-top: 4.25rem;
   }
 
   .mainCollapsed {
     margin-left: 0;
+  }
+}
+
+/* ========================================
+   HAMBURGER MOBILE
+======================================== */
+
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 0.875rem;
+  left: 0.875rem;
+  z-index: 110;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-card, rgba(20, 20, 30, 0.9));
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 10px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background var(--transition-normal), transform var(--transition-normal);
+}
+
+.hamburger:hover {
+  background: var(--color-hover-overlay);
+}
+
+.hamburger:active {
+  transform: scale(0.96);
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+  .backdrop {
+    display: block;
   }
 }

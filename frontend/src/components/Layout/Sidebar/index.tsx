@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Home,
   MessageSquare,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts';
 import { PerfilUsuario } from '../../../types';
@@ -21,6 +22,8 @@ import styles from './styles.module.css';
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
 function formatPerfil(perfil: string): string {
@@ -32,7 +35,7 @@ function formatPerfil(perfil: string): string {
   return perfilMap[perfil] || perfil;
 }
 
-export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
   const { usuario, logout } = useAuth();
 
   const isInterno = usuario?.perfil === PerfilUsuario.LIDER || usuario?.perfil === PerfilUsuario.ANALISTA;
@@ -57,7 +60,11 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       ];
 
   return (
-    <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
+    <aside
+      className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''} ${
+        mobileOpen ? styles.open : ''
+      }`}
+    >
       {/* Header com Logo */}
       <div className={styles.header}>
         <Link to="/" className={styles.logoLink}>
@@ -71,6 +78,16 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
             </div>
           )}
         </Link>
+        {onMobileClose && (
+          <button
+            type="button"
+            className={styles.mobileCloseButton}
+            onClick={onMobileClose}
+            aria-label="Fechar menu"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
 
       {/* Navegacao */}
